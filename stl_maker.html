@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Formwork — Layout Mockup v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --navy:#1a1a2e; --navy-2:#20213a; --navy-3:#2a2b48; --gold:#c8a96e; --gold-light:#e0c48f; --ink:#f2f0ea; --muted:#9a9ab0; --danger:#c1666b; --line:rgba(200,169,110,0.16); }
+  *{box-sizing:border-box;}
+  html,body{margin:0; height:100%; background:var(--navy); color:var(--ink); font-family:'Inter',sans-serif; overflow:hidden;}
+  #app{position:fixed; inset:0; display:flex; flex-direction:column;}
+  .mockup-flag{background:#3a2a1a; color:var(--gold-light); font-size:11px; text-align:center; padding:5px; font-weight:600; letter-spacing:0.04em;}
+
+  #h1{ flex:0 0 auto; height:50px; display:flex; align-items:center; gap:4px; padding:0 8px; background:rgba(26,26,46,0.95); border-bottom:1px solid var(--line); }
+  .h1-btn{ flex:0 0 auto; width:40px; height:40px; display:flex; align-items:center; justify-content:center; background:transparent; border:none; color:var(--muted); border-radius:8px; }
+  .h1-btn svg{width:19px; height:19px;}
+  .h1-btn.active{color:var(--gold); background:var(--navy-3);}
+  .h1-sep{flex:0 0 auto; width:1px; height:22px; background:var(--line); margin:0 4px;}
+  .h1-tools{ margin-left:auto; display:flex; align-items:center; gap:7px; padding:0 12px; background:var(--navy-3); border-radius:8px; color:var(--ink); font-size:12.5px; font-weight:600; height:38px; }
+  .h1-tools svg{width:17px; height:17px; color:var(--gold-light);}
+  .h1-tools.active{background:var(--gold); color:var(--navy);}
+  .h1-tools.active svg{color:var(--navy);}
+
+  #h2{ flex:0 0 auto; height:38px; display:flex; flex-direction:column; justify-content:center; padding:6px 12px; background:rgba(26,26,46,0.85); border-bottom:1px solid var(--line); z-index:3; }
+  #h2.empty{ opacity:0.4; }
+  #h2 .title{font-size:12.5px; font-weight:600; color:var(--gold-light); line-height:1.2;}
+  #h2 .info{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); line-height:1.3;}
+
+  #main{flex:1; position:relative; display:flex; overflow:hidden;}
+
+  /* narrow icon-rail panel — as slim as still usable; widens slightly only for tools that need real inputs */
+  #leftPanel{
+    flex:0 0 auto; width:0; background:var(--navy-2); border-right:1px solid var(--line);
+    display:flex; flex-direction:column; z-index:2; overflow:hidden; transition:width .16s ease;
+  }
+  #leftPanel.open{width:15%; min-width:58px;}
+  #leftPanel.open.wide{width:34%; min-width:132px; max-width:150px;}
+  .panel-scroll{flex:1; overflow-y:auto; padding:6px; display:flex; flex-direction:column; gap:4px;}
+
+  .tool-row{
+    display:flex; align-items:center; gap:8px; padding:9px 6px; border-radius:8px; background:transparent;
+    border:none; color:var(--ink); width:100%; text-align:left; font-size:11px; font-family:'Inter',sans-serif;
+  }
+  .tool-row:active{background:var(--navy-3);}
+  .tool-row svg{width:18px; height:18px; color:var(--gold-light); flex:0 0 auto;}
+  .tool-row span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .back-row{
+    display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 4px; border-radius:8px; background:transparent; border:none;
+    color:var(--gold-light); width:100%; font-size:11px; font-weight:600; font-family:'Inter',sans-serif; margin-bottom:2px;
+  }
+  .back-row:active{background:var(--navy-3);}
+
+  .nudge-box{ border:1px solid var(--line); border-radius:10px; background:var(--navy); width:100%; aspect-ratio:1; display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr 1fr; gap:4px; padding:6px; }
+  .nudge-btn{ background:var(--navy-3); border:1px solid var(--line); border-radius:7px; display:flex; align-items:center; justify-content:center; color:var(--gold-light); }
+  .nudge-btn svg{width:16px; height:16px;}
+  .nudge-btn:active{background:var(--gold); color:var(--navy);}
+
+  .swatch-row{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; padding:4px 2px;}
+  .swatch{width:24px; height:24px; border-radius:6px; border:1px solid var(--line);}
+
+  .field-row{display:flex; align-items:center; gap:5px; padding:3px 2px;}
+  .field-row label{width:12px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold);}
+  .field-row input{flex:1; background:var(--navy); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-family:'JetBrains Mono',monospace; font-size:11px; padding:5px 6px; width:0;}
+
+  .obj-title{font-size:11.5px; font-weight:600; color:var(--gold-light); text-align:center; padding:4px 2px 2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .delete-btn{ display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 4px; border-radius:8px; background:transparent; border:1px solid rgba(193,102,107,0.4); color:var(--danger); font-size:11px; font-weight:600; width:100%; margin-top:2px; }
+  .delete-btn svg{width:15px; height:15px;}
+  .delete-btn:active{background:rgba(193,102,107,0.15);}
+  .section-gap{height:6px;}
+
+  #plane{flex:1; position:relative; background:var(--navy);}
+  #viewport3d{position:absolute; inset:0; width:100%; height:100%; touch-action:none;}
+  .plane-note{position:absolute; top:8px; left:50%; transform:translateX(-50%); color:var(--muted); font-size:10.5px; background:rgba(26,26,46,0.7); padding:4px 10px; border-radius:12px; white-space:nowrap; pointer-events:none;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="mockup-flag">MOCKUP — real 3D grid, narrow rail, tap Tools or tap a shape</div>
+
+  <div id="h1">
+    <button class="h1-btn" title="Reference Table"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg></button>
+    <button class="h1-btn" title="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-1"/></svg></button>
+    <button class="h1-btn" title="Redo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 7 5 5-5 5"/><path d="M20 12H9a5 5 0 0 0 0 10h1"/></svg></button>
+    <button class="h1-btn" id="btnRotateView" title="Rotate View"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></button>
+    <button class="h1-btn" id="btnHome" title="Reset View"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></button>
+    <div class="h1-sep"></div>
+    <button class="h1-tools" id="btnToolsToggle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 1-5.66 5.66L4 17l3 3 5.04-5.04a4 4 0 0 1 5.66-5.66L21 6l-3-3-3.3 3.3Z"/></svg>
+      Tools
+    </button>
+  </div>
+
+  <div id="h2" class="empty">
+    <span class="title" id="h2Title">Nothing open</span>
+    <span class="info" id="h2Info">Tap Tools, or tap a shape on the plate</span>
+  </div>
+
+  <div id="main">
+    <div id="leftPanel"><div class="panel-scroll" id="panelScroll"></div></div>
+    <div id="plane">
+      <div class="plane-note">drag with one finger to orbit</div>
+      <canvas id="viewport3d"></canvas>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ---------- three.js scene (same fixed plate rules as the real app) ---------- */
+const PLATE_SIZE = 100, GRID_SQUARE_MM = 5;
+const canvas = document.getElementById('viewport3d');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x1a1a2e, 1);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 5000);
+const DEFAULT_CAM = new THREE.Vector3(90, 70, 110);
+camera.position.copy(DEFAULT_CAM);
+scene.add(new THREE.HemisphereLight(0xfff4e0, 0x14141f, 1.1));
+const key = new THREE.DirectionalLight(0xffffff, 1.4); key.position.set(60,90,40); scene.add(key);
+const fillL = new THREE.DirectionalLight(0xc8a96e, 0.35); fillL.position.set(-60,30,-40); scene.add(fillL);
+
+const grid = new THREE.GridHelper(PLATE_SIZE, PLATE_SIZE/GRID_SQUARE_MM, 0xc8a96e, 0x34355a);
+grid.material.transparent = true; grid.material.opacity = 0.45;
+scene.add(grid);
+const half = PLATE_SIZE/2;
+const boundary = new THREE.LineLoop(
+  new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-half,0.06,-half),new THREE.Vector3(half,0.06,-half),new THREE.Vector3(half,0.06,half),new THREE.Vector3(-half,0.06,half)]),
+  new THREE.LineBasicMaterial({ color:0xe0c48f })
+);
+scene.add(boundary);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.08;
+controls.target.set(0,10,0); controls.update();
+
+function resize(){ const w=innerWidth,h=innerHeight; renderer.setSize(w,h,false); }
+function fitCanvas(){
+  const rect = document.getElementById('plane').getBoundingClientRect();
+  renderer.setSize(rect.width, rect.height, false);
+  camera.aspect = rect.width/rect.height; camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', fitCanvas);
+setTimeout(fitCanvas, 50);
+(function animate(){ requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera); })();
+
+document.getElementById('btnHome').addEventListener('click', () => { camera.position.copy(DEFAULT_CAM); controls.target.set(0,10,0); controls.update(); });
+document.getElementById('btnRotateView').addEventListener('click', () => {
+  const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+  const sph = new THREE.Spherical().setFromVector3(offset); sph.theta += Math.PI/4;
+  offset.setFromSpherical(sph); camera.position.copy(controls.target).add(offset); controls.update();
+});
+
+/* ---------- shapes ---------- */
+const objects = []; // {id, mesh, name}
+let idSeq = 1;
+function newMat(){ return new THREE.MeshStandardMaterial({ color:0xc8a96e, metalness:0.15, roughness:0.55 }); }
+const selectedMat = new THREE.MeshStandardMaterial({ color:0xe0c48f, metalness:0.2, roughness:0.4, emissive:0x2a1f00, emissiveIntensity:0.25 });
+
+function clampToPlate(mesh){
+  const geo = mesh.geometry; if (!geo.boundingBox) geo.computeBoundingBox(); const bb = geo.boundingBox;
+  const rx=(bb.max.x-bb.min.x)*mesh.scale.x, ry=(bb.max.y-bb.min.y)*mesh.scale.y, rz=(bb.max.z-bb.min.z)*mesh.scale.z;
+  if (rx>PLATE_SIZE) mesh.scale.x*=PLATE_SIZE/rx;
+  if (ry>PLATE_SIZE) mesh.scale.y*=PLATE_SIZE/ry;
+  if (rz>PLATE_SIZE) mesh.scale.z*=PLATE_SIZE/rz;
+  mesh.position.y = -bb.min.y*mesh.scale.y;
+  const hx=(bb.max.x-bb.min.x)*mesh.scale.x/2, hz=(bb.max.z-bb.min.z)*mesh.scale.z/2;
+  mesh.position.x = THREE.MathUtils.clamp(mesh.position.x, -half+hx, half-hx);
+  mesh.position.z = THREE.MathUtils.clamp(mesh.position.z, -half+hz, half-hz);
+}
+function addShape(kind){
+  let geo, name;
+  if (kind==='circle'){ geo=new THREE.SphereGeometry(12,32,24); name='Circle'; }
+  else if (kind==='square'){ geo=new THREE.BoxGeometry(20,20,20); name='Square'; }
+  else if (kind==='rectangle'){ geo=new THREE.BoxGeometry(30,15,20); name='Rectangle'; }
+  else if (kind==='cylinder'){ geo=new THREE.CylinderGeometry(8,8,20,32); name='Cylinder'; }
+  else { geo=new THREE.ConeGeometry(8,20,32); name='Cone'; }
+  const mesh = new THREE.Mesh(geo, newMat());
+  mesh.position.set((Math.random()-0.5)*40, 0, (Math.random()-0.5)*40);
+  clampToPlate(mesh);
+  const rec = { id:idSeq++, mesh, name };
+  objects.push(rec); scene.add(mesh);
+  selectObject(rec.id);
+}
+function deleteObject(id){
+  const idx = objects.findIndex(o=>o.id===id); if (idx===-1) return;
+  scene.remove(objects[idx].mesh); objects[idx].mesh.geometry.dispose(); objects.splice(idx,1);
+  closePanel();
+}
+let selectedId = null;
+function selectObject(id){
+  selectedId = id;
+  objects.forEach(o => o.mesh.material = (o.id===id) ? selectedMat : newMat());
+  openObjectPanel(findObj(id));
+}
+function findObj(id){ return objects.find(o=>o.id===id); }
+
+/* raycaster tap-to-select */
+const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2();
+canvas.addEventListener('pointerup', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  ndc.x = ((e.clientX-rect.left)/rect.width)*2-1;
+  ndc.y = -((e.clientY-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(objects.map(o=>o.mesh), false);
+  if (hits.length){ const rec = objects.find(o=>o.mesh===hits[0].object); selectObject(rec.id); }
+});
+
+/* ---------- left panel: two doors in — Tools button, or tapping a shape ---------- */
+const ICONS = {
+  shapes:'<path d="M12 2 3 7.5 12 12l9-4.5L12 2Z"/><path d="M3 7.5v9L12 21l9-4.5v-9"/>',
+  boolean:'<circle cx="9" cy="12" r="5.5" fill="currentColor" fill-opacity="0.18"/><circle cx="15" cy="12" r="5.5" fill="currentColor" fill-opacity="0.18"/>',
+  move:'<path d="M12 2v20M2 12h20M5 5l-3 3 3 3M19 5l3 3-3 3M5 19l-3-3 3-3M19 19l3-3-3-3"/>',
+  scale:'<path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5M3 3l7 7M21 3l-7 7M3 21l7-7M21 21l-7-7"/>',
+  color:'<circle cx="12" cy="12" r="8.5"/>',
+  grid:'<rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>',
+  layers:'<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>',
+  back:'<path d="m15 18-6-6 6-6"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13"/>',
+};
+function svg(name){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`; }
+function arrow(dir){
+  const p={up:'M12 19V5M5 12l7-7 7 7',down:'M12 5v14M19 12l-7 7-7-7',left:'M19 12H5M12 5l-7 7 7 7',right:'M5 12h14M12 5l7 7-7 7'}[dir];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${p}"/></svg>`;
+}
+
+const TOOLS = [
+  { id:'shapes', name:'Shapes', info:'Tap a shape to drop it on the plate' },
+  { id:'boolean', name:'Boolean', info:'Select two shapes, then tap an operation' },
+  { id:'move', name:'Move', info:'5mm per tap \u2014 height stays flush' },
+  { id:'scale', name:'Scale', info:'Capped at 100mm on every axis' },
+  { id:'color', name:'Color', info:'Cosmetic only \u2014 doesn\u2019t affect the STL' },
+  { id:'grid', name:'Grid Size', info:'Plate size \u2014 5mm squares stay fixed' },
+  { id:'layers', name:'Layers', info:'Every shape \u2014 show, hide, lock, rename' },
+  { id:'settings', name:'Settings', info:'App-wide options, including Save' },
+];
+
+const leftPanel = document.getElementById('leftPanel');
+const panelScroll = document.getElementById('panelScroll');
+const h2 = document.getElementById('h2'), h2Title = document.getElementById('h2Title'), h2Info = document.getElementById('h2Info');
+const btnToolsToggle = document.getElementById('btnToolsToggle');
+
+function setH2(title, info, empty){ h2.classList.toggle('empty', !!empty); h2Title.textContent = title; h2Info.textContent = info; }
+function closePanel(){
+  leftPanel.classList.remove('open','wide');
+  btnToolsToggle.classList.remove('active');
+  selectedId = null;
+  objects.forEach(o => o.mesh.material = newMat());
+  setH2('Nothing open', 'Tap Tools, or tap a shape on the plate', true);
+}
+
+function renderToolsList(){
+  leftPanel.classList.add('open'); leftPanel.classList.remove('wide');
+  btnToolsToggle.classList.add('active');
+  setH2('Tools', 'Tap a tool to open its options', true);
+  panelScroll.innerHTML = TOOLS.map(t => `<button class="tool-row" data-id="${t.id}" title="${t.name}">${svg(t.id)}<span>${t.name}</span></button>`).join('');
+  panelScroll.querySelectorAll('.tool-row').forEach(row => row.addEventListener('click', () => openTool(row.dataset.id)));
+}
+
+function openTool(id){
+  const tool = TOOLS.find(t=>t.id===id);
+  leftPanel.classList.add('wide');
+  setH2(tool.name, tool.info, false);
+  let body = '';
+  if (id==='shapes'){
+    body = [['circle','Circle'],['square','Square'],['rectangle','Rectangle'],['cylinder','Cylinder'],['cone','Cone']]
+      .map(([k,l]) => `<button class="tool-row" data-shape="${k}">${svg('shapes')}<span>${l}</span></button>`).join('');
+  } else if (id==='boolean'){
+    body = ['Union','Subtract','Intersect'].map(s=>`<button class="tool-row">${svg('boolean')}<span>${s}</span></button>`).join('');
+  } else if (id==='scale'){
+    body = `<div class="field-row"><label>X</label><input value="1.00"></div><div class="field-row"><label>Y</label><input value="1.00"></div><div class="field-row"><label>Z</label><input value="1.00"></div>`;
+  } else if (id==='color'){
+    body = `<div class="swatch-row">${['#c8a96e','#e0c48f','#7fae8e','#6e8fc8','#c1666b','#9a9ab0'].map(c=>`<div class="swatch" style="background:${c}"></div>`).join('')}</div>`;
+  } else if (id==='grid'){
+    body = `<div class="field-row"><input value="100\u00d7100mm"></div>`;
+  } else if (id==='move'){
+    body = `<div class="nudge-box">
+      <button class="nudge-btn" style="grid-column:2;grid-row:1">${arrow('up')}</button>
+      <button class="nudge-btn" style="grid-column:1;grid-row:2">${arrow('left')}</button>
+      <div style="grid-column:2;grid-row:2"></div>
+      <button class="nudge-btn" style="grid-column:3;grid-row:2">${arrow('right')}</button>
+      <button class="nudge-btn" style="grid-column:2;grid-row:3">${arrow('down')}</button>
+    </div>`;
+  } else if (id==='layers'){
+    body = objects.length ? objects.map(o=>`<button class="tool-row">${svg('layers')}<span>${o.name}</span></button>`).join('') : `<div class="tool-row" style="color:var(--muted)">no shapes yet</div>`;
+  } else if (id==='settings'){
+    body = ['Save Scene','Load Scene','About'].map(s=>`<button class="tool-row">${svg('settings')}<span>${s}</span></button>`).join('');
+  }
+  panelScroll.innerHTML = `<button class="back-row" id="backRow">${svg('back')}Tools</button>` + body;
+  document.getElementById('backRow').addEventListener('click', renderToolsList);
+  panelScroll.querySelectorAll('[data-shape]').forEach(btn => btn.addEventListener('click', () => addShape(btn.dataset.shape)));
+}
+
+/* object-tap contextual panel: Move + Scale + Color + Delete, all together, no sub-drilling */
+function openObjectPanel(rec){
+  leftPanel.classList.add('open','wide');
+  btnToolsToggle.classList.remove('active');
+  setH2(rec.name, 'Selected \u2014 move, scale, recolor, or delete', false);
+  panelScroll.innerHTML = `
+    <button class="back-row" id="backRow">${svg('back')}Deselect</button>
+    <div class="obj-title">Move</div>
+    <div class="nudge-box">
+      <button class="nudge-btn" style="grid-column:2;grid-row:1">${arrow('up')}</button>
+      <button class="nudge-btn" style="grid-column:1;grid-row:2">${arrow('left')}</button>
+      <div style="grid-column:2;grid-row:2"></div>
+      <button class="nudge-btn" style="grid-column:3;grid-row:2">${arrow('right')}</button>
+      <button class="nudge-btn" style="grid-column:2;grid-row:3">${arrow('down')}</button>
+    </div>
+    <div class="section-gap"></div>
+    <div class="obj-title">Scale</div>
+    <div class="field-row"><label>X</label><input value="1.00"></div>
+    <div class="field-row"><label>Y</label><input value="1.00"></div>
+    <div class="field-row"><label>Z</label><input value="1.00"></div>
+    <div class="section-gap"></div>
+    <div class="obj-title">Color</div>
+    <div class="swatch-row">${['#c8a96e','#e0c48f','#7fae8e','#6e8fc8','#c1666b','#9a9ab0'].map(c=>`<div class="swatch" data-color="${c}" style="background:${c}"></div>`).join('')}</div>
+    <div class="section-gap"></div>
+    <button class="delete-btn" id="deleteBtn">${svg('trash')}Delete</button>
+  `;
+  document.getElementById('backRow').addEventListener('click', closePanel);
+  document.getElementById('deleteBtn').addEventListener('click', () => deleteObject(rec.id));
+  panelScroll.querySelectorAll('[data-color]').forEach(sw => sw.addEventListener('click', () => {
+    rec.mesh.material.color.set(sw.dataset.color); selectedMat.color.set(sw.dataset.color);
+  }));
+  const nudges = panelScroll.querySelectorAll('.nudge-btn');
+  const STEP = 5;
+  nudges[0].addEventListener('click', () => { rec.mesh.position.z -= STEP; clampToPlate(rec.mesh); });
+  nudges[1].addEventListener('click', () => { rec.mesh.position.x -= STEP; clampToPlate(rec.mesh); });
+  nudges[2].addEventListener('click', () => { rec.mesh.position.x += STEP; clampToPlate(rec.mesh); });
+  nudges[3].addEventListener('click', () => { rec.mesh.position.z += STEP; clampToPlate(rec.mesh); });
+}
+
+btnToolsToggle.addEventListener('click', () => {
+  if (leftPanel.classList.contains('open') && btnToolsToggle.classList.contains('active')) closePanel();
+  else renderToolsList();
+});
+</script>
+</body>
+</html>
