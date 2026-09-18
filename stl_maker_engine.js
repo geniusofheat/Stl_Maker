@@ -1,9 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { STLExporter } from 'three/addons/exporters/STLExporter.js';
-import { ICONS, MODULES, SHAPES_3D, SWATCHES } from './formwork-data.js';
-/* NOTE: if your data file has a different name than formwork-data.js, update the
-   import path above to match — search for "formwork-data.js" and replace it. */
+import { ICONS, MODULES, SHAPES_3D, SWATCHES } from './stl_maker_data.js';
 
 /* =====================================================================
    INJECTED STYLES — kept in this one file on purpose (single-file build)
