@@ -8,29 +8,37 @@ import { ICONS, MODULES, SHAPES_3D, SWATCHES } from './stl_maker_data.js';
    ===================================================================== */
 const style = document.createElement('style');
 style.textContent = `
+.module-btn.active-blue{ background:#3a6fd8 !important; border-color:#3a6fd8 !important; color:#fff !important; }
+.module-btn.active-blue svg{ color:#fff !important; }
 .stepper-row{ display:flex; align-items:center; gap:6px; }
-.stepper-row .step-lbl{ width:14px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold); flex:0 0 auto; }
-.stepper-row button{ width:30px; height:30px; flex:0 0 auto; background:var(--navy-3); border:1px solid var(--line); border-radius:7px; color:var(--gold-light); font-size:16px; font-weight:700; }
+.stepper-row .step-lbl{ width:16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold); flex:0 0 auto; }
+.stepper-row button{ width:32px; height:32px; flex:0 0 auto; background:var(--navy-3); border:1px solid var(--line); border-radius:7px; color:var(--gold-light); font-size:17px; font-weight:700; }
 .stepper-row button:active{ background:var(--gold); color:var(--navy); }
 .stepper-row input{ flex:1; min-width:0; background:#fff; color:#111; border:1px solid var(--line); border-radius:7px; font-family:'JetBrains Mono',monospace; font-size:12px; padding:6px 4px; text-align:center; }
+.stepper-row.all-axes .step-lbl{ width:auto; font-size:9.5px; text-transform:uppercase; letter-spacing:0.04em; }
 .pinned-tile{ display:flex; align-items:center; gap:8px; background:var(--navy-4); border:1px solid var(--gold); border-radius:10px; padding:8px; position:relative; }
 .pinned-tile .swatch-fill{ width:28px; height:28px; border-radius:6px; flex:0 0 auto; }
 .pinned-tile .pt-label{ font-size:11.5px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:none; }
 #slideMenu.expanded .pinned-tile .pt-label{ display:block; }
-.action-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:5px; }
-.action-row button{ display:flex; flex-direction:column; align-items:center; gap:3px; background:var(--navy-3); border:1px solid var(--line); border-radius:8px; color:var(--ink); padding:7px 2px; }
-.action-row button svg{ width:16px; height:16px; color:var(--gold-light); }
-.action-row button span{ font-size:8px; font-weight:600; }
-.action-row button.active{ border-color:var(--gold); background:var(--navy-4); }
+.action-col{ display:flex; flex-direction:column; gap:6px; }
+.action-col button{ display:flex; flex-direction:row; align-items:center; gap:10px; background:var(--navy-3); border:1px solid var(--line); border-radius:9px; color:var(--ink); padding:12px 10px; }
+.action-col button svg{ width:20px; height:20px; color:var(--gold-light); flex:0 0 auto; }
+.action-col button span{ font-size:12px; font-weight:600; display:block !important; }
+.action-col button.active{ border-color:var(--gold); background:var(--navy-4); }
 .shape-tile-wrap{ position:relative; }
 .shape-num{ position:absolute; top:3px; right:5px; font-size:9px; font-weight:700; color:var(--gold-light); }
 .layer-tile-wrap{ position:relative; }
 .layer-del{ position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:5px; background:var(--navy); border:1px solid var(--line); color:var(--muted); display:flex; align-items:center; justify-content:center; z-index:2; }
 .layer-del svg{ width:12px; height:12px; }
 .layer-del.armed{ background:var(--danger); color:#fff; border-color:var(--danger); }
-#lockBtn{ position:absolute; top:10px; right:10px; z-index:6; width:38px; height:38px; background:rgba(32,33,58,0.9); border:1px solid var(--line); border-radius:9px; color:var(--gold-light); display:flex; align-items:center; justify-content:center; }
+#lockBtn, #mmBtn{ position:absolute; top:10px; z-index:6; height:38px; background:rgba(32,33,58,0.9); border:1px solid var(--line); border-radius:9px; color:var(--gold-light); display:flex; align-items:center; justify-content:center; }
+#lockBtn{ right:10px; width:38px; }
 #lockBtn svg{ width:18px; height:18px; }
 #lockBtn.unlocked{ color:var(--muted); }
+#mmBtn{ left:10px; padding:0 10px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; gap:5px; }
+#mmBtn .seg{ opacity:0.4; }
+#mmBtn .seg.on{ opacity:1; color:#fff; }
+#mmBtn .sep{ opacity:0.3; }
 #confirmOverlay{ position:absolute; inset:0; z-index:50; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; }
 #confirmOverlay.hidden{ display:none; }
 .confirm-box{ background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:18px; width:78%; max-width:280px; text-align:center; }
@@ -39,6 +47,7 @@ style.textContent = `
 .confirm-row button{ flex:1; padding:10px; border-radius:8px; font-size:13px; font-weight:700; border:1px solid var(--line); }
 .confirm-yes{ background:var(--danger); color:#fff; border-color:var(--danger); }
 .confirm-no{ background:var(--navy-3); color:var(--ink); }
+#h2Title{ white-space:normal !important; word-break:break-word; }
 `;
 document.head.appendChild(style);
 
@@ -46,12 +55,11 @@ document.head.appendChild(style);
    ICON HELPER
    ===================================================================== */
 function svg(name){ return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`; }
-const EXTRA_ICONS = {
+Object.assign(ICONS, {
   lock:   '<rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>',
   unlock: '<rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V7a4 4 0 0 1 7.5-2"/>',
   crosshair: '<circle cx="12" cy="12" r="7"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>',
-};
-Object.assign(ICONS, EXTRA_ICONS);
+});
 
 /* =====================================================================
    THREE.JS SCENE
@@ -77,11 +85,60 @@ scene.add(new THREE.LineLoop(
   new THREE.LineBasicMaterial({ color:0xe0c48f })
 ));
 
+/* ---- axis indicator arrows, placed outside the plate boundary ---- */
+const axisOrigin = new THREE.Vector3(-half-4, 0.1, -half-4);
+scene.add(new THREE.ArrowHelper(new THREE.Vector3(1,0,0), axisOrigin, 18, 0xd9534f, 4, 3));   // X — red
+scene.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,1), axisOrigin, 18, 0x4a90d9, 4, 3));   // Z — blue
+scene.add(new THREE.ArrowHelper(new THREE.Vector3(0,1,0), axisOrigin, 18, 0x5cb85c, 4, 3));   // Y (height) — green
+
+/* ---- mm number labels along X and Z edges, toggleable, sprite-based ---- */
+function makeLabelSprite(text){
+  const cvs = document.createElement('canvas'); cvs.width = 64; cvs.height = 32;
+  const ctx = cvs.getContext('2d');
+  ctx.fillStyle = '#e0c48f'; ctx.font = 'bold 22px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, 32, 16);
+  const tex = new THREE.CanvasTexture(cvs);
+  const mat = new THREE.SpriteMaterial({ map:tex, depthTest:false });
+  const spr = new THREE.Sprite(mat);
+  spr.scale.set(6,3,1);
+  return spr;
+}
+let mmLabelGroup = null;
+function buildMmLabels(step){
+  if (mmLabelGroup) { scene.remove(mmLabelGroup); }
+  mmLabelGroup = new THREE.Group();
+  for (let v=0; v<=PLATE_SIZE; v+=step){
+    const sx = makeLabelSprite(String(v));
+    sx.position.set(-half+v, 0.2, half+5);
+    mmLabelGroup.add(sx);
+    const sz = makeLabelSprite(String(v));
+    sz.position.set(-half-5, 0.2, -half+v);
+    mmLabelGroup.add(sz);
+  }
+  mmLabelGroup.visible = false;
+  scene.add(mmLabelGroup);
+}
+buildMmLabels(5);
+let mmState = 'off'; // 'off' | '5' | '2.5'
+const mmBtn = document.createElement('button');
+mmBtn.id = 'mmBtn';
+document.getElementById('plate').appendChild(mmBtn);
+function refreshMmBtn(){
+  mmBtn.innerHTML = `<span class="seg ${mmState==='5'?'on':''}">5</span><span class="sep">|</span><span class="seg ${mmState==='2.5'?'on':''}">2.5</span>`;
+}
+mmBtn.addEventListener('click', () => {
+  mmState = mmState==='off' ? '5' : mmState==='5' ? '2.5' : 'off';
+  if (mmState==='off'){ mmLabelGroup.visible = false; }
+  else { buildMmLabels(mmState==='5' ? 5 : 2.5); mmLabelGroup.visible = true; }
+  refreshMmBtn();
+});
+refreshMmBtn();
+
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.dampingFactor = 0.08;
 controls.target.set(0,10,0); controls.update();
 
-/* manual rotation lock — defaults LOCKED on load, independent of 2D/3D shape mode */
+/* manual rotation lock — defaults LOCKED on load */
 let rotationLocked = true;
 controls.enableRotate = !rotationLocked;
 const lockBtn = document.createElement('button');
@@ -106,7 +163,7 @@ setTimeout(fitCanvas, 30);
 /* =====================================================================
    DATA MODEL — layers hold many shapes
    ===================================================================== */
-const layers = [];        // { id, name, shapes:[{id,num,mesh,geomId,fields,color}] }
+const layers = [];
 let nextLayerId = 1;
 let activeLayerId = null;
 let activeShapeId = null;
@@ -114,7 +171,6 @@ const GRAY = 0x777788;
 
 function findLayer(id){ return layers.find(l=>l.id===id); }
 function activeLayer(){ return findLayer(activeLayerId); }
-function findShape(layerId, shapeId){ const l=findLayer(layerId); return l ? l.shapes.find(s=>s.id===shapeId) : null; }
 function activeShape(){ const l=activeLayer(); return l ? l.shapes.find(s=>s.id===activeShapeId) : null; }
 
 function createLayer(){
@@ -122,7 +178,6 @@ function createLayer(){
   layers.push(l);
   return l;
 }
-
 function refreshShapeVisuals(){
   layers.forEach(l => l.shapes.forEach(s => {
     const active = (l.id===activeLayerId && s.id===activeShapeId);
@@ -149,7 +204,7 @@ function clampToPlate(mesh, allowFloat){
   if (ry>PLATE_SIZE) mesh.scale.y*=PLATE_SIZE/ry;
   if (rz>PLATE_SIZE) mesh.scale.z*=PLATE_SIZE/rz;
   if (!allowFloat) mesh.position.y = -bb.min.y*mesh.scale.y;
-  else if (mesh.position.y < -bb.min.y*mesh.scale.y) mesh.position.y = -bb.min.y*mesh.scale.y; // floor at plate
+  else if (mesh.position.y < -bb.min.y*mesh.scale.y) mesh.position.y = -bb.min.y*mesh.scale.y;
   const hx=(bb.max.x-bb.min.x)*mesh.scale.x/2, hz=(bb.max.z-bb.min.z)*mesh.scale.z/2;
   mesh.position.x = THREE.MathUtils.clamp(mesh.position.x, -half+hx, half-hx);
   mesh.position.z = THREE.MathUtils.clamp(mesh.position.z, -half+hz, half-hz);
@@ -178,7 +233,7 @@ function deleteShape(layerId, shapeId){
   const s = l.shapes[idx];
   scene.remove(s.mesh); s.mesh.geometry.dispose();
   l.shapes.splice(idx,1);
-  l.shapes.forEach((s2,i)=>s2.num=i+1); // renumber sequentially, no gaps
+  l.shapes.forEach((s2,i)=>s2.num=i+1);
   if (activeShapeId===shapeId) activeShapeId = null;
 }
 function deleteLayer(layerId){
@@ -186,7 +241,7 @@ function deleteLayer(layerId){
   l.shapes.forEach(s => { scene.remove(s.mesh); s.mesh.geometry.dispose(); });
   const idx = layers.indexOf(l);
   layers.splice(idx,1);
-  layers.forEach((l2,i)=>l2.name=`Layer ${i+1}`); // renumber sequentially
+  layers.forEach((l2,i)=>l2.name=`Layer ${i+1}`);
   if (activeLayerId===layerId){ activeLayerId=null; activeShapeId=null; }
 }
 
@@ -204,29 +259,31 @@ canvas.addEventListener('pointerup', (e) => {
     const hit = all.find(x => x.s.mesh === hits[0].object);
     activeLayerId = hit.l.id; activeShapeId = hit.s.id;
     refreshShapeVisuals();
-    resetView('shapePanel');
+    resetView('tools', 'shapePanel', shapeLabel(hit.s));
   }
 });
+function shapeLabel(s){ return `${s.geomId[0].toUpperCase()+s.geomId.slice(1)} #${s.num}`; }
 
 /* =====================================================================
-   H1 — MODULES  (View is intentionally skipped — replaced by lock button)
+   H1 — MODULES (View intentionally excluded — replaced by the lock button)
    ===================================================================== */
 const h1 = document.getElementById('h1');
 const MODULE_ORDER = ['tools','layers','settings','help'];
+let activeModule = 'tools';
 function renderH1(){
   const mods = MODULE_ORDER.map(id => MODULES.find(m=>m.id===id)).filter(Boolean);
-  h1.innerHTML = mods.map(m => `<button class="module-btn" data-module="${m.id}">${svg(m.icon)}<span>${m.label}</span></button>`).join('');
+  h1.innerHTML = mods.map(m => `<button class="module-btn ${m.id===activeModule?'active-blue':''}" data-module="${m.id}">${svg(m.icon)}<span>${m.label}</span></button>`).join('');
   h1.querySelectorAll('[data-module]').forEach(btn => btn.addEventListener('click', () => {
     const id = btn.dataset.module;
-    if (id==='tools') resetView('toolsHome');
-    else if (id==='layers') resetView('layersList');
-    else if (id==='settings') resetView('settings');
-    else if (id==='help') resetView('help');
+    if (id==='tools') resetView('tools', 'home');
+    else if (id==='layers') resetView('layers', 'layersList', 'Layers');
+    else if (id==='settings') resetView('settings', 'settings', 'Settings');
+    else if (id==='help') resetView('help', 'help', 'Help');
   }));
 }
 
 /* =====================================================================
-   H2 + VIEW STACK
+   H2 — breadcrumb path + Undo/Redo
    ===================================================================== */
 const h2Title = document.getElementById('h2Title'), h2Info = document.getElementById('h2Info');
 const btnUndo = document.getElementById('btnUndo'), btnRedo = document.getElementById('btnRedo');
@@ -234,20 +291,22 @@ btnUndo.innerHTML = svg('undo') + '<span>Undo</span>';
 btnRedo.innerHTML = svg('redo') + '<span>Redo</span>';
 btnUndo.disabled = true; btnRedo.disabled = true; // history not wired in this pass
 
-let viewStack = [{v:'home'}];
-function resetView(v, ctx){ viewStack = [{v, ...(ctx||{})}]; render(); }
-function pushView(v, ctx){ viewStack.push({v, ...(ctx||{})}); render(); }
+/* viewStack entries: {v, label} — label is what shows in the h2 breadcrumb */
+let viewStack = [];
+function resetView(mod, v, label){
+  activeModule = mod;
+  viewStack = [{v, label}];
+  renderH1();
+  render();
+}
+function pushView(v, label){ viewStack.push({v, label}); render(); }
 function backView(){ if (viewStack.length>1) viewStack.pop(); render(); }
 function topView(){ return viewStack[viewStack.length-1]; }
+function replaceTop(v, label){ viewStack[viewStack.length-1] = {v, label}; render(); }
 
-const menuScroll = document.getElementById('menuScroll');
-const slideMenu = document.getElementById('slideMenu');
-document.getElementById('expandTab').innerHTML = svg('back') // placeholder, rotated via CSS
-document.getElementById('expandTab').addEventListener('click', () => slideMenu.classList.toggle('expanded'));
-
-let h2BackHandlerAttached = false;
+let h2BackAttached = false;
 function ensureH2Back(){
-  if (h2BackHandlerAttached) return;
+  if (h2BackAttached) return;
   const wrap = h2Title.parentElement.parentElement; // #h2
   const backBtn = document.createElement('button');
   backBtn.id = 'h2Back';
@@ -255,13 +314,19 @@ function ensureH2Back(){
   backBtn.innerHTML = svg('back');
   backBtn.addEventListener('click', backView);
   wrap.insertBefore(backBtn, wrap.firstChild);
-  h2BackHandlerAttached = true;
+  h2BackAttached = true;
 }
 ensureH2Back();
-function setH2(title, info){
+function renderH2(info){
   document.getElementById('h2Back').style.display = viewStack.length>1 ? 'flex' : 'none';
-  h2Title.textContent = title; h2Info.textContent = info;
+  h2Title.textContent = viewStack.map(x=>x.label).join(' - ');
+  h2Info.textContent = info || '';
 }
+
+const menuScroll = document.getElementById('menuScroll');
+const slideMenu = document.getElementById('slideMenu');
+document.getElementById('expandTab').innerHTML = svg('back');
+document.getElementById('expandTab').addEventListener('click', () => slideMenu.classList.toggle('expanded'));
 
 /* =====================================================================
    RENDER DISPATCH
@@ -274,27 +339,27 @@ function render(){
   else if (t.v==='shapePanel') renderShapePanel();
   else if (t.v==='subtool') renderSubtool(t.tool);
   else if (t.v==='layersList') renderLayersList();
-  else if (t.v==='toolsHome') renderToolsHome();
   else if (t.v==='booleanPick') renderBooleanPick();
   else if (t.v==='settings') renderSettings();
   else if (t.v==='help') renderHelp();
+  else if (t.v==='drawMethod') renderDrawMethod(t.method);
+  else if (t.v==='drawShapePick') renderDrawShapePick(t.method);
+  else if (t.v==='drawDivisionPick') renderDrawDivisionPick(t.method, t.shape);
 }
 
 /* ---- HOME: content of the active layer ---- */
 function renderHome(){
-  const l = activeLayer();
-  if (!l){
-    // no layer active yet — create the first one automatically
-    const nl = createLayer(); activeLayerId = nl.id;
-  }
-  const layer = activeLayer();
-  if (!layer.shapes.length){
-    pushIfNeeded('addShapeFlow');
+  let l = activeLayer();
+  if (!l){ l = createLayer(); activeLayerId = l.id; }
+  if (!l.shapes.length){
+    replaceTop('addShapeFlow', shapeMode==='2d' ? '2D' : '3D');
     renderAddShapeFlow();
     return;
   }
-  setH2(`${layer.name} : ${layer.shapes.length} shapes`, 'Tap a shape to select it');
-  menuScroll.innerHTML = layer.shapes.map(s => `
+  renderH2(`Tap a shape to select it`);
+  h2Title.textContent = `${l.name} : ${l.shapes.length} shapes`;
+  document.getElementById('h2Back').style.display = 'none';
+  menuScroll.innerHTML = l.shapes.map(s => `
     <div class="tile shape-tile-wrap" data-shape="${s.id}">
       ${svg('shapes')}<span>${s.geomId}</span>
       <span class="shape-num">#${s.num}</span>
@@ -302,15 +367,15 @@ function renderHome(){
   menuScroll.querySelectorAll('[data-shape]').forEach(el => el.addEventListener('click', () => {
     activeShapeId = parseFloat(el.dataset.shape);
     refreshShapeVisuals();
-    pushView('shapePanel');
+    pushView('shapePanel', shapeLabel(l.shapes.find(s=>s.id===activeShapeId)));
   }));
 }
-function pushIfNeeded(v){ if (topView().v!==v) viewStack.push({v}); }
 
 /* ---- ADD SHAPE FLOW: 2D (default) / 3D toggle ---- */
 let shapeMode = '2d';
 function renderAddShapeFlow(){
-  setH2('Add Shape', shapeMode==='2d' ? 'Sketch tools' : 'Tap a shape to add it');
+  replaceTop('addShapeFlow', shapeMode==='2d' ? '2D' : '3D');
+  renderH2(shapeMode==='2d' ? 'Sketch tools' : 'Tap a shape to add it');
   const toggle = `<div class="toggle-row">
     <button class="toggle-btn ${shapeMode==='2d'?'active':''}" data-mode="2d">2D</button>
     <button class="toggle-btn ${shapeMode==='3d'?'active':''}" data-mode="3d">3D</button>
@@ -320,7 +385,7 @@ function renderAddShapeFlow(){
     list = SHAPES_3D.map(s => `<button class="tile" data-shape3d="${s.id}">${svg('shapes')}<span>${s.label}</span></button>`).join('');
   } else {
     list = [['freehand','Freehand'],['shapedrag','Shape Drag'],['p2p','P2P']]
-      .map(([id,label]) => `<button class="tile" data-shape2d="${id}">${svg('shapes')}<span>${label}</span></button>`).join('');
+      .map(([id,label]) => `<button class="tile" data-method="${id}">${svg('shapes')}<span>${label}</span></button>`).join('');
   }
   menuScroll.innerHTML = toggle + list;
   menuScroll.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => { shapeMode=b.dataset.mode; renderAddShapeFlow(); }));
@@ -331,14 +396,51 @@ function renderAddShapeFlow(){
     activeShapeId = rec.id;
     refreshShapeVisuals();
     showToast(`${def.label} added`);
-    resetView('shapePanel');
+    resetView('tools', 'shapePanel', shapeLabel(rec));
   }));
-  menuScroll.querySelectorAll('[data-shape2d]').forEach(b => b.addEventListener('click', () => {
-    showToast('2D drawing tools are coming in a future update');
+  menuScroll.querySelectorAll('[data-method]').forEach(b => b.addEventListener('click', () => {
+    const label = b.dataset.method==='freehand'?'Freehand':b.dataset.method==='shapedrag'?'Shape Drag':'P2P';
+    pushView('drawMethod', label);
   }));
 }
 
-/* ---- SHAPE PANEL: pinned tile + 5 action buttons ---- */
+/* ---- 2D draw methods: structural navigation is real; the actual canvas
+   drawing interaction (finger-drag capture, point placement) is the next
+   build, not this one — each still stubs at its deepest actionable step. ---- */
+function renderDrawMethod(method){
+  const key = method.toLowerCase().replace(' ','');
+  if (key==='freehand'){
+    renderH2('Drag one finger on the plate to trace a line');
+    menuScroll.innerHTML = `<div class="panel-note-static" style="padding:14px 6px;color:var(--muted);font-size:12px;text-align:center;">Freehand tracing isn't wired up yet \u2014 next build.</div>`;
+    return;
+  }
+  // shapedrag and p2p both offer the same shape+division picker
+  pushOrShow('drawShapePick', method);
+}
+function pushOrShow(v, method){ pushView(v, method); }
+const DIVISIONS = {
+  circle:   [['full','Full'],['half','Half'],['quarter','Quarter']],
+  square:   [['full','Full'],['quarter','Quarter']],
+  rectangle:[['full','Full'],['eighth','Eighth']],
+};
+function renderDrawShapePick(method){
+  renderH2('Pick a shape to divide, or use it whole');
+  menuScroll.innerHTML = Object.keys(DIVISIONS).map(k => `<button class="tile" data-dshape="${k}">${svg('shapes')}<span>${k[0].toUpperCase()+k.slice(1)}</span></button>`).join('');
+  menuScroll.querySelectorAll('[data-dshape]').forEach(b => b.addEventListener('click', () => {
+    pushView('drawDivisionPick', b.dataset.dshape[0].toUpperCase()+b.dataset.dshape.slice(1));
+  }));
+}
+function renderDrawDivisionPick(method, shapeLabelText){
+  const shapeKey = shapeLabelText.toLowerCase();
+  renderH2(`Press and drag on the plate to size it`);
+  const divs = DIVISIONS[shapeKey] || [['full','Full']];
+  menuScroll.innerHTML = divs.map(([id,label]) => `<button class="tile" data-div="${id}">${svg('shapes')}<span>${label}</span></button>`).join('');
+  menuScroll.querySelectorAll('[data-div]').forEach(b => b.addEventListener('click', () => {
+    showToast(`${method} \u2014 ${shapeLabelText} (${b.dataset.div}) drag-to-size isn't wired up yet, next build`);
+  }));
+}
+
+/* ---- SHAPE PANEL: pinned tile + 5 action buttons, stacked vertically ---- */
 const ACTIONS = [
   { id:'select', label:'Select', icon:'select' },
   { id:'move',   label:'Move',   icon:'move' },
@@ -346,17 +448,17 @@ const ACTIONS = [
   { id:'color',  label:'Color',  icon:'color' },
   { id:'delete', label:'Delete', icon:'trash' },
 ];
-function renderShapePanel(){
+function renderShapePanel(activeTool){
   const l = activeLayer(), s = activeShape();
-  if (!l || !s){ resetView('home'); return; }
-  setH2(`${s.geomId} #${s.num}`, `${l.name}`);
+  if (!l || !s){ resetView('tools','home','Tools'); return; }
+  renderH2(l.name);
   menuScroll.innerHTML = `
     <div class="pinned-tile">
       <div class="swatch-fill" style="background:${s.color}"></div>
-      <span class="pt-label">${s.geomId} #${s.num}</span>
+      <span class="pt-label">${shapeLabel(s)}</span>
     </div>
-    <div class="action-row">
-      ${ACTIONS.map(a => `<button data-action="${a.id}">${svg(a.icon)}<span>${a.label}</span></button>`).join('')}
+    <div class="action-col">
+      ${ACTIONS.map(a => `<button data-action="${a.id}" class="${a.id===activeTool?'active':''}">${svg(a.icon)}<span>${a.label}</span></button>`).join('')}
     </div>
     <div id="subtoolSlot"></div>
   `;
@@ -364,7 +466,7 @@ function renderShapePanel(){
     const id = b.dataset.action;
     if (id==='delete'){
       deleteShape(l.id, s.id);
-      resetView('home');
+      resetView('tools','home','Tools');
       showToast('Shape deleted');
       return;
     }
@@ -372,61 +474,58 @@ function renderShapePanel(){
       showToast('Tap any shape on the plate to select it \u2014 crosshair mode coming soon');
       return;
     }
-    pushView('subtool', { tool:id });
+    pushView('subtool', id[0].toUpperCase()+id.slice(1));
   }));
 }
 
-/* ---- SUBTOOL: Move / Scale / Color, rendered under the pinned tile ---- */
-function renderSubtool(tool){
+/* ---- SUBTOOL: Move / Scale / Color ---- */
+function renderSubtool(toolLabel){
+  const tool = toolLabel.toLowerCase();
   const l = activeLayer(), s = activeShape();
-  if (!l || !s){ resetView('home'); return; }
-  // repaint the pinned tile + action row first (stay visible), then this tool's controls
-  setH2(tool[0].toUpperCase()+tool.slice(1), `${s.geomId} #${s.num}`);
-  const slot = () => document.getElementById('subtoolSlot');
-  renderShapePanelStatic(l, s, tool);
+  if (!l || !s){ resetView('tools','home','Tools'); return; }
+  renderShapePanel(tool);
+  const slot = document.getElementById('subtoolSlot');
   if (tool==='move'){
-    slot().innerHTML = stepperRow('X', s.mesh.position.x, -half, half) + stepperRow('Y', s.mesh.position.y, 0, PLATE_SIZE) + stepperRow('Z', s.mesh.position.z, -half, half);
-    wireSteppers(['X','Y','Z'], (axis,val) => {
+    slot.innerHTML = stepperRow('X', s.mesh.position.x, -half, half) + stepperRow('Y', s.mesh.position.y, 0, PLATE_SIZE) + stepperRow('Z', s.mesh.position.z, -half, half);
+    wireSteppers(slot, ['X','Y','Z'], (axis,val) => {
       if (axis==='X') s.mesh.position.x = val;
       if (axis==='Y') s.mesh.position.y = Math.max(0, val);
       if (axis==='Z') s.mesh.position.z = val;
       clampToPlate(s.mesh, true);
-      renderSubtool('move');
+      renderSubtool('Move');
     });
   } else if (tool==='scale'){
-    slot().innerHTML = stepperRow('X', s.mesh.scale.x, 0.1, 10) + stepperRow('Y', s.mesh.scale.y, 0.1, 10) + stepperRow('Z', s.mesh.scale.z, 0.1, 10);
-    wireSteppers(['X','Y','Z'], (axis,val) => {
+    slot.innerHTML = allAxisStepper(s) + stepperRow('X', s.mesh.scale.x, 0.1, 10) + stepperRow('Y', s.mesh.scale.y, 0.1, 10) + stepperRow('Z', s.mesh.scale.z, 0.1, 10);
+    wireSteppers(slot, ['X','Y','Z'], (axis,val) => {
       if (axis==='X') s.mesh.scale.x = val;
       if (axis==='Y') s.mesh.scale.y = val;
       if (axis==='Z') s.mesh.scale.z = val;
       clampToPlate(s.mesh, true);
-      renderSubtool('scale');
+      renderSubtool('Scale');
     });
+    const allRow = slot.querySelector('.stepper-row.all-axes');
+    allRow.querySelectorAll('[data-step]').forEach(btn => btn.addEventListener('click', () => {
+      const d = parseFloat(btn.dataset.step) * 0.1;
+      s.mesh.scale.x = Math.min(10, Math.max(0.1, s.mesh.scale.x + d));
+      s.mesh.scale.y = Math.min(10, Math.max(0.1, s.mesh.scale.y + d));
+      s.mesh.scale.z = Math.min(10, Math.max(0.1, s.mesh.scale.z + d));
+      clampToPlate(s.mesh, true);
+      renderSubtool('Scale');
+    }));
   } else if (tool==='color'){
-    slot().innerHTML = `<div class="swatch-row">${SWATCHES.map(c=>`<div class="swatch ${s.color===c?'selected':''}" data-c="${c}" style="background:${c}"></div>`).join('')}</div>`;
-    slot().querySelectorAll('[data-c]').forEach(sw => sw.addEventListener('click', () => {
-      s.color = sw.dataset.c; refreshShapeVisuals(); renderSubtool('color');
+    slot.innerHTML = `<div class="swatch-row">${SWATCHES.map(c=>`<div class="swatch ${s.color===c?'selected':''}" data-c="${c}" style="background:${c}"></div>`).join('')}</div>`;
+    slot.querySelectorAll('[data-c]').forEach(sw => sw.addEventListener('click', () => {
+      s.color = sw.dataset.c; refreshShapeVisuals(); renderSubtool('Color');
     }));
   }
 }
-function renderShapePanelStatic(l, s, activeTool){
-  menuScroll.innerHTML = `
-    <div class="pinned-tile">
-      <div class="swatch-fill" style="background:${s.color}"></div>
-      <span class="pt-label">${s.geomId} #${s.num}</span>
-    </div>
-    <div class="action-row">
-      ${ACTIONS.map(a => `<button data-action="${a.id}" class="${a.id===activeTool?'active':''}">${svg(a.icon)}<span>${a.label}</span></button>`).join('')}
-    </div>
-    <div id="subtoolSlot"></div>
-  `;
-  menuScroll.querySelectorAll('[data-action]').forEach(b => b.addEventListener('click', () => {
-    const id = b.dataset.action;
-    if (id==='delete'){ deleteShape(l.id, s.id); resetView('home'); showToast('Shape deleted'); return; }
-    if (id==='select'){ showToast('Tap any shape on the plate to select it \u2014 crosshair mode coming soon'); return; }
-    viewStack[viewStack.length-1] = { v:'subtool', tool:id };
-    render();
-  }));
+function allAxisStepper(s){
+  return `<div class="stepper-row all-axes">
+    <span class="step-lbl">All</span>
+    <button data-step="-1">\u2212</button>
+    <input type="text" value="X/Y/Z together" readonly>
+    <button data-step="1">+</button>
+  </div>`;
 }
 function stepperRow(axis, val, min, max){
   return `<div class="stepper-row" data-axis="${axis}">
@@ -436,14 +535,14 @@ function stepperRow(axis, val, min, max){
     <button data-step="1">+</button>
   </div>`;
 }
-function wireSteppers(axes, onChange){
+function wireSteppers(scope, axes, onChange){
   axes.forEach(axis => {
-    const row = menuScroll.querySelector(`.stepper-row[data-axis="${axis}"]`);
+    const row = scope.querySelector(`.stepper-row[data-axis="${axis}"]`);
     if (!row) return;
     const input = row.querySelector('input');
     const min = parseFloat(input.dataset.min), max = parseFloat(input.dataset.max);
     row.querySelectorAll('[data-step]').forEach(btn => btn.addEventListener('click', () => {
-      const stepSize = axis==='X'||axis==='Y'||axis==='Z' ? (max>50?2.5:0.1) : 1;
+      const stepSize = max>50 ? GRID_SQUARE : 0.1;
       let v = parseFloat(input.value) + parseFloat(btn.dataset.step)*stepSize;
       v = Math.min(max, Math.max(min, v));
       onChange(axis, v);
@@ -457,7 +556,7 @@ function wireSteppers(axes, onChange){
 
 /* ---- LAYERS LIST ---- */
 function renderLayersList(){
-  setH2('Layers', 'Tap Add, or tap a layer to enter it');
+  renderH2('Tap Add, or tap a layer to enter it');
   menuScroll.innerHTML = `<button class="tile" id="addLayerBtn">${svg('add')}<span>Add</span></button>` +
     layers.map(l => `
       <div class="tile layer-tile-wrap" data-layer="${l.id}">
@@ -466,13 +565,13 @@ function renderLayersList(){
       </div>`).join('');
   document.getElementById('addLayerBtn').addEventListener('click', () => {
     const l = createLayer(); activeLayerId = l.id; activeShapeId = null;
-    resetView('home');
+    resetView('tools','home','Tools');
   });
   menuScroll.querySelectorAll('[data-layer]').forEach(el => el.addEventListener('click', (e) => {
     if (e.target.closest('[data-del]')) return;
     activeLayerId = parseInt(el.dataset.layer,10); activeShapeId = null;
     refreshShapeVisuals();
-    resetView('home');
+    resetView('tools','home','Tools');
   }));
   let armedId = null, armTimer = null;
   menuScroll.querySelectorAll('[data-del]').forEach(btn => btn.addEventListener('click', (e) => {
@@ -485,39 +584,23 @@ function renderLayersList(){
       armTimer = setTimeout(() => { armedId=null; btn.classList.remove('armed'); }, 3000);
     } else {
       clearTimeout(armTimer);
-      showConfirm(`Delete this layer?`, () => {
-        deleteLayer(id);
-        renderLayersList();
-      });
+      showConfirm(`Delete this layer?`, () => { deleteLayer(id); renderLayersList(); });
     }
   }));
 }
 
-/* ---- TOOLS HOME: Boolean, Select ---- */
-function renderToolsHome(){
-  setH2('Tools', 'Boolean and selection helpers');
-  const totalShapes = layers.reduce((n,l)=>n+l.shapes.length,0);
-  menuScroll.innerHTML = `
-    <button class="tile" data-t="select">${svg('select')}<span>Select</span></button>
-    <button class="tile" data-t="boolean" ${totalShapes<2?'disabled':''}>${svg('boolean')}<span>Boolean</span></button>
-  `;
-  menuScroll.querySelector('[data-t="select"]').addEventListener('click', () => {
-    showToast('Tap any shape on the plate to select it \u2014 crosshair mode coming soon');
-  });
-  const boolBtn = menuScroll.querySelector('[data-t="boolean"]');
-  if (boolBtn) boolBtn.addEventListener('click', () => {
-    if (!activeShape()){ showToast('Select a shape first, then open Boolean'); return; }
-    pushView('booleanPick');
-  });
-}
+/* ---- BOOLEAN (reached from a selected shape's action row is not listed —
+   kept reachable via Tools home shape list for now: select a shape, then
+   use this view directly) ---- */
 function renderBooleanPick(){
   const s = activeShape();
-  setH2('Boolean', 'Pick a second shape, then an operation');
+  if (!s){ resetView('tools','home','Tools'); return; }
+  renderH2('Pick a second shape, then an operation');
   const others = [];
   layers.forEach(l => l.shapes.forEach(sh => { if (!(l.id===activeLayerId && sh.id===activeShapeId)) others.push({l,sh}); }));
   let targetId = null;
-  menuScroll.innerHTML = others.map(o => `<button class="tile" data-target="${o.l.id}:${o.sh.id}">${svg('shapes')}<span>${o.sh.geomId} #${o.sh.num}</span></button>`).join('') +
-    `<div class="action-row" style="grid-template-columns:repeat(3,1fr)">
+  menuScroll.innerHTML = others.map(o => `<button class="tile" data-target="${o.l.id}:${o.sh.id}">${svg('shapes')}<span>${shapeLabel(o.sh)}</span></button>`).join('') +
+    `<div class="action-col">
       <button data-op="union" disabled>${svg('boolean')}<span>Union</span></button>
       <button data-op="subtract" disabled>${svg('boolean')}<span>Subtract</span></button>
       <button data-op="intersect" disabled>${svg('boolean')}<span>Intersect</span></button>
@@ -531,8 +614,7 @@ function renderBooleanPick(){
   menuScroll.querySelectorAll('[data-op]').forEach(b => b.addEventListener('click', () => {
     if (!targetId) return;
     const parts = targetId.split(':');
-    const lid = parseInt(parts[0], 10), sid = parseFloat(parts[1]);
-    runBoolean(b.dataset.op, lid, sid);
+    runBoolean(b.dataset.op, parseInt(parts[0],10), parseFloat(parts[1]));
   }));
 }
 async function runBoolean(mode, targetLayerId, targetShapeId){
@@ -553,7 +635,7 @@ async function runBoolean(mode, targetLayerId, targetShapeId){
     clampToPlate(mesh, false);
     attachOutline(mesh);
     scene.add(mesh);
-    const rec = { id: Date.now()+Math.random(), num: aLayer.shapes.length, mesh, geomId:'Solid', fields:null, color };
+    const rec = { id: Date.now()+Math.random(), num: aLayer.shapes.length, mesh, geomId:'solid', fields:null, color };
     deleteShape(aLayer.id, a.id);
     deleteShape(bLayer.id, b.id);
     aLayer.shapes.push(rec);
@@ -561,7 +643,7 @@ async function runBoolean(mode, targetLayerId, targetShapeId){
     activeLayerId = aLayer.id; activeShapeId = rec.id;
     refreshShapeVisuals();
     showToast(`${mode[0].toUpperCase()+mode.slice(1)} created`);
-    resetView('shapePanel');
+    resetView('tools','shapePanel', shapeLabel(rec));
   } catch(err){
     console.error(err);
     showToast('Boolean tool could not load \u2014 check your connection and try again');
@@ -570,7 +652,7 @@ async function runBoolean(mode, targetLayerId, targetShapeId){
 
 /* ---- SETTINGS ---- */
 function renderSettings(){
-  setH2('Settings', `Plate fixed at ${PLATE_SIZE}\u00d7${PLATE_SIZE}mm, ${GRID_SQUARE}mm grid`);
+  renderH2(`Plate fixed at ${PLATE_SIZE}\u00d7${PLATE_SIZE}mm, ${GRID_SQUARE}mm grid`);
   menuScroll.innerHTML = `
     <button class="tile" id="saveBtn">${svg('settings')}<span>Save Scene</span></button>
     <button class="tile" id="loadBtn">${svg('settings')}<span>Load Scene</span></button>
@@ -583,7 +665,7 @@ function renderSettings(){
 
 /* ---- HELP ---- */
 function renderHelp(){
-  setH2('Help', 'Every module in the app');
+  renderH2('Every module in the app');
   menuScroll.innerHTML = MODULES.filter(m=>MODULE_ORDER.includes(m.id)).map(m => `<button class="tile" disabled>${svg(m.icon)}<span>${m.label}</span></button>`).join('');
 }
 
@@ -643,5 +725,4 @@ function showToast(msg){
 /* =====================================================================
    INIT
    ===================================================================== */
-renderH1();
-resetView('home');
+resetView('tools', 'home', 'Tools');
