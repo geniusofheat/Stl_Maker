@@ -11,24 +11,25 @@ style.textContent = `
 .module-btn.active-blue{ background:#3a6fd8 !important; border-color:#3a6fd8 !important; color:#fff !important; }
 .module-btn.active-blue svg{ color:#fff !important; }
 
-#slideMenu.open{ width:20%; min-width:88px; }
-#slideMenu.open.expanded{ width:38%; min-width:150px; }
-.toggle-row2{ display:flex; gap:5px; width:100%; }
-.toggle-row2 button{ flex:1; padding:8px 2px; border-radius:8px; border:1px solid var(--line); background:var(--navy-3); color:var(--ink); font-size:10.5px; font-weight:700; }
+#slideMenu{ transition:none !important; }
+#slideMenu.open{ width:76px; min-width:76px; }
+#slideMenu.open.expanded{ width:120px; min-width:120px; }
+.toggle-row2{ display:flex; gap:4px; width:100%; }
+.toggle-row2 button{ flex:1; padding:6px 1px; border-radius:7px; border:1px solid var(--line); background:var(--navy-3); color:var(--ink); font-size:9.5px; font-weight:700; }
 .toggle-row2 button.toggle-active{ background:#3a6fd8; color:#fff; border-color:#3a6fd8; }
-.add-rect{ width:100%; padding:8px 2px; border-radius:8px; border:1px solid var(--line); background:var(--navy-3); color:var(--gold-light); font-size:10.5px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px; }
-.add-rect svg{ width:14px; height:14px; }
+.add-rect{ width:100%; padding:6px 1px; border-radius:7px; border:1px solid var(--line); background:var(--navy-3); color:var(--gold-light); font-size:8.5px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:3px; }
+.add-rect svg{ width:12px; height:12px; flex:0 0 auto; }
 .h3-stack{ display:flex; flex-direction:column; gap:6px; width:100%; }
 .menu-scroll{ align-items:center; }
 .tile3{
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-  width:82px; aspect-ratio:1; border-radius:14px; background:var(--navy-3); border:1px solid var(--line);
-  color:var(--ink); padding:6px 4px; position:relative;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  width:62px; aspect-ratio:1; border-radius:12px; background:var(--navy-3); border:1px solid var(--line);
+  color:var(--ink); padding:4px 3px; position:relative;
 }
-#slideMenu.expanded .tile3{ width:112px; }
-.tile3 svg{ width:20px; height:20px; color:var(--gold-light); flex:0 0 auto; }
-.tile3 span{ font-size:8.5px; font-weight:600; text-align:center; line-height:1.15; display:block; overflow:hidden; text-overflow:ellipsis; max-height:2.3em; }
-#slideMenu.expanded .tile3 span{ font-size:10px; }
+#slideMenu.expanded .tile3{ width:100px; }
+.tile3 svg{ width:16px; height:16px; color:var(--gold-light); flex:0 0 auto; }
+.tile3 span{ font-size:7.5px; font-weight:600; text-align:center; line-height:1.1; display:block; overflow:hidden; text-overflow:ellipsis; max-height:2.2em; }
+#slideMenu.expanded .tile3 span{ font-size:9.5px; }
 .tile3.toggle-active{ background:#3a6fd8; border-color:#3a6fd8; color:#fff; }
 .tile3.toggle-active svg{ color:#fff; }
 .tile3.layer-active{ background:#fff; border:2px solid #3a6fd8; color:#111; }
@@ -40,32 +41,44 @@ style.textContent = `
 .tile-del svg{ width:11px; height:11px; }
 .tile-del.armed{ background:var(--danger); color:#fff; border-color:var(--danger); }
 
-.stepper-row{ display:flex; align-items:center; gap:5px; width:100%; }
-.stepper-row .step-lbl{ width:14px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); flex:0 0 auto; }
-.stepper-row button{ width:26px; height:26px; flex:0 0 auto; background:var(--navy-3); border:1px solid var(--line); border-radius:6px; color:var(--gold-light); font-size:15px; font-weight:700; }
+.stepper-row{ display:flex; align-items:center; gap:3px; width:100%; }
+.stepper-row .step-lbl{ display:none; width:12px; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--gold); flex:0 0 auto; }
+#slideMenu.expanded .stepper-row .step-lbl{ display:block; }
+.stepper-row button{ width:20px; height:20px; flex:0 0 auto; background:var(--navy-3); border:1px solid var(--line); border-radius:5px; color:var(--gold-light); font-size:13px; font-weight:700; line-height:1; padding:0; }
+#slideMenu.expanded .stepper-row button{ width:26px; height:26px; font-size:15px; }
 .stepper-row button:active{ background:var(--gold); color:var(--navy); }
-.stepper-row input{ flex:1; min-width:0; background:#fff; color:#111; border:1px solid var(--line); border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:10.5px; padding:5px 2px; text-align:center; }
-.stepper-row.all-axes .step-lbl{ width:auto; font-size:8.5px; text-transform:uppercase; }
-.stepper-stack{ display:flex; flex-direction:column; gap:5px; width:100%; padding:0 2px; }
+.stepper-row input{ flex:1 1 0; min-width:0; width:0; background:#fff; color:#111; border:1px solid var(--line); border-radius:5px; font-family:'JetBrains Mono',monospace; font-size:8.5px; padding:4px 1px; text-align:center; }
+#slideMenu.expanded .stepper-row input{ font-size:10.5px; padding:5px 2px; }
+.stepper-row.all-axes .step-lbl{ width:auto; font-size:8px; text-transform:uppercase; }
+.stepper-stack{ display:flex; flex-direction:column; gap:4px; width:100%; padding:0 1px; }
 
-.action-col{ display:flex; flex-direction:column; gap:6px; width:100%; }
-.action-col button{ display:flex; flex-direction:row; align-items:center; gap:8px; background:var(--navy-3); border:1px solid var(--line); border-radius:9px; color:var(--ink); padding:9px 8px; width:100%; }
-.action-col button svg{ width:17px; height:17px; color:var(--gold-light); flex:0 0 auto; }
-.action-col button span{ font-size:10.5px; font-weight:600; }
+.action-col{ display:flex; flex-direction:column; gap:4px; width:100%; }
+.action-col button{ display:flex; flex-direction:column; align-items:center; gap:2px; background:var(--navy-3); border:1px solid var(--line); border-radius:8px; color:var(--ink); padding:6px 2px; width:100%; }
+#slideMenu.expanded .action-col button{ flex-direction:row; padding:9px 8px; gap:8px; }
+.action-col button svg{ width:15px; height:15px; color:var(--gold-light); flex:0 0 auto; }
+#slideMenu.expanded .action-col button svg{ width:17px; height:17px; }
+.action-col button span{ font-size:7.5px; font-weight:600; }
+#slideMenu.expanded .action-col button span{ font-size:10.5px; }
 .action-col button.active{ border-color:var(--gold); background:var(--navy-4); }
 
 .tile-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; width:100%; }
 .swatch-row{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; width:100%; }
 
-#lockBtn, #mmBtn{ position:absolute; top:10px; z-index:6; height:36px; background:rgba(32,33,58,0.9); border:1px solid var(--line); border-radius:9px; color:var(--gold-light); display:flex; align-items:center; justify-content:center; }
+#lockBtn, #mmBtn, #modeToggle{ position:absolute; top:10px; z-index:6; height:36px; background:rgba(32,33,58,0.9); border:1px solid var(--line); border-radius:9px; color:var(--gold-light); display:flex; align-items:center; justify-content:center; }
+#modeToggle{ left:10px; padding:3px; gap:3px; }
+#modeToggle button{ height:100%; padding:0 10px; border-radius:6px; border:none; background:transparent; color:var(--muted); font-size:11px; font-weight:700; }
+#modeToggle button.toggle-active{ background:#3a6fd8; color:#fff; }
+#mmBtn{ left:118px; padding:0 9px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; gap:5px; }
 #lockBtn{ right:10px; width:36px; }
 #lockBtn svg{ width:17px; height:17px; }
 #lockBtn.unlocked{ color:var(--muted); }
-#mmBtn{ left:10px; padding:0 9px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; gap:5px; }
 #mmBtn .seg{ opacity:0.4; } #mmBtn .seg.on{ opacity:1; color:#fff; } #mmBtn .sep{ opacity:0.3; }
 
-#confirmOverlay{ position:absolute; inset:0; z-index:50; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; }
-#confirmOverlay.hidden{ display:none; }
+#crosshairCursor{ position:absolute; display:none; align-items:center; justify-content:center; width:40px; height:40px; pointer-events:none; z-index:7; }
+#crosshairCursor::before, #crosshairCursor::after{ content:''; position:absolute; background:#3a6fd8; }
+#crosshairCursor::before{ width:100%; height:2px; top:19px; }
+#crosshairCursor::after{ width:2px; height:100%; left:19px; }
+#confirmOverlay{ position:absolute; inset:0; z-index:50; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; }#confirmOverlay.hidden{ display:none; }
 .confirm-box{ background:var(--navy-2); border:1px solid var(--line); border-radius:12px; padding:18px; width:78%; max-width:280px; text-align:center; }
 .confirm-box p{ font-size:13px; color:var(--ink); margin:0 0 14px; }
 .confirm-row{ display:flex; gap:10px; }
@@ -146,6 +159,16 @@ mmBtn.addEventListener('click', () => {
   refreshMmBtn();
 });
 refreshMmBtn();
+
+/* 2D/3D toggle — plate's top-left corner, right next to the slide panel */
+const modeToggle = document.createElement('div');
+modeToggle.id = 'modeToggle';
+modeToggle.innerHTML = `<button data-m="2d">2D</button><button data-m="3d">3D</button>`;
+document.getElementById('plate').appendChild(modeToggle);
+function refreshModeToggle(){
+  modeToggle.querySelectorAll('button').forEach(b => b.classList.toggle('toggle-active', b.dataset.m===shapeMode));
+}
+modeToggle.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { setShapeMode(b.dataset.m); refreshModeToggle(); }));
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.dampingFactor = 0.08;
@@ -246,10 +269,10 @@ function deleteLayer(layerId){
 }
 
 const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2();
-canvas.addEventListener('pointerup', (e) => {
+function trySelectAt(clientX, clientY){
   const rect = canvas.getBoundingClientRect();
-  ndc.x = ((e.clientX-rect.left)/rect.width)*2-1;
-  ndc.y = -((e.clientY-rect.top)/rect.height)*2+1;
+  ndc.x = ((clientX-rect.left)/rect.width)*2-1;
+  ndc.y = -((clientY-rect.top)/rect.height)*2+1;
   raycaster.setFromCamera(ndc, camera);
   const all = []; layers.forEach(l => l.shapes.forEach(s => all.push({l,s})));
   const hits = raycaster.intersectObjects(all.map(x=>x.s.mesh), false);
@@ -258,8 +281,40 @@ canvas.addEventListener('pointerup', (e) => {
     activeLayerId = hit.l.id; activeShapeId = hit.s.id;
     refreshShapeVisuals();
     goToShape();
+    return true;
   }
-});
+  return false;
+}
+canvas.addEventListener('pointerup', (e) => { if (!crosshairActive) trySelectAt(e.clientX, e.clientY); });
+
+/* explicit Select/crosshair mode — a visible cursor offset from the finger,
+   tap to select using the real touch point underneath it */
+let crosshairActive = false;
+const crosshairEl = document.createElement('div');
+crosshairEl.id = 'crosshairCursor';
+document.getElementById('plate').appendChild(crosshairEl);
+function activateCrosshair(){
+  crosshairActive = true;
+  crosshairEl.style.display = 'flex';
+  showToast('Tap a shape on the plate to select it');
+  function move(e){
+    const rect = canvas.getBoundingClientRect();
+    crosshairEl.style.left = (e.clientX - rect.left - 20) + 'px';
+    crosshairEl.style.top = (e.clientY - rect.top - 20) + 'px';
+  }
+  function up(e){
+    const found = trySelectAt(e.clientX, e.clientY);
+    if (found) deactivate();
+  }
+  function deactivate(){
+    crosshairActive = false;
+    crosshairEl.style.display = 'none';
+    canvas.removeEventListener('pointermove', move);
+    canvas.removeEventListener('pointerup', up);
+  }
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', up);
+}
 function shapeLabel(s){ return `${s.geomId[0].toUpperCase()+s.geomId.slice(1)} #${s.num}`; }
 
 /* =====================================================================
@@ -290,8 +345,18 @@ const btnUndo = document.getElementById('btnUndo'), btnRedo = document.getElemen
 btnUndo.innerHTML = svg('undo') + '<span>Undo</span>';
 btnRedo.innerHTML = svg('redo') + '<span>Redo</span>';
 btnUndo.disabled = true; btnRedo.disabled = true;
+/* single-level undo: remembers only the most recent shape placement */
+let lastPlaced = null; // {layerId, shapeId}
+function armUndo(layerId, shapeId){ lastPlaced = {layerId, shapeId}; btnUndo.disabled = false; }
+btnUndo.addEventListener('click', () => {
+  if (!lastPlaced) return;
+  deleteShape(lastPlaced.layerId, lastPlaced.shapeId);
+  if (activeLayerId===lastPlaced.layerId) goToLayer(); else goToLayersHome();
+  showToast('Shape removed');
+  lastPlaced = null; btnUndo.disabled = true;
+});
 
-let crumbs = ['Layers'];
+let crumbs = ['Layer 1'];
 let crumbBack = null;
 let h2BackAttached = false;
 function ensureH2Back(){
@@ -318,33 +383,47 @@ document.getElementById('expandTab').innerHTML = svg('back');
 document.getElementById('expandTab').addEventListener('click', () => slideMenu.classList.toggle('expanded'));
 
 /* =====================================================================
-   SHAPE MODE (2D/3D) — presentational toggle, always visible, never gates
+   SHAPE MODE (2D/3D) — now drives the camera too (see setShapeMode)
    ===================================================================== */
 let shapeMode = '2d';
+function setShapeMode(mode){
+  shapeMode = mode;
+  if (mode==='2d'){
+    // bird's-eye: straight down, showing every layer regardless of which is active
+    camera.position.set(0, 140, 0.01);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  } else {
+    camera.position.copy(DEFAULT_CAM);
+    controls.target.set(0, 10, 0);
+    controls.update();
+  }
+}
 
 /* =====================================================================
-   NAVIGATION
+   NAVIGATION — breadcrumb starts with the layer, not the H1 module name
    ===================================================================== */
 function goToLayersHome(){
-  crumbs = ['Layers']; crumbBack = null;
+  const l = activeLayer();
+  crumbs = [l ? l.name : 'Layers']; crumbBack = null;
   activeShapeId = null;
   render('layersHome');
 }
 function goToLayer(){
   const l = activeLayer();
-  crumbs = ['Layers', l.name];
+  crumbs = [l.name];
   crumbBack = () => { activeLayerId = null; goToLayersHome(); };
   render('layersHome');
 }
 function goToShape(){
   const l = activeLayer(), s = activeShape();
-  crumbs = ['Layers', l.name, shapeLabel(s)];
+  crumbs = [l.name, shapeLabel(s)];
   crumbBack = () => { activeShapeId = null; goToLayer(); };
-  render('shapePanel');
+  render('shapePanel', 'color');
 }
 function goToSubtool(toolLabel){
   const l = activeLayer(), s = activeShape();
-  crumbs = ['Layers', l.name, shapeLabel(s), toolLabel];
+  crumbs = [l.name, shapeLabel(s), toolLabel];
   crumbBack = () => { goToShape(); };
   render('shapePanel', toolLabel.toLowerCase());
 }
@@ -369,13 +448,11 @@ function render(view, subtool){
 function renderLayersHome(){
   if (!layers.length){ const l = createLayer(); activeLayerId = l.id; }
   const active = activeLayer();
-  setH2(active ? `${active.name} : ${active.shapes.length} shapes` : 'Tap Add for a layer');
+  setH2(active ? `${active.name} : ${active.shapes.length} shapes` : 'Tap Add Layer for a layer');
+  refreshModeToggle();
 
-  const toggleRow = `<div class="toggle-row2">
-    <button class="${shapeMode==='2d'?'toggle-active':''}" data-mode="2d">2D</button>
-    <button class="${shapeMode==='3d'?'toggle-active':''}" data-mode="3d">3D</button>
-  </div>`;
-  const addRect = `<button class="add-rect" id="addLayerTile">${svg('add')}Add</button>`;
+  const addRects = `<button class="add-rect" id="addLayerTile">${svg('add')}Add Layer +</button>
+    <button class="add-rect" id="addShapeTile">${svg('add')}Add Shape +</button>`;
 
   let layerTiles;
   if (active){
@@ -394,13 +471,13 @@ function renderLayersHome(){
       </div>`).join('');
   }
 
-  menuScroll.innerHTML = `<div class="h3-stack">${toggleRow}${addRect}<div class="tile-row">${layerTiles}${shapeTiles}</div></div>`;
+  menuScroll.innerHTML = `<div class="h3-stack">${addRects}<div class="tile-row">${layerTiles}${shapeTiles}</div></div>`;
 
-  menuScroll.querySelectorAll('[data-mode]').forEach(el => el.addEventListener('click', () => { shapeMode = el.dataset.mode; renderLayersHome(); }));
   document.getElementById('addLayerTile').addEventListener('click', () => {
     const l = createLayer(); activeLayerId = l.id; activeShapeId = null;
     goToLayer();
   });
+  document.getElementById('addShapeTile').addEventListener('click', () => renderAddShapeOptions(active));
   menuScroll.querySelectorAll('[data-layer]').forEach(el => el.addEventListener('click', (e) => {
     if (e.target.closest('[data-del]')) return;
     const id = parseInt(el.dataset.layer,10);
@@ -416,25 +493,27 @@ function renderLayersHome(){
   }));
   wireLayerDelete();
 
-  if (active && active.shapes.length===0){
-    const addRow = document.createElement('div');
-    addRow.className = 'tile-row';
-    addRow.style.marginTop = '8px';
-    addRow.innerHTML = (shapeMode==='3d'
-      ? [...SHAPES_3D, ...SHAPES_3D_EXTRA].map(s => `<div class="tile3" data-add3d="${s.id}">${svg('shapes')}<span>${s.label}</span></div>`).join('')
-      : [['freehand','Freehand'],['shapedrag','Shape Drag'],['p2p','P2P']].map(([id,l]) => `<div class="tile3" data-method="${id}">${svg('shapes')}<span>${l}</span></div>`).join('')
-    );
-    menuScroll.appendChild(addRow);
-    addRow.querySelectorAll('[data-add3d]').forEach(el => el.addEventListener('click', () => {
-      const def = [...SHAPES_3D, ...SHAPES_3D_EXTRA].find(s=>s.id===el.dataset.add3d);
-      const rec = insertShape(active.id, def.id, def.fields);
-      activeShapeId = rec.id;
-      refreshShapeVisuals();
-      showToast(`${def.label} added`);
-      goToShape();
-    }));
-    addRow.querySelectorAll('[data-method]').forEach(el => el.addEventListener('click', () => goToDrawMethod(el.dataset.method)));
-  }
+  if (active && active.shapes.length===0) renderAddShapeOptions(active);
+}
+function renderAddShapeOptions(active){
+  const addRow = document.createElement('div');
+  addRow.className = 'tile-row';
+  addRow.style.marginTop = '8px';
+  addRow.innerHTML = (shapeMode==='3d'
+    ? [...SHAPES_3D, ...SHAPES_3D_EXTRA].map(s => `<div class="tile3" data-add3d="${s.id}">${svg('shapes')}<span>${s.label}</span></div>`).join('')
+    : [['freehand','Freehand'],['shapedrag','Shape Drag'],['p2p','P2P']].map(([id,l]) => `<div class="tile3" data-method="${id}">${svg('shapes')}<span>${l}</span></div>`).join('')
+  );
+  menuScroll.appendChild(addRow);
+  addRow.querySelectorAll('[data-add3d]').forEach(el => el.addEventListener('click', () => {
+    const def = [...SHAPES_3D, ...SHAPES_3D_EXTRA].find(s=>s.id===el.dataset.add3d);
+    const rec = insertShape(active.id, def.id, def.fields);
+    activeShapeId = rec.id;
+    armUndo(active.id, rec.id);
+    refreshShapeVisuals();
+    showToast(`${def.label} added`);
+    goToShape();
+  }));
+  addRow.querySelectorAll('[data-method]').forEach(el => el.addEventListener('click', () => goToDrawMethod(el.dataset.method)));
 }
 /* extra 3D primitives, kept local to this file so data.js doesn't need editing */
 const SHAPES_3D_EXTRA = [
@@ -562,6 +641,7 @@ function startDragToSize(shapeKey){
     const rec = { id: Date.now()+Math.random(), num: active.shapes.length+1, mesh, geomId:shapeKey, fields:{ size }, color: SWATCHES[0] };
     active.shapes.push(rec);
     activeShapeId = rec.id;
+    armUndo(active.id, rec.id);
     refreshShapeVisuals();
     showToast(`${shapeKey} placed at ${size}mm`);
     cleanup();
@@ -615,7 +695,7 @@ function renderShapePanel(subtool){
   menuScroll.querySelectorAll('[data-action]').forEach(b => b.addEventListener('click', () => {
     const id = b.dataset.action;
     if (id==='delete'){ deleteShape(l.id, s.id); goToLayer(); showToast('Shape deleted'); return; }
-    if (id==='select'){ showToast('Tap any shape on the plate to select it \u2014 crosshair mode coming soon'); return; }
+    if (id==='select'){ activateCrosshair(); return; }
     goToSubtool(id[0].toUpperCase()+id.slice(1));
   }));
   if (subtool) fillSubtool(subtool, l, s);
@@ -679,7 +759,7 @@ function renderToolsHome(){
     <div class="tile3" data-t="select">${svg('select')}<span>Select</span></div>
     <div class="tile3" data-t="boolean" style="${totalShapes<2?'opacity:0.4':''}">${svg('boolean')}<span>Boolean</span></div>
   </div>`;
-  menuScroll.querySelector('[data-t="select"]').addEventListener('click', () => showToast('Tap any shape on the plate to select it \u2014 crosshair mode coming soon'));
+  menuScroll.querySelector('[data-t="select"]').addEventListener('click', () => activateCrosshair());
   menuScroll.querySelector('[data-t="boolean"]').addEventListener('click', () => {
     if (!activeShape()){ showToast('Select a shape first (via Layers), then open Boolean'); return; }
     crumbs = ['Tools','Boolean']; crumbBack = () => goToTools();
