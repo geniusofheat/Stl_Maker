@@ -189,6 +189,9 @@ function buildGeometry(shapeId, fields){
   if (shapeId==='rectangle') return new THREE.BoxGeometry(fields.L, fields.H, fields.W);
   if (shapeId==='cylinder')  return new THREE.CylinderGeometry(fields.D/2, fields.D/2, fields.H, 32);
   if (shapeId==='cone')      return new THREE.ConeGeometry(fields.D/2, fields.H, 32);
+  if (shapeId==='triangle')  return new THREE.CylinderGeometry(fields.D/2, fields.D/2, fields.H, 3);
+  if (shapeId==='octagon')   return new THREE.CylinderGeometry(fields.D/2, fields.D/2, fields.H, 8);
+  if (shapeId==='oval'){ const g = new THREE.SphereGeometry(fields.D/2, 32, 24); g.scale(1,0.6,1); return g; }
   return new THREE.BoxGeometry(30,30,30);
 }
 function clampToPlate(mesh, allowFloat){
@@ -353,6 +356,9 @@ function render(view, subtool){
   else if (view==='booleanPick') renderBooleanPick();
   else if (view==='settings') renderSettings();
   else if (view==='help') renderHelp();
+  else if (view==='drawMethod') renderDrawMethod(subtool);
+  else if (view==='drawShapePick') renderDrawShapePick(subtool);
+  else if (view==='drawDivisionPick') renderDrawDivisionPick(subtool.method, subtool.shapeKey);
 }
 
 function renderLayersHome(){
@@ -410,22 +416,160 @@ function renderLayersHome(){
     addRow.className = 'tile-row';
     addRow.style.marginTop = '8px';
     addRow.innerHTML = (shapeMode==='3d'
-      ? SHAPES_3D.map(s => `<div class="tile3" data-add3d="${s.id}">${svg('shapes')}<span>${s.label}</span></div>`).join('')
-      : [['freehand','Freehand'],['shapedrag','Shape Drag'],['p2p','P2P']].map(([id,l]) => `<div class="tile3" data-add2d="${id}">${svg('shapes')}<span>${l}</span></div>`).join('')
+      ? [...SHAPES_3D, ...SHAPES_3D_EXTRA].map(s => `<div class="tile3" data-add3d="${s.id}">${svg('shapes')}<span>${s.label}</span></div>`).join('')
+      : [['freehand','Freehand'],['shapedrag','Shape Drag'],['p2p','P2P']].map(([id,l]) => `<div class="tile3" data-method="${id}">${svg('shapes')}<span>${l}</span></div>`).join('')
     );
     menuScroll.appendChild(addRow);
     addRow.querySelectorAll('[data-add3d]').forEach(el => el.addEventListener('click', () => {
-      const def = SHAPES_3D.find(s=>s.id===el.dataset.add3d);
+      const def = [...SHAPES_3D, ...SHAPES_3D_EXTRA].find(s=>s.id===el.dataset.add3d);
       const rec = insertShape(active.id, def.id, def.fields);
       activeShapeId = rec.id;
       refreshShapeVisuals();
       showToast(`${def.label} added`);
       goToShape();
     }));
-    addRow.querySelectorAll('[data-add2d]').forEach(el => el.addEventListener('click', () => {
-      showToast('2D drawing tools are coming in a future update');
-    }));
+    addRow.querySelectorAll('[data-method]').forEach(el => el.addEventListener('click', () => goToDrawMethod(el.dataset.method)));
   }
+}
+/* extra 3D primitives, kept local to this file so data.js doesn't need editing */
+const SHAPES_3D_EXTRA = [
+  { id:'triangle', label:'Triangle', fields:{ D:30, H:15 } },
+  { id:'octagon',  label:'Octagon',  fields:{ D:30, H:15 } },
+  { id:'oval',     label:'Oval',     fields:{ D:30, H:15 } },
+];
+const DRAW_METHOD_LABEL = { freehand:'Freehand', shapedrag:'Shape Drag', p2p:'P2P' };
+const DIVISIONS = {
+  circle:    [['full','Full'],['half','Half'],['quarter','Quarter']],
+  square:    [['full','Full'],['quarter','Quarter']],
+  rectangle: [['full','Full'],['eighth','Eighth']],
+  triangle:  [['full','Full'],['half','Half']],
+  octagon:   [['full','Full'],['quarter','Quarter']],
+  oval:      [['full','Full'],['half','Half']],
+};
+const LINE_TYPES = [['straight','Straight'],['arc','Arc'],['wave','Wave']];
+function goToDrawMethod(method){
+  const l = activeLayer();
+  crumbs = ['Layers', l.name, DRAW_METHOD_LABEL[method]];
+  crumbBack = () => goToLayer();
+  render('drawMethod', method);
+}
+function goToDrawShapePick(method){
+  const l = activeLayer();
+  crumbs = ['Layers', l.name, DRAW_METHOD_LABEL[method]];
+  crumbBack = () => goToDrawMethod(method);
+  render('drawShapePick', method);
+}
+function goToDrawDivisionPick(method, shapeKey){
+  const l = activeLayer();
+  crumbs = ['Layers', l.name, DRAW_METHOD_LABEL[method], shapeKey[0].toUpperCase()+shapeKey.slice(1)];
+  crumbBack = () => goToDrawShapePick(method);
+  render('drawDivisionPick', {method, shapeKey});
+}
+function renderDrawMethod(method){
+  if (method==='freehand'){
+    setH2('Drag one finger on the plate to trace a line');
+    menuScroll.innerHTML = `<div style="padding:14px 6px;color:var(--muted);font-size:11px;text-align:center;max-width:220px;">Freehand tracing isn\u2019t wired up yet \u2014 next build.</div>`;
+    return;
+  }
+  if (method==='p2p'){
+    setH2('Tap points on the plate; pick how they connect');
+    menuScroll.innerHTML = `<div class="tile-row">${LINE_TYPES.map(([id,label]) => `<div class="tile3" data-line="${id}">${svg('shapes')}<span>${label}</span></div>`).join('')}</div>
+      <div style="padding:10px 6px;color:var(--muted);font-size:10.5px;text-align:center;max-width:220px;">Point placement on the plate isn\u2019t wired up yet \u2014 next build. This picks which connector each segment will use once it is.</div>`;
+    menuScroll.querySelectorAll('[data-line]').forEach(el => el.addEventListener('click', () => {
+      showToast(`${el.dataset.line} connector selected \u2014 point placement itself is next build`);
+    }));
+    return;
+  }
+  goToDrawShapePick(method); // shapedrag
+}
+function renderDrawShapePick(method){
+  setH2('Pick a shape to divide, or use it whole');
+  menuScroll.innerHTML = `<div class="tile-row">${Object.keys(DIVISIONS).map(k => `<div class="tile3" data-dshape="${k}">${svg('shapes')}<span>${k[0].toUpperCase()+k.slice(1)}</span></div>`).join('')}</div>`;
+  menuScroll.querySelectorAll('[data-dshape]').forEach(el => el.addEventListener('click', () => goToDrawDivisionPick(method, el.dataset.dshape)));
+}
+function renderDrawDivisionPick(method, shapeKey){
+  setH2('Press and drag on the plate to size it');
+  const divs = DIVISIONS[shapeKey] || [['full','Full']];
+  menuScroll.innerHTML = `<div class="tile-row">${divs.map(([id,label]) => `<div class="tile3" data-div="${id}">${svg('shapes')}<span>${label}</span></div>`).join('')}</div>`;
+  menuScroll.querySelectorAll('[data-div]').forEach(el => el.addEventListener('click', () => {
+    if (el.dataset.div !== 'full'){
+      showToast(`${shapeKey} (${el.dataset.div}) isn\u2019t wired up yet \u2014 next build. Try Full \u2014 that one\u2019s live.`);
+      return;
+    }
+    startDragToSize(shapeKey);
+  }));
+}
+
+/* =====================================================================
+   SHAPE DRAG — real press/drag/release sizing on the plate, "Full" only
+   ===================================================================== */
+const dragGroundPlane = new THREE.Plane(new THREE.Vector3(0,1,0), 0);
+function plateHit(clientX, clientY){
+  const rect = canvas.getBoundingClientRect();
+  ndc.x = ((clientX-rect.left)/rect.width)*2-1;
+  ndc.y = -((clientY-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(ndc, camera);
+  const pt = new THREE.Vector3();
+  raycaster.ray.intersectPlane(dragGroundPlane, pt);
+  return pt;
+}
+function buildDragGeometry(shapeKey, sizeMM){
+  const H = 15;
+  if (shapeKey==='circle')    return new THREE.SphereGeometry(sizeMM/2, 32, 24);
+  if (shapeKey==='square')    return new THREE.BoxGeometry(sizeMM, sizeMM, sizeMM);
+  if (shapeKey==='rectangle') return new THREE.BoxGeometry(sizeMM, H, sizeMM*0.5);
+  if (shapeKey==='triangle')  return new THREE.CylinderGeometry(sizeMM/2, sizeMM/2, H, 3);
+  if (shapeKey==='octagon')   return new THREE.CylinderGeometry(sizeMM/2, sizeMM/2, H, 8);
+  if (shapeKey==='oval'){ const g = new THREE.SphereGeometry(sizeMM/2, 32, 24); g.scale(1,0.6,1); return g; }
+  return new THREE.BoxGeometry(sizeMM, H, sizeMM);
+}
+function startDragToSize(shapeKey){
+  setH2('Press on the plate, drag out to size, release to place');
+  menuScroll.innerHTML = `<div style="padding:14px 6px;color:var(--muted);font-size:11px;text-align:center;max-width:220px;">Dragging on the plate now sizes the ${shapeKey}\u2026</div>`;
+
+  let startPt = null, previewMesh = null;
+  function onDown(e){
+    startPt = plateHit(e.clientX, e.clientY);
+    rotationLocked = true; controls.enableRotate = false; refreshLockBtn();
+  }
+  function onMove(e){
+    if (!startPt) return;
+    const cur = plateHit(e.clientX, e.clientY);
+    const size = Math.max(2.5, startPt.distanceTo(cur));
+    if (previewMesh){ scene.remove(previewMesh); previewMesh.geometry.dispose(); }
+    previewMesh = new THREE.Mesh(buildDragGeometry(shapeKey, size), new THREE.MeshStandardMaterial({ color:0xe0c48f, transparent:true, opacity:0.55 }));
+    previewMesh.position.set((startPt.x+cur.x)/2, 0, (startPt.z+cur.z)/2);
+    clampToPlate(previewMesh, false);
+    scene.add(previewMesh);
+  }
+  function onUp(e){
+    if (!startPt){ cleanup(); return; }
+    const cur = plateHit(e.clientX, e.clientY);
+    let size = Math.max(2.5, startPt.distanceTo(cur));
+    size = Math.round(size / GRID_SQUARE) * GRID_SQUARE; // snap to nearest grid line
+    if (previewMesh){ scene.remove(previewMesh); previewMesh.geometry.dispose(); previewMesh=null; }
+    const active = activeLayer();
+    const mesh = new THREE.Mesh(buildDragGeometry(shapeKey, size), new THREE.MeshStandardMaterial({ color:SWATCHES[0], metalness:0.15, roughness:0.55 }));
+    mesh.position.set((startPt.x+cur.x)/2, 0, (startPt.z+cur.z)/2);
+    clampToPlate(mesh, false);
+    attachOutline(mesh);
+    scene.add(mesh);
+    const rec = { id: Date.now()+Math.random(), num: active.shapes.length+1, mesh, geomId:shapeKey, fields:{ size }, color: SWATCHES[0] };
+    active.shapes.push(rec);
+    activeShapeId = rec.id;
+    refreshShapeVisuals();
+    showToast(`${shapeKey} placed at ${size}mm`);
+    cleanup();
+    goToShape();
+  }
+  function cleanup(){
+    canvas.removeEventListener('pointerdown', onDown);
+    canvas.removeEventListener('pointermove', onMove);
+    canvas.removeEventListener('pointerup', onUp);
+  }
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerup', onUp);
 }
 function wireLayerDelete(){
   let armedId = null, armTimer = null;
