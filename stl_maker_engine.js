@@ -11,9 +11,14 @@ style.textContent = `
 .module-btn.active-blue{ background:#3a6fd8 !important; border-color:#3a6fd8 !important; color:#fff !important; }
 .module-btn.active-blue svg{ color:#fff !important; }
 
-#slideMenu{ width:auto !important; max-width:none !important; min-width:0 !important; }
-#slideMenu.open{ width:98px; }
-#slideMenu.open.expanded{ width:130px; }
+#slideMenu.open{ width:20%; min-width:88px; }
+#slideMenu.open.expanded{ width:38%; min-width:150px; }
+.toggle-row2{ display:flex; gap:5px; width:100%; }
+.toggle-row2 button{ flex:1; padding:8px 2px; border-radius:8px; border:1px solid var(--line); background:var(--navy-3); color:var(--ink); font-size:10.5px; font-weight:700; }
+.toggle-row2 button.toggle-active{ background:#3a6fd8; color:#fff; border-color:#3a6fd8; }
+.add-rect{ width:100%; padding:8px 2px; border-radius:8px; border:1px solid var(--line); background:var(--navy-3); color:var(--gold-light); font-size:10.5px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:5px; }
+.add-rect svg{ width:14px; height:14px; }
+.h3-stack{ display:flex; flex-direction:column; gap:6px; width:100%; }
 .menu-scroll{ align-items:center; }
 .tile3{
   display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
@@ -366,11 +371,11 @@ function renderLayersHome(){
   const active = activeLayer();
   setH2(active ? `${active.name} : ${active.shapes.length} shapes` : 'Tap Add for a layer');
 
-  const topRow = `
-    <div class="tile3 ${shapeMode==='2d'?'toggle-active':''}" data-mode="2d">${svg('twod')}<span>2D</span></div>
-    <div class="tile3 ${shapeMode==='3d'?'toggle-active':''}" data-mode="3d">${svg('threed')}<span>3D</span></div>
-    <div class="tile3" id="addLayerTile">${svg('add')}<span>Add</span></div>
-  `;
+  const toggleRow = `<div class="toggle-row2">
+    <button class="${shapeMode==='2d'?'toggle-active':''}" data-mode="2d">2D</button>
+    <button class="${shapeMode==='3d'?'toggle-active':''}" data-mode="3d">3D</button>
+  </div>`;
+  const addRect = `<button class="add-rect" id="addLayerTile">${svg('add')}Add</button>`;
 
   let layerTiles;
   if (active){
@@ -389,7 +394,7 @@ function renderLayersHome(){
       </div>`).join('');
   }
 
-  menuScroll.innerHTML = `<div class="tile-row">${topRow}${layerTiles}${shapeTiles}</div>`;
+  menuScroll.innerHTML = `<div class="h3-stack">${toggleRow}${addRect}<div class="tile-row">${layerTiles}${shapeTiles}</div></div>`;
 
   menuScroll.querySelectorAll('[data-mode]').forEach(el => el.addEventListener('click', () => { shapeMode = el.dataset.mode; renderLayersHome(); }));
   document.getElementById('addLayerTile').addEventListener('click', () => {
