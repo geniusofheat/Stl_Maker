@@ -16,16 +16,17 @@ style.textContent = `
   border-color:#3a6fd8 !important;
   color:#fff !important;
 }
-.module-btn.active-blue svg{ color:#fff !important; }
+.module-btn.active-blue svg{color:#fff !important}
 
-#slideMenu{ transition:none !important; }
-#slideMenu.open{ width:92px; min-width:92px; }
+#slideMenu{transition:none !important}
+#slideMenu.open{width:92px;min-width:92px}
 
 .toggle-row2{
   display:flex;
   gap:4px;
   width:100%;
 }
+
 .toggle-row2 button{
   flex:1;
   padding:6px 1px;
@@ -36,6 +37,7 @@ style.textContent = `
   font-size:9.5px;
   font-weight:700;
 }
+
 .toggle-row2 button.toggle-active{
   background:#3a6fd8;
   color:#fff;
@@ -56,10 +58,10 @@ style.textContent = `
   justify-content:center;
   gap:3px;
 }
+
 .add-rect svg{
   width:12px;
   height:12px;
-  flex:0 0 auto;
 }
 
 .h3-stack{
@@ -112,15 +114,24 @@ style.textContent = `
   border-color:#3a6fd8;
   color:#fff;
 }
-.tile3.toggle-active svg{ color:#fff; }
+
+.tile3.toggle-active svg{
+  color:#fff;
+}
 
 .tile3.layer-active{
   background:#fff;
   border:2px solid #3a6fd8;
   color:#111;
 }
-.tile3.layer-active svg{ color:#3a6fd8; }
-.tile3.layer-active span{ color:#111; }
+
+.tile3.layer-active svg{
+  color:#3a6fd8;
+}
+
+.tile3.layer-active span{
+  color:#111;
+}
 
 .tile-num{
   position:absolute;
@@ -153,10 +164,12 @@ style.textContent = `
   justify-content:center;
   z-index:2;
 }
+
 .tile-del svg{
   width:11px;
   height:11px;
 }
+
 .tile-del.armed{
   background:var(--danger);
   color:#fff;
@@ -166,30 +179,46 @@ style.textContent = `
 .stepper-row{
   display:flex;
   align-items:center;
-  gap:2px;
+  gap:3px;
   width:100%;
   min-width:0;
+  padding:0 3px;
+  box-sizing:border-box;
 }
 
 .stepper-row .step-lbl{
-  display:block;
-  width:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:18px;
+  min-width:18px;
+  height:28px;
   font-family:'JetBrains Mono',monospace;
   font-size:8px;
   color:var(--gold);
   flex:0 0 auto;
   text-align:center;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:var(--navy-3);
+  cursor:pointer;
+}
+
+.stepper-row .step-lbl.axis-active{
+  background:#3a6fd8;
+  border-color:#3a6fd8;
+  color:#fff;
 }
 
 .stepper-row button{
-  width:18px;
-  height:20px;
+  width:28px;
+  height:28px;
   flex:0 0 auto;
   background:var(--navy-3);
   border:1px solid var(--line);
-  border-radius:5px;
+  border-radius:6px;
   color:var(--gold-light);
-  font-size:12px;
+  font-size:15px;
   font-weight:700;
   line-height:1;
   padding:0;
@@ -204,18 +233,35 @@ style.textContent = `
   flex:1 1 0;
   min-width:0;
   width:0;
+  height:28px;
+  box-sizing:border-box;
   background:#fff;
   color:#111;
   border:1px solid var(--line);
-  border-radius:5px;
+  border-radius:6px;
   font-family:'JetBrains Mono',monospace;
-  font-size:8px;
-  padding:3px 0;
+  font-size:9px;
+  padding:3px 1px;
+  text-align:center;
+}
+
+.stepper-row .value-button{
+  flex:1 1 0;
+  min-width:0;
+  height:28px;
+  background:#fff;
+  color:#111;
+  border:1px solid var(--line);
+  border-radius:6px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;
+  padding:0 2px;
   text-align:center;
 }
 
 .stepper-row.all-axes .step-lbl{
-  width:18px;
+  width:28px;
+  min-width:28px;
   font-size:7px;
   text-transform:uppercase;
 }
@@ -223,9 +269,10 @@ style.textContent = `
 .stepper-stack{
   display:flex;
   flex-direction:column;
-  gap:4px;
+  gap:5px;
   width:100%;
-  padding:0 1px;
+  padding:0;
+  box-sizing:border-box;
 }
 
 .action-col{
@@ -261,8 +308,17 @@ style.textContent = `
 }
 
 .action-col button.active{
-  border-color:var(--gold);
-  background:var(--navy-4);
+  border-color:#3a6fd8;
+  background:#3a6fd8;
+  color:#fff;
+}
+
+.action-col button.active svg{
+  color:#fff;
+}
+
+.action-col button:disabled{
+  opacity:.35;
 }
 
 .tile-row{
@@ -288,7 +344,7 @@ style.textContent = `
   top:10px;
   z-index:6;
   height:36px;
-  background:rgba(32,33,58,0.9);
+  background:rgba(32,33,58,.9);
   border:1px solid var(--line);
   border-radius:9px;
   color:var(--gold-light);
@@ -342,45 +398,57 @@ style.textContent = `
   color:var(--muted);
 }
 
-#mmBtn .seg{ opacity:0.4; }
-#mmBtn .seg.on{ opacity:1; color:#fff; }
-#mmBtn .sep{ opacity:0.3; }
+#mmBtn .seg{
+  opacity:.4;
+}
+
+#mmBtn .seg.on{
+  opacity:1;
+  color:#fff;
+}
+
+#mmBtn .sep{
+  opacity:.3;
+}
 
 #crosshairCursor{
   position:absolute;
   display:none;
   align-items:center;
   justify-content:center;
-  width:40px;
-  height:40px;
+  width:34px;
+  height:34px;
   pointer-events:none;
   z-index:7;
+  color:#3a6fd8;
+  font-size:30px;
+  line-height:1;
+  text-shadow:0 1px 2px #000;
 }
 
-#crosshairCursor::before,
-#crosshairCursor::after{
-  content:'';
+#moveCursor{
   position:absolute;
-  background:#3a6fd8;
+  display:none;
+  width:34px;
+  height:34px;
+  pointer-events:none;
+  z-index:20;
+  color:#3a6fd8;
+  font-size:30px;
+  line-height:30px;
+  text-shadow:0 1px 2px #000;
 }
 
-#crosshairCursor::before{
-  width:100%;
-  height:2px;
-  top:19px;
-}
-
-#crosshairCursor::after{
-  width:2px;
-  height:100%;
-  left:19px;
+#moveCursor span{
+  display:block;
+  transform:rotate(-8deg);
 }
 
 #confirmOverlay{
   position:absolute;
   inset:0;
   z-index:50;
-  background:rgba(0,0,0,0.55);
+  background:rgba(0,0,0,.55);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -448,17 +516,19 @@ function svg(name){
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]||''}</svg>`;
 }
 
-Object.assign(ICONS, {
-  lock:   '<rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>',
-  unlock: '<rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V7a4 4 0 0 1 7.5-2"/>',
-  twod:   '<rect x="4" y="4" width="16" height="16" rx="2"/>',
-  threed: '<path d="M12 2 3 7.5 12 12l9-4.5L12 2Z"/><path d="M3 7.5v9L12 21l9-4.5v-9"/>',
-  pencil: '<path d="m14 4 6 6-11 11H3v-6L14 4Z"/><path d="m13.5 5.5 5 5"/>'
+Object.assign(ICONS,{
+  lock:'<rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>',
+  unlock:'<rect x="5" y="10.5" width="14" height="9.5" rx="1.5"/><path d="M8 10.5V7a4 4 0 0 1 7.5-2"/>',
+  twod:'<rect x="4" y="4" width="16" height="16" rx="2"/>',
+  threed:'<path d="M12 2 3 7.5 12 12l9-4.5L12 2Z"/><path d="M3 7.5v9L12 21l9-4.5v-9"/>',
+  pencil:'<path d="m14 4 6 6-11 11H3v-6L14 4Z"/><path d="m13.5 5.5 5 5"/>',
+  rotate:'<path d="M20 11a8 8 0 0 0-14.9-4L3 9"/><path d="M3 4v5h5"/><path d="M4 13a8 8 0 0 0 14.9 4L21 15"/><path d="M21 20v-5h-5"/>',
+  move:'<path d="M12 2v20M2 12h20"/><path d="m8 6 4-4 4 4M8 18l4 4 4-4M6 8l-4 4 4 4M18 8l4 4-4 4"/>'
 });
 
 
 /* ─────────────────────────────────────────────────────────────
-   THREE.JS SCENE
+   THREE.JS
 ───────────────────────────────────────────────────────────── */
 
 const canvas = document.getElementById('viewport3d');
@@ -468,393 +538,613 @@ const renderer = new THREE.WebGLRenderer({
   antialias:true
 });
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x1a1a2e, 1);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.setClearColor(0x1a1a2e,1);
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 5000);
+const camera = new THREE.PerspectiveCamera(
+  45,
+  1,
+  .1,
+  5000
+);
 
-const DEFAULT_CAM = new THREE.Vector3(90, 70, 110);
+const DEFAULT_CAM =
+  new THREE.Vector3(90,70,110);
+
 camera.position.copy(DEFAULT_CAM);
 
-scene.add(new THREE.HemisphereLight(0xfff4e0, 0x14141f, 1.1));
+scene.add(
+  new THREE.HemisphereLight(
+    0xfff4e0,
+    0x14141f,
+    1.1
+  )
+);
 
-const key = new THREE.DirectionalLight(0xffffff, 1.4);
+const key =
+  new THREE.DirectionalLight(
+    0xffffff,
+    1.4
+  );
+
 key.position.set(60,90,40);
 scene.add(key);
 
-const fillL = new THREE.DirectionalLight(0xc8a96e, 0.35);
+const fillL =
+  new THREE.DirectionalLight(
+    0xc8a96e,
+    .35
+  );
+
 fillL.position.set(-60,30,-40);
 scene.add(fillL);
 
 
 const PLATE_SIZE = 100;
-const GRID_SQUARE = 2.5;
+const GRID_SQUARE = 5;
 const half = PLATE_SIZE / 2;
 
 let shapeMode = '2d';
 
 
-/* Grid */
+/* GRID — X/Y PLANE */
 
-const grid = new THREE.GridHelper(
-  PLATE_SIZE,
-  PLATE_SIZE / GRID_SQUARE,
-  0xc8a96e,
-  0x34355a
-);
+const grid =
+  new THREE.GridHelper(
+    PLATE_SIZE,
+    PLATE_SIZE / GRID_SQUARE,
+    0xc8a96e,
+    0x34355a
+  );
 
 grid.material.transparent = true;
-grid.material.opacity = 0.4;
+grid.material.opacity = .4;
+
+grid.rotation.x = Math.PI / 2;
 
 scene.add(grid);
 
 
-/* Plate border */
+/* PLATE BORDER */
 
-const borderGeometry = new THREE.BufferGeometry().setFromPoints([
-  new THREE.Vector3(-half,0,-half),
-  new THREE.Vector3( half,0,-half),
-  new THREE.Vector3( half,0, half),
-  new THREE.Vector3(-half,0, half)
-]);
+const borderGeometry =
+  new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(-half,-half,0),
+    new THREE.Vector3(half,-half,0),
+    new THREE.Vector3(half,half,0),
+    new THREE.Vector3(-half,half,0)
+  ]);
 
-const plateBorder = new THREE.LineLoop(
-  borderGeometry,
-  new THREE.LineBasicMaterial({ color:0xe0c48f })
-);
+const plateBorder =
+  new THREE.LineLoop(
+    borderGeometry,
+    new THREE.LineBasicMaterial({
+      color:0xe0c48f
+    })
+  );
 
 scene.add(plateBorder);
 
 
-/* Axis labels */
+/* AXES */
 
-function makeLabelSprite(text, color, fontSize = 22){
-  const cvs = document.createElement('canvas');
+function makeLabelSprite(
+  text,
+  color,
+  fontSize=26
+){
+
+  const cvs =
+    document.createElement('canvas');
+
   cvs.width = 64;
   cvs.height = 32;
 
-  const ctx = cvs.getContext('2d');
+  const ctx =
+    cvs.getContext('2d');
 
-  ctx.fillStyle = color || '#e0c48f';
-  ctx.font = `bold ${fontSize}px monospace`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  ctx.fillStyle =
+    color || '#e0c48f';
 
-  ctx.fillText(text, 32, 16);
+  ctx.font =
+    `bold ${fontSize}px monospace`;
 
-  const spr = new THREE.Sprite(
-    new THREE.SpriteMaterial({
-      map:new THREE.CanvasTexture(cvs),
-      depthTest:false
-    })
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+
+  ctx.fillText(
+    text,
+    32,
+    16
   );
+
+  const spr =
+    new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map:new THREE.CanvasTexture(cvs),
+        depthTest:false
+      })
+    );
 
   spr.scale.set(6,3,1);
 
   return spr;
 }
 
-const axisOrigin = new THREE.Vector3(-half-4, 0.1, -half-4);
 
-const xArrow = new THREE.ArrowHelper(
-  new THREE.Vector3(1,0,0),
-  axisOrigin,
-  18,
-  0xd9534f,
-  4,
-  3
-);
+const axisOrigin =
+  new THREE.Vector3(
+    -half-4,
+    -half-4,
+    .1
+  );
 
-const zArrow = new THREE.ArrowHelper(
-  new THREE.Vector3(0,0,1),
-  axisOrigin,
-  18,
-  0x4a90d9,
-  4,
-  3
-);
 
-const yArrow = new THREE.ArrowHelper(
-  new THREE.Vector3(0,1,0),
-  axisOrigin,
-  18,
-  0x5cb85c,
-  4,
-  3
-);
+const xArrow =
+  new THREE.ArrowHelper(
+    new THREE.Vector3(1,0,0),
+    axisOrigin,
+    18,
+    0xd9534f,
+    4,
+    3
+  );
+
+const yArrow =
+  new THREE.ArrowHelper(
+    new THREE.Vector3(0,1,0),
+    axisOrigin,
+    18,
+    0x5cb85c,
+    4,
+    3
+  );
+
+const zArrow =
+  new THREE.ArrowHelper(
+    new THREE.Vector3(0,0,1),
+    axisOrigin,
+    18,
+    0x4a90d9,
+    4,
+    3
+  );
 
 scene.add(xArrow);
-scene.add(zArrow);
 scene.add(yArrow);
+scene.add(zArrow);
 
-const xLabel = makeLabelSprite('X', '#d9534f', 26);
-const zLabel = makeLabelSprite('Z', '#4a90d9', 26);
-const yLabel = makeLabelSprite('Y', '#5cb85c', 26);
 
-xLabel.position.set(axisOrigin.x+10, axisOrigin.y, axisOrigin.z);
-zLabel.position.set(axisOrigin.x, axisOrigin.y, axisOrigin.z+10);
-yLabel.position.set(axisOrigin.x, axisOrigin.y+10, axisOrigin.z);
+const xLabel =
+  makeLabelSprite(
+    'X',
+    '#d9534f',
+    26
+  );
+
+const yLabel =
+  makeLabelSprite(
+    'Y',
+    '#5cb85c',
+    26
+  );
+
+const zLabel =
+  makeLabelSprite(
+    'Z',
+    '#4a90d9',
+    26
+  );
 
 scene.add(xLabel);
-scene.add(zLabel);
 scene.add(yLabel);
+scene.add(zLabel);
 
 
-/* ─────────────────────────────────────────────────────────────
-   MM LABELS
-───────────────────────────────────────────────────────────── */
+/* MM LABELS */
 
 let mmLabelGroup = null;
 
 function buildMmLabels(step){
-  if (mmLabelGroup) scene.remove(mmLabelGroup);
 
-  mmLabelGroup = new THREE.Group();
+  if (mmLabelGroup)
+    scene.remove(mmLabelGroup);
 
-  for (let v=0; v<=PLATE_SIZE; v+=step){
+  mmLabelGroup =
+    new THREE.Group();
 
-    if (shapeMode === '2d'){
-      const sx = makeLabelSprite(String(v));
-      sx.position.set(-half+v, -half-5, 0.2);
-      mmLabelGroup.add(sx);
+  for (
+    let v=0;
+    v<=PLATE_SIZE;
+    v+=step
+  ){
 
-      const sy = makeLabelSprite(String(v));
-      sy.position.set(-half-5, -half+v, 0.2);
-      mmLabelGroup.add(sy);
-    } else {
-      const sx = makeLabelSprite(String(v));
-      sx.position.set(-half+v, 0.2, half+5);
-      mmLabelGroup.add(sx);
+    const sx =
+      makeLabelSprite(String(v));
 
-      const sz = makeLabelSprite(String(v));
-      sz.position.set(-half-5, 0.2, -half+v);
-      mmLabelGroup.add(sz);
-    }
+    sx.position.set(
+      -half+v,
+      -half-5,
+      .2
+    );
+
+    mmLabelGroup.add(sx);
+
+
+    const sy =
+      makeLabelSprite(String(v));
+
+    sy.position.set(
+      -half-5,
+      -half+v,
+      .2
+    );
+
+    mmLabelGroup.add(sy);
   }
 
-  mmLabelGroup.visible = false;
+  mmLabelGroup.visible=false;
+
   scene.add(mmLabelGroup);
 }
 
 buildMmLabels(5);
 
-let mmState = 'off';
+let mmState='off';
 
-const mmBtn = document.createElement('button');
-mmBtn.id = 'mmBtn';
+const mmBtn =
+  document.createElement('button');
 
-document.getElementById('plate').appendChild(mmBtn);
+mmBtn.id='mmBtn';
+
+document
+  .getElementById('plate')
+  .appendChild(mmBtn);
+
 
 function refreshMmBtn(){
+
   mmBtn.innerHTML =
-    `<span class="seg ${mmState==='5'?'on':''}">5</span>` +
-    `<span class="sep">|</span>` +
+    `<span class="seg ${mmState==='5'?'on':''}">5</span>`+
+    `<span class="sep">|</span>`+
     `<span class="seg ${mmState==='2.5'?'on':''}">2.5</span>`;
 }
 
-mmBtn.addEventListener('click', () => {
 
-  mmState =
-    mmState==='off'
-      ? '5'
-      : mmState==='5'
-        ? '2.5'
-        : 'off';
+mmBtn.addEventListener(
+  'click',
+  () => {
 
-  if (mmState==='off'){
-    mmLabelGroup.visible = false;
-  } else {
-    buildMmLabels(mmState==='5' ? 5 : 2.5);
-    mmLabelGroup.visible = true;
+    mmState =
+      mmState==='off'
+        ? '5'
+        : mmState==='5'
+          ? '2.5'
+          : 'off';
+
+    if(mmState==='off'){
+
+      mmLabelGroup.visible=false;
+
+    }else{
+
+      buildMmLabels(
+        mmState==='5'
+          ? 5
+          : 2.5
+      );
+
+      mmLabelGroup.visible=true;
+    }
+
+    refreshMmBtn();
   }
-
-  refreshMmBtn();
-});
+);
 
 refreshMmBtn();
 
 
-/* ─────────────────────────────────────────────────────────────
-   2D / 3D MODE
-───────────────────────────────────────────────────────────── */
+/* MODE */
 
-const modeToggle = document.createElement('div');
+const modeToggle =
+  document.createElement('div');
 
-modeToggle.id = 'modeToggle';
+modeToggle.id='modeToggle';
 
 modeToggle.innerHTML =
-  `<button data-m="2d">2D</button>` +
+  `<button data-m="2d">2D</button>`+
   `<button data-m="3d">3D</button>`;
 
-document.getElementById('plate').appendChild(modeToggle);
+document
+  .getElementById('plate')
+  .appendChild(modeToggle);
 
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls =
+  new OrbitControls(
+    camera,
+    renderer.domElement
+  );
 
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
+controls.enableDamping=true;
+controls.dampingFactor=.08;
 
-controls.target.set(0,10,0);
+controls.target.set(0,0,0);
+
 controls.update();
 
-let rotationLocked = true;
+let rotationLocked=true;
 
-controls.enableRotate = false;
+controls.enableRotate=false;
 
 
-/* Mode-dependent drawing plane */
+/* WORKING PLANE */
 
-const dragGroundPlane = new THREE.Plane(
-  new THREE.Vector3(0,1,0),
-  0
-);
+const dragGroundPlane =
+  new THREE.Plane(
+    new THREE.Vector3(0,0,1),
+    0
+  );
 
 
 function refreshModeScene(){
 
-  if (shapeMode === '2d'){
+  if(shapeMode==='2d'){
 
-    /*
-      2D = X/Y plane.
-      Z is removed from the working plane.
-    */
+    grid.rotation.set(
+      Math.PI/2,
+      0,
+      0
+    );
 
-    grid.rotation.set(Math.PI/2,0,0);
-    grid.position.set(0,0,0);
+    grid.position.set(
+      0,
+      0,
+      0
+    );
 
-    plateBorder.rotation.set(Math.PI/2,0,0);
-    plateBorder.position.set(0,0,0.06);
+    plateBorder.rotation.set(
+      0,
+      0,
+      0
+    );
 
-    xArrow.position.set(-half-4,-half-4,0.1);
-    xArrow.setDirection(new THREE.Vector3(1,0,0));
+    plateBorder.position.set(
+      0,
+      0,
+      .06
+    );
 
-    yArrow.position.set(-half-4,-half-4,0.1);
-    yArrow.setDirection(new THREE.Vector3(0,1,0));
+    xArrow.position.set(
+      -half-4,
+      -half-4,
+      .1
+    );
 
-    zArrow.visible = false;
-    zLabel.visible = false;
+    xArrow.setDirection(
+      new THREE.Vector3(1,0,0)
+    );
 
-    xLabel.position.set(-half-4+10,-half-4,0.1);
-    yLabel.position.set(-half-4,-half-4+10,0.1);
+    yArrow.position.set(
+      -half-4,
+      -half-4,
+      .1
+    );
 
-    xLabel.visible = true;
-    yLabel.visible = true;
+    yArrow.setDirection(
+      new THREE.Vector3(0,1,0)
+    );
 
-    camera.position.set(0,0,140);
-    camera.up.set(0,1,0);
+    zArrow.visible=false;
+    zLabel.visible=false;
 
-    controls.target.set(0,0,0);
-    controls.enableRotate = false;
+    xLabel.position.set(
+      -half-4+10,
+      -half-4,
+      .1
+    );
+
+    yLabel.position.set(
+      -half-4,
+      -half-4+10,
+      .1
+    );
+
+    xLabel.visible=true;
+    yLabel.visible=true;
+
+    camera.position.set(
+      0,
+      0,
+      140
+    );
+
+    camera.up.set(
+      0,
+      1,
+      0
+    );
+
+    controls.target.set(
+      0,
+      0,
+      0
+    );
+
+    controls.enableRotate=false;
 
     dragGroundPlane.set(
       new THREE.Vector3(0,0,1),
       0
     );
 
-  } else {
+  }else{
 
-    /*
-      3D = X/Y/Z.
-      The modeling plate remains X/Z with Y as height.
-    */
+    grid.rotation.set(
+      Math.PI/2,
+      0,
+      0
+    );
 
-    grid.rotation.set(0,0,0);
-    grid.position.set(0,0,0);
+    grid.position.set(
+      0,
+      0,
+      0
+    );
 
-    plateBorder.rotation.set(0,0,0);
-    plateBorder.position.set(0,0.06,0);
+    plateBorder.rotation.set(
+      0,
+      0,
+      0
+    );
+
+    plateBorder.position.set(
+      0,
+      0,
+      .06
+    );
 
     xArrow.position.copy(axisOrigin);
-    xArrow.setDirection(new THREE.Vector3(1,0,0));
-
-    zArrow.position.copy(axisOrigin);
-    zArrow.setDirection(new THREE.Vector3(0,0,1));
-    zArrow.visible = true;
-
     yArrow.position.copy(axisOrigin);
-    yArrow.setDirection(new THREE.Vector3(0,1,0));
+    zArrow.position.copy(axisOrigin);
 
-    xLabel.position.set(axisOrigin.x+10,axisOrigin.y,axisOrigin.z);
-    zLabel.position.set(axisOrigin.x,axisOrigin.y,axisOrigin.z+10);
-    yLabel.position.set(axisOrigin.x,axisOrigin.y+10,axisOrigin.z);
+    xArrow.setDirection(
+      new THREE.Vector3(1,0,0)
+    );
 
-    xLabel.visible = true;
-    yLabel.visible = true;
-    zLabel.visible = true;
+    yArrow.setDirection(
+      new THREE.Vector3(0,1,0)
+    );
 
-    camera.position.copy(DEFAULT_CAM);
+    zArrow.setDirection(
+      new THREE.Vector3(0,0,1)
+    );
 
-    controls.target.set(0,10,0);
-    controls.enableRotate = !rotationLocked;
+    xLabel.position.set(
+      axisOrigin.x+10,
+      axisOrigin.y,
+      axisOrigin.z
+    );
+
+    yLabel.position.set(
+      axisOrigin.x,
+      axisOrigin.y+10,
+      axisOrigin.z
+    );
+
+    zLabel.position.set(
+      axisOrigin.x,
+      axisOrigin.y,
+      axisOrigin.z+10
+    );
+
+    xLabel.visible=true;
+    yLabel.visible=true;
+    zLabel.visible=true;
+
+    camera.position.copy(
+      DEFAULT_CAM
+    );
+
+    controls.target.set(
+      0,
+      0,
+      10
+    );
+
+    controls.enableRotate =
+      !rotationLocked;
 
     dragGroundPlane.set(
-      new THREE.Vector3(0,1,0),
+      new THREE.Vector3(0,0,1),
       0
     );
   }
 
   controls.update();
 
-  if (mmState !== 'off'){
-    buildMmLabels(mmState==='5' ? 5 : 2.5);
-    mmLabelGroup.visible = true;
+  if(mmState!=='off'){
+
+    buildMmLabels(
+      mmState==='5'
+        ? 5
+        : 2.5
+    );
+
+    mmLabelGroup.visible=true;
   }
 }
 
 
 function refreshModeToggle(){
 
-  modeToggle.querySelectorAll('button').forEach(b => {
-    b.classList.toggle(
-      'toggle-active',
-      b.dataset.m === shapeMode
-    );
-  });
+  modeToggle
+    .querySelectorAll('button')
+    .forEach(b => {
+
+      b.classList.toggle(
+        'toggle-active',
+        b.dataset.m===shapeMode
+      );
+    });
 }
 
 
 function setShapeMode(mode){
 
-  shapeMode = mode;
+  shapeMode=mode;
 
   refreshModeScene();
   refreshModeToggle();
 
-  /*
-    Re-render only the currently visible H3 content.
-    Tools and Layers use the same tool set in either mode.
-  */
-
-  if (activeModule === 'tools'){
+  if(activeModule==='tools'){
     renderDrawingToolsHome();
-  } else if (activeModule === 'layers'){
-    const s = activeShape();
-    if (s) goToShape();
-    else goToLayersHome();
+
+  }else if(activeModule==='layers'){
+
+    const s=activeShape();
+
+    if(s)
+      goToShape();
+    else
+      goToLayersHome();
   }
 }
 
 
-modeToggle.querySelectorAll('button').forEach(b => {
-  b.addEventListener('click', () => {
-    setShapeMode(b.dataset.m);
+modeToggle
+  .querySelectorAll('button')
+  .forEach(b => {
+
+    b.addEventListener(
+      'click',
+      () => setShapeMode(
+        b.dataset.m
+      )
+    );
   });
-});
 
 
-const lockBtn = document.createElement('button');
+const lockBtn =
+  document.createElement('button');
 
-lockBtn.id = 'lockBtn';
+lockBtn.id='lockBtn';
 
-document.getElementById('plate').appendChild(lockBtn);
+document
+  .getElementById('plate')
+  .appendChild(lockBtn);
 
 
 function refreshLockBtn(){
-  lockBtn.innerHTML = svg(
-    rotationLocked ? 'lock' : 'unlock'
-  );
+
+  lockBtn.innerHTML =
+    svg(
+      rotationLocked
+        ? 'lock'
+        : 'unlock'
+    );
 
   lockBtn.classList.toggle(
     'unlocked',
@@ -863,16 +1153,20 @@ function refreshLockBtn(){
 }
 
 
-lockBtn.addEventListener('click', () => {
+lockBtn.addEventListener(
+  'click',
+  () => {
 
-  rotationLocked = !rotationLocked;
+    rotationLocked=
+      !rotationLocked;
 
-  controls.enableRotate =
-    shapeMode === '3d' && !rotationLocked;
+    controls.enableRotate =
+      shapeMode==='3d' &&
+      !rotationLocked;
 
-  refreshLockBtn();
-});
-
+    refreshLockBtn();
+  }
+);
 
 refreshLockBtn();
 
@@ -880,7 +1174,9 @@ refreshLockBtn();
 function fitCanvas(){
 
   const rect =
-    document.getElementById('plate').getBoundingClientRect();
+    document
+      .getElementById('plate')
+      .getBoundingClientRect();
 
   renderer.setSize(
     rect.width,
@@ -888,60 +1184,84 @@ function fitCanvas(){
     false
   );
 
-  camera.aspect = rect.width / rect.height;
+  camera.aspect =
+    rect.width /
+    rect.height;
 
   camera.updateProjectionMatrix();
 }
 
 
-new ResizeObserver(fitCanvas)
-  .observe(document.getElementById('plate'));
+new ResizeObserver(
+  fitCanvas
+).observe(
+  document.getElementById('plate')
+);
 
-setTimeout(fitCanvas,30);
+setTimeout(
+  fitCanvas,
+  30
+);
 
 
 (function animate(){
-  requestAnimationFrame(animate);
+
+  requestAnimationFrame(
+    animate
+  );
+
   controls.update();
-  renderer.render(scene,camera);
+
+  renderer.render(
+    scene,
+    camera
+  );
+
 })();
 
 
 /* ─────────────────────────────────────────────────────────────
-   DATA MODEL
+   DATA
 ───────────────────────────────────────────────────────────── */
 
-const layers = [];
+const layers=[];
 
-let nextLayerId = 1;
-let activeLayerId = null;
-let activeShapeId = null;
+let nextLayerId=1;
+let activeLayerId=null;
+let activeShapeId=null;
 
-const GRAY = 0x777788;
+const GRAY=0x777788;
 
 
 function findLayer(id){
-  return layers.find(l => l.id === id);
+  return layers.find(
+    l => l.id===id
+  );
 }
 
 
 function activeLayer(){
-  return findLayer(activeLayerId);
+  return findLayer(
+    activeLayerId
+  );
 }
 
 
 function activeShape(){
-  const l = activeLayer();
+
+  const l=activeLayer();
 
   return l
-    ? l.shapes.find(s => s.id === activeShapeId)
+    ? l.shapes.find(
+        s => s.id===activeShapeId
+      )
     : null;
 }
 
 
 function createLayer(){
 
-  const l = {
+  const l={
     id:nextLayerId++,
     name:`Layer ${layers.length+1}`,
     shapes:[]
@@ -955,25 +1275,39 @@ function createLayer(){
 
 function refreshShapeVisuals(){
 
-  layers.forEach(l => {
+  layers.forEach(
+    l => {
 
-    l.shapes.forEach(s => {
+      l.shapes.forEach(
+        s => {
 
-      const active =
-        l.id === activeLayerId &&
-        s.id === activeShapeId;
+          const active =
+            l.id===activeLayerId &&
+            s.id===activeShapeId;
 
-      if (s.mesh.material && s.mesh.material.color){
-        s.mesh.material.color.set(
-          active ? s.color : GRAY
-        );
-      }
+          if(
+            s.mesh.material &&
+            s.mesh.material.color
+          ){
 
-      if (s.mesh.userData.outline){
-        s.mesh.userData.outline.visible = !active;
-      }
-    });
-  });
+            s.mesh.material.color.set(
+              active
+                ? s.color
+                : GRAY
+            );
+          }
+
+          if(
+            s.mesh.userData.outline
+          ){
+
+            s.mesh.userData.outline.visible =
+              !active;
+          }
+        }
+      );
+    }
+  );
 }
 
 
@@ -981,265 +1315,346 @@ function refreshShapeVisuals(){
    GEOMETRY
 ───────────────────────────────────────────────────────────── */
 
-function polygonGeometry(sides, radius){
+function polygonGeometry(
+  sides,
+  radius
+){
 
-  const shape = new THREE.Shape();
+  const shape =
+    new THREE.Shape();
 
-  for (let i=0; i<sides; i++){
+  for(
+    let i=0;
+    i<sides;
+    i++
+  ){
 
     const a =
-      Math.PI / 2 +
-      (i / sides) * Math.PI * 2;
+      Math.PI/2 +
+      i/sides *
+      Math.PI*2;
 
-    const x = Math.cos(a) * radius;
-    const y = Math.sin(a) * radius;
+    const x =
+      Math.cos(a)*radius;
 
-    if (i===0){
+    const y =
+      Math.sin(a)*radius;
+
+    if(i===0)
       shape.moveTo(x,y);
-    } else {
+    else
       shape.lineTo(x,y);
-    }
   }
 
   shape.closePath();
 
-  return new THREE.ShapeGeometry(shape);
+  return new THREE.ShapeGeometry(
+    shape
+  );
 }
 
 
-function buildGeometry(shapeId, fields){
+function rotateGeometryToZ(
+  geometry
+){
 
-  if (shapeMode === '2d'){
+  geometry.rotateX(
+    Math.PI/2
+  );
 
-    if (shapeId === 'circle'){
+  return geometry;
+}
+
+
+function buildGeometry(
+  shapeId,
+  fields
+){
+
+  if(shapeMode==='2d'){
+
+    if(shapeId==='circle')
       return new THREE.CircleGeometry(
-        fields.D / 2,
+        fields.D/2,
         64
       );
-    }
 
-    if (shapeId === 'square'){
+    if(shapeId==='square')
       return new THREE.PlaneGeometry(
         fields.W,
         fields.W
       );
-    }
 
-    if (shapeId === 'rectangle'){
+    if(shapeId==='rectangle')
       return new THREE.PlaneGeometry(
-        fields.L,
-        fields.H
+        fields.W,
+        fields.L
       );
-    }
 
-    if (shapeId === 'triangle'){
+    if(shapeId==='triangle')
       return polygonGeometry(
         3,
-        fields.D / 2
+        fields.D/2
       );
-    }
 
-    if (shapeId === 'octagon'){
+    if(shapeId==='octagon')
       return polygonGeometry(
         8,
-        fields.D / 2
-      );
-    }
-
-    if (shapeId === 'oval'){
-      const g = new THREE.CircleGeometry(
-        fields.D / 2,
-        64
+        fields.D/2
       );
 
-      g.scale(1,0.6,1);
+    if(shapeId==='oval'){
+
+      const g=
+        new THREE.CircleGeometry(
+          fields.D/2,
+          64
+        );
+
+      g.scale(
+        1,
+        .6,
+        1
+      );
 
       return g;
     }
 
-    return new THREE.PlaneGeometry(30,30);
+    return new THREE.PlaneGeometry(
+      30,
+      30
+    );
   }
 
 
-  if (shapeId === 'circle')
+  if(shapeId==='circle')
     return new THREE.SphereGeometry(
       fields.D/2,
       32,
       24
     );
 
-  if (shapeId === 'square')
+  if(shapeId==='square')
     return new THREE.BoxGeometry(
       fields.W,
       fields.W,
-      fields.W
+      fields.H ?? fields.W
     );
 
-  if (shapeId === 'rectangle')
+  if(shapeId==='rectangle')
     return new THREE.BoxGeometry(
+      fields.W,
       fields.L,
-      fields.H,
-      fields.W
+      fields.H
     );
 
-  if (shapeId === 'cylinder')
-    return new THREE.CylinderGeometry(
-      fields.D/2,
-      fields.D/2,
-      fields.H,
-      32
+  if(shapeId==='cylinder')
+    return rotateGeometryToZ(
+      new THREE.CylinderGeometry(
+        fields.D/2,
+        fields.D/2,
+        fields.H,
+        32
+      )
     );
 
-  if (shapeId === 'cone')
-    return new THREE.ConeGeometry(
-      fields.D/2,
-      fields.H,
-      32
+  if(shapeId==='cone')
+    return rotateGeometryToZ(
+      new THREE.ConeGeometry(
+        fields.D/2,
+        fields.H,
+        32
+      )
     );
 
-  if (shapeId === 'triangle')
-    return new THREE.CylinderGeometry(
-      fields.D/2,
-      fields.D/2,
-      fields.H,
-      3
+  if(shapeId==='triangle')
+    return rotateGeometryToZ(
+      new THREE.CylinderGeometry(
+        fields.D/2,
+        fields.D/2,
+        fields.H,
+        3
+      )
     );
 
-  if (shapeId === 'octagon')
-    return new THREE.CylinderGeometry(
-      fields.D/2,
-      fields.D/2,
-      fields.H,
-      8
+  if(shapeId==='octagon')
+    return rotateGeometryToZ(
+      new THREE.CylinderGeometry(
+        fields.D/2,
+        fields.D/2,
+        fields.H,
+        8
+      )
     );
 
-  if (shapeId === 'oval'){
-    const g = new THREE.SphereGeometry(
-      fields.D/2,
-      32,
-      24
-    );
+  if(shapeId==='oval'){
 
-    g.scale(1,0.6,1);
+    const g=
+      new THREE.SphereGeometry(
+        fields.D/2,
+        32,
+        24
+      );
+
+    g.scale(
+      1,
+      .6,
+      1
+    );
 
     return g;
   }
 
-  return new THREE.BoxGeometry(30,30,30);
+  return new THREE.BoxGeometry(
+    30,
+    30,
+    30
+  );
 }
 
 
-function clampToPlate(mesh, allowFloat){
+function geometryDimensions(mesh){
 
-  const geo = mesh.geometry;
+  if(!mesh.geometry.boundingBox)
+    mesh.geometry.computeBoundingBox();
 
-  if (!geo.boundingBox){
-    geo.computeBoundingBox();
-  }
+  const bb=
+    mesh.geometry.boundingBox;
 
-  const bb = geo.boundingBox;
+  return {
+    x:
+      Math.abs(
+        bb.max.x-bb.min.x
+      ) * Math.abs(mesh.scale.x),
 
-  const rx =
+    y:
+      Math.abs(
+        bb.max.y-bb.min.y
+      ) * Math.abs(mesh.scale.y),
+
+    z:
+      Math.abs(
+        bb.max.z-bb.min.z
+      ) * Math.abs(mesh.scale.z)
+  };
+}
+
+
+function storeDimensions(
+  mesh
+){
+
+  return geometryDimensions(
+    mesh
+  );
+}
+
+
+function clampToPlate(
+  mesh,
+  allowFloat
+){
+
+  if(!mesh.geometry.boundingBox)
+    mesh.geometry.computeBoundingBox();
+
+  const bb=
+    mesh.geometry.boundingBox;
+
+  const rx=
     (bb.max.x-bb.min.x) *
     Math.abs(mesh.scale.x);
 
-  const ry =
+  const ry=
     (bb.max.y-bb.min.y) *
     Math.abs(mesh.scale.y);
 
-  const rz =
+  const rz=
     (bb.max.z-bb.min.z) *
     Math.abs(mesh.scale.z);
 
 
-  if (rx > PLATE_SIZE){
-    mesh.scale.x *= PLATE_SIZE / rx;
-  }
+  if(rx>PLATE_SIZE)
+    mesh.scale.x *=
+      PLATE_SIZE/rx;
 
-  if (shapeMode === '2d'){
+  if(ry>PLATE_SIZE)
+    mesh.scale.y *=
+      PLATE_SIZE/ry;
 
-    if (ry > PLATE_SIZE){
-      mesh.scale.y *= PLATE_SIZE / ry;
-    }
-
-    mesh.position.z = 0;
-
-    const hx =
-      (bb.max.x-bb.min.x) *
-      Math.abs(mesh.scale.x) / 2;
-
-    const hy =
-      (bb.max.y-bb.min.y) *
-      Math.abs(mesh.scale.y) / 2;
-
-    mesh.position.x =
-      THREE.MathUtils.clamp(
-        mesh.position.x,
-        -half+hx,
-        half-hx
-      );
-
-    mesh.position.y =
-      THREE.MathUtils.clamp(
-        mesh.position.y,
-        -half+hy,
-        half-hy
-      );
-
-    return;
-  }
+  if(rz>PLATE_SIZE)
+    mesh.scale.z *=
+      PLATE_SIZE/rz;
 
 
-  if (ry > PLATE_SIZE){
-    mesh.scale.y *= PLATE_SIZE / ry;
-  }
-
-  if (rz > PLATE_SIZE){
-    mesh.scale.z *= PLATE_SIZE / rz;
-  }
-
-  if (!allowFloat){
-    mesh.position.y =
-      -bb.min.y * mesh.scale.y;
-  } else if (
-    mesh.position.y <
-    -bb.min.y * mesh.scale.y
-  ){
-    mesh.position.y =
-      -bb.min.y * mesh.scale.y;
-  }
-
-  const hx =
+  const hx=
     (bb.max.x-bb.min.x) *
-    Math.abs(mesh.scale.x) / 2;
+    Math.abs(mesh.scale.x)/2;
 
-  const hz =
+  const hy=
+    (bb.max.y-bb.min.y) *
+    Math.abs(mesh.scale.y)/2;
+
+  const hz=
     (bb.max.z-bb.min.z) *
-    Math.abs(mesh.scale.z) / 2;
+    Math.abs(mesh.scale.z)/2;
 
-  mesh.position.x =
+
+  mesh.position.x=
     THREE.MathUtils.clamp(
       mesh.position.x,
       -half+hx,
       half-hx
     );
 
-  mesh.position.z =
+  mesh.position.y=
     THREE.MathUtils.clamp(
-      mesh.position.z,
-      -half+hz,
-      half-hz
+      mesh.position.y,
+      -half+hy,
+      half-hy
     );
+
+
+  const floorZ=
+    -bb.min.z *
+    mesh.scale.z;
+
+
+  if(!allowFloat){
+
+    mesh.position.z=
+      floorZ;
+
+  }else if(
+    mesh.position.z<floorZ
+  ){
+
+    mesh.position.z=
+      floorZ;
+  }
+
+
+  if(
+    mesh.position.z >
+    PLATE_SIZE-hz
+  ){
+
+    mesh.position.z=
+      PLATE_SIZE-hz;
+  }
 }
 
 
 function attachOutline(mesh){
 
-  if (!mesh.isMesh) return;
+  if(!mesh.isMesh)
+    return;
 
-  const edges =
+  const edges=
     new THREE.LineSegments(
-      new THREE.EdgesGeometry(mesh.geometry),
+      new THREE.EdgesGeometry(
+        mesh.geometry
+      ),
       new THREE.LineBasicMaterial({
         color:0xffffff
       })
@@ -1247,44 +1662,67 @@ function attachOutline(mesh){
 
   mesh.add(edges);
 
-  mesh.userData.outline = edges;
+  mesh.userData.outline=edges;
 }
 
 
-function insertShape(layerId, shapeId, fields){
+function centerMeshOnGrid(
+  mesh
+){
 
-  const l = findLayer(layerId);
+  mesh.position.x=0;
+  mesh.position.y=0;
 
-  const geo =
-    buildGeometry(shapeId,fields);
+  clampToPlate(
+    mesh,
+    false
+  );
+}
 
-  const color = SWATCHES[0];
 
-  const material =
-    new THREE.MeshStandardMaterial({
-      color,
-      metalness:0.15,
-      roughness:0.55
-    });
+function insertShape(
+  layerId,
+  shapeId,
+  fields
+){
 
-  const mesh =
-    new THREE.Mesh(geo,material);
+  const l=
+    findLayer(layerId);
 
-  mesh.position.set(0,0,0);
+  const geo=
+    buildGeometry(
+      shapeId,
+      fields
+    );
 
-  clampToPlate(mesh,false);
+  const color=
+    SWATCHES[0];
+
+  const mesh=
+    new THREE.Mesh(
+      geo,
+      new THREE.MeshStandardMaterial({
+        color,
+        metalness:.15,
+        roughness:.55
+      })
+    );
+
+  centerMeshOnGrid(mesh);
 
   attachOutline(mesh);
 
   scene.add(mesh);
 
-  const rec = {
+  const rec={
     id:Date.now()+Math.random(),
     num:l.shapes.length+1,
     mesh,
     geomId:shapeId,
     fields:{...fields},
-    color
+    color,
+    baseDimensions:
+      storeDimensions(mesh)
   };
 
   l.shapes.push(rec);
@@ -1293,82 +1731,122 @@ function insertShape(layerId, shapeId, fields){
 }
 
 
-function deleteShape(layerId, shapeId){
+function deleteShape(
+  layerId,
+  shapeId
+){
 
-  const l = findLayer(layerId);
+  const l=
+    findLayer(layerId);
 
-  if (!l) return;
+  if(!l)
+    return;
 
-  const idx =
+  const idx=
     l.shapes.findIndex(
-      s => s.id === shapeId
+      s => s.id===shapeId
     );
 
-  if (idx === -1) return;
+  if(idx===-1)
+    return;
 
-  const s = l.shapes[idx];
+  const s=
+    l.shapes[idx];
 
   scene.remove(s.mesh);
 
-  if (s.mesh.geometry){
+  if(s.mesh.geometry)
     s.mesh.geometry.dispose();
-  }
 
-  if (s.mesh.material){
-    if (Array.isArray(s.mesh.material)){
-      s.mesh.material.forEach(m => m.dispose());
-    } else {
+  if(s.mesh.material){
+
+    if(Array.isArray(
+      s.mesh.material
+    )){
+
+      s.mesh.material.forEach(
+        m => m.dispose()
+      );
+
+    }else{
+
       s.mesh.material.dispose();
     }
   }
 
-  l.shapes.splice(idx,1);
+  l.shapes.splice(
+    idx,
+    1
+  );
 
-  l.shapes.forEach((s2,i) => {
-    s2.num = i+1;
-  });
+  l.shapes.forEach(
+    (s2,i) =>
+      s2.num=i+1
+  );
 
-  if (activeShapeId === shapeId){
-    activeShapeId = null;
+  if(
+    activeShapeId===shapeId
+  ){
+
+    activeShapeId=null;
   }
 }
 
 
-function deleteLayer(layerId){
+function deleteLayer(
+  layerId
+){
 
-  const l = findLayer(layerId);
+  const l=
+    findLayer(layerId);
 
-  if (!l) return;
+  if(!l)
+    return;
 
-  l.shapes.forEach(s => {
+  l.shapes.forEach(
+    s => {
 
-    scene.remove(s.mesh);
+      scene.remove(
+        s.mesh
+      );
 
-    if (s.mesh.geometry){
-      s.mesh.geometry.dispose();
-    }
+      if(s.mesh.geometry)
+        s.mesh.geometry.dispose();
 
-    if (s.mesh.material){
-      if (Array.isArray(s.mesh.material)){
-        s.mesh.material.forEach(m => m.dispose());
-      } else {
-        s.mesh.material.dispose();
+      if(s.mesh.material){
+
+        if(Array.isArray(
+          s.mesh.material
+        )){
+
+          s.mesh.material.forEach(
+            m => m.dispose()
+          );
+
+        }else{
+
+          s.mesh.material.dispose();
+        }
       }
     }
-  });
+  );
 
   layers.splice(
     layers.indexOf(l),
     1
   );
 
-  layers.forEach((l2,i) => {
-    l2.name = `Layer ${i+1}`;
-  });
+  layers.forEach(
+    (l2,i) =>
+      l2.name=`Layer ${i+1}`
+  );
 
-  if (activeLayerId === layerId){
-    activeLayerId = null;
-    activeShapeId = null;
+  if(
+    activeLayerId===layerId
+  ){
+
+    activeLayerId=null;
+    activeShapeId=null;
   }
 }
 
@@ -1377,49 +1855,66 @@ function deleteLayer(layerId){
    SELECTION
 ───────────────────────────────────────────────────────────── */
 
-const raycaster = new THREE.Raycaster();
-const ndc = new THREE.Vector2();
+const raycaster=
+  new THREE.Raycaster();
+
+const ndc=
+  new THREE.Vector2();
 
 
-function trySelectAt(clientX,clientY){
+function trySelectAt(
+  clientX,
+  clientY
+){
 
-  const rect =
+  const rect=
     canvas.getBoundingClientRect();
 
-  ndc.x =
-    ((clientX-rect.left)/rect.width)*2-1;
+  ndc.x=
+    ((clientX-rect.left)/
+      rect.width)*2-1;
 
-  ndc.y =
-    -((clientY-rect.top)/rect.height)*2+1;
+  ndc.y=
+    -((clientY-rect.top)/
+      rect.height)*2+1;
 
   raycaster.setFromCamera(
     ndc,
     camera
   );
 
-  const all = [];
+  const all=[];
 
-  layers.forEach(l =>
-    l.shapes.forEach(s =>
-      all.push({l,s})
-    )
+  layers.forEach(
+    l =>
+      l.shapes.forEach(
+        s =>
+          all.push({l,s})
+      )
   );
 
-  const hits =
+  const hits=
     raycaster.intersectObjects(
-      all.map(x => x.s.mesh),
+      all.map(
+        x => x.s.mesh
+      ),
       false
     );
 
-  if (hits.length){
+  if(hits.length){
 
-    const hit =
+    const hit=
       all.find(
-        x => x.s.mesh === hits[0].object
+        x =>
+          x.s.mesh===
+          hits[0].object
       );
 
-    activeLayerId = hit.l.id;
-    activeShapeId = hit.s.id;
+    activeLayerId=
+      hit.l.id;
+
+    activeShapeId=
+      hit.s.id;
 
     refreshShapeVisuals();
 
@@ -1432,36 +1927,31 @@ function trySelectAt(clientX,clientY){
 }
 
 
-canvas.addEventListener(
-  'pointerup',
-  e => {
-    if (!crosshairActive){
-      trySelectAt(
-        e.clientX,
-        e.clientY
-      );
-    }
-  }
-);
+let crosshairActive=false;
 
+const crosshairEl=
+  document.createElement(
+    'div'
+  );
 
-let crosshairActive = false;
-
-const crosshairEl =
-  document.createElement('div');
-
-crosshairEl.id =
+crosshairEl.id=
   'crosshairCursor';
 
-document.getElementById('plate')
-  .appendChild(crosshairEl);
+crosshairEl.textContent='➤';
+
+document
+  .getElementById('plate')
+  .appendChild(
+    crosshairEl
+  );
 
 
 function activateCrosshair(){
 
-  crosshairActive = true;
+  crosshairActive=true;
 
-  crosshairEl.style.display = 'flex';
+  crosshairEl.style.display=
+    'flex';
 
   showToast(
     'Tap a shape on the plate to select it'
@@ -1469,34 +1959,38 @@ function activateCrosshair(){
 
   function move(e){
 
-    const rect =
+    const rect=
       canvas.getBoundingClientRect();
 
-    crosshairEl.style.left =
-      (e.clientX-rect.left-20)+'px';
+    crosshairEl.style.left=
+      (e.clientX-
+       rect.left-
+       17)+'px';
 
-    crosshairEl.style.top =
-      (e.clientY-rect.top-20)+'px';
+    crosshairEl.style.top=
+      (e.clientY-
+       rect.top-
+       38)+'px';
   }
 
   function up(e){
 
-    const found =
+    const found=
       trySelectAt(
         e.clientX,
         e.clientY
       );
 
-    if (found){
+    if(found)
       deactivate();
-    }
   }
 
   function deactivate(){
 
-    crosshairActive = false;
+    crosshairActive=false;
 
-    crosshairEl.style.display = 'none';
+    crosshairEl.style.display=
+      'none';
 
     canvas.removeEventListener(
       'pointermove',
@@ -1521,15 +2015,30 @@ function activateCrosshair(){
 }
 
 
+canvas.addEventListener(
+  'pointerup',
+  e => {
+
+    if(!crosshairActive &&
+       !manipulationActive){
+
+      trySelectAt(
+        e.clientX,
+        e.clientY
+      );
+    }
+  }
+);
+
+
 function shapeLabel(s){
 
-  if (!s || !s.geomId){
+  if(!s || !s.geomId)
     return 'Shape';
-  }
 
   return (
-    s.geomId[0].toUpperCase() +
-    s.geomId.slice(1) +
+    s.geomId[0].toUpperCase()+
+    s.geomId.slice(1)+
     ` #${s.num}`
   );
 }
@@ -1539,89 +2048,108 @@ function shapeLabel(s){
    MODULE / H1
 ───────────────────────────────────────────────────────────── */
 
-const h1 =
+const h1=
   document.getElementById('h1');
 
-const MODULE_ORDER = [
+const MODULE_ORDER=[
   'tools',
   'layers',
   'settings',
   'help'
 ];
 
-const MODULE_OVERRIDE = {
+const MODULE_OVERRIDE={
   tools:{
     label:'Drawing Tools',
     icon:'pencil'
   }
 };
 
-let activeModule = 'tools';
+let activeModule='tools';
 
 
 function renderH1(){
 
-  const mods =
+  const mods=
     MODULE_ORDER
-      .map(id =>
-        MODULES.find(m => m.id===id)
+      .map(
+        id =>
+          MODULES.find(
+            m => m.id===id
+          )
       )
       .filter(Boolean);
 
-  h1.innerHTML =
-    mods.map(m => {
+  h1.innerHTML=
+    mods.map(
+      m => {
 
-      const o =
-        MODULE_OVERRIDE[m.id] || {};
+        const o=
+          MODULE_OVERRIDE[m.id] ||
+          {};
 
-      return `
-        <button
-          class="module-btn ${m.id===activeModule?'active-blue':''}"
-          data-module="${m.id}">
-          ${svg(o.icon || m.icon)}
-          <span>${o.label || m.label}</span>
-        </button>
-      `;
-    }).join('');
+        return `
+          <button
+            class="module-btn ${
+              m.id===activeModule
+                ? 'active-blue'
+                : ''
+            }"
+            data-module="${m.id}">
+            ${svg(o.icon||m.icon)}
+            <span>${
+              o.label||m.label
+            }</span>
+          </button>
+        `;
+      }
+    ).join('');
 
 
-  h1.querySelectorAll(
-    '[data-module]'
-  ).forEach(btn => {
+  h1
+    .querySelectorAll(
+      '[data-module]'
+    )
+    .forEach(
+      btn => {
 
-    btn.addEventListener(
-      'click',
-      () => {
+        btn.addEventListener(
+          'click',
+          () => {
 
-        const id =
-          btn.dataset.module;
+            const id=
+              btn.dataset.module;
 
-        activeModule = id;
+            activeModule=id;
 
-        if (id === 'layers'){
-          goToLayersHome();
-        }
+            if(id==='layers')
+              goToLayersHome();
 
-        else if (id === 'tools'){
-          goToDrawingTools();
-        }
+            else if(id==='tools')
+              goToDrawingTools();
 
-        else if (id === 'settings'){
-          crumbs = ['Settings'];
-          crumbBack = null;
-          render('settings');
-        }
+            else if(id==='settings'){
 
-        else if (id === 'help'){
-          crumbs = ['Help'];
-          crumbBack = null;
-          render('help');
-        }
+              crumbs=['Settings'];
+              crumbBack=null;
 
-        renderH1();
+              render('settings');
+
+              renderH1();
+
+            }else if(id==='help'){
+
+              crumbs=['Help'];
+              crumbBack=null;
+
+              render('help');
+
+              renderH1();
+            }
+          }
+        );
       }
     );
-  });
 }
 
 
@@ -1629,40 +2157,51 @@ function renderH1(){
    H2
 ───────────────────────────────────────────────────────────── */
 
-const h2Title =
-  document.getElementById('h2Title');
+const h2Title=
+  document.getElementById(
+    'h2Title'
+  );
 
-const h2Info =
-  document.getElementById('h2Info');
+const h2Info=
+  document.getElementById(
+    'h2Info'
+  );
 
-const btnUndo =
-  document.getElementById('btnUndo');
+const btnUndo=
+  document.getElementById(
+    'btnUndo'
+  );
 
-const btnRedo =
-  document.getElementById('btnRedo');
+const btnRedo=
+  document.getElementById(
+    'btnRedo'
+  );
+
+btnUndo.innerHTML=
+  svg('undo')+
+  '<span>Undo</span>';
+
+btnRedo.innerHTML=
+  svg('redo')+
+  '<span>Redo</span>';
+
+btnUndo.disabled=true;
+btnRedo.disabled=true;
+
+let lastPlaced=null;
 
 
-btnUndo.innerHTML =
-  svg('undo') + '<span>Undo</span>';
+function armUndo(
+  layerId,
+  shapeId
+){
 
-btnRedo.innerHTML =
-  svg('redo') + '<span>Redo</span>';
-
-btnUndo.disabled = true;
-btnRedo.disabled = true;
-
-
-let lastPlaced = null;
-
-
-function armUndo(layerId,shapeId){
-
-  lastPlaced = {
+  lastPlaced={
     layerId,
     shapeId
   };
 
-  btnUndo.disabled = false;
+  btnUndo.disabled=false;
 }
 
 
@@ -1670,60 +2209,60 @@ btnUndo.addEventListener(
   'click',
   () => {
 
-    if (!lastPlaced) return;
+    if(!lastPlaced)
+      return;
 
     deleteShape(
       lastPlaced.layerId,
       lastPlaced.shapeId
     );
 
-    if (
-      activeLayerId ===
-      lastPlaced.layerId
-    ){
-      goToLayer();
-    } else {
-      goToLayersHome();
-    }
+    goToDrawingTools();
 
-    showToast('Shape removed');
+    showToast(
+      'Shape removed'
+    );
 
-    lastPlaced = null;
+    lastPlaced=null;
 
-    btnUndo.disabled = true;
+    btnUndo.disabled=true;
   }
 );
 
 
-let crumbs = ['Layer 1'];
-let crumbBack = null;
-let h2BackAttached = false;
+let crumbs=['Drawing Tools'];
+let crumbBack=null;
+let h2BackAttached=false;
 
 
 function ensureH2Back(){
 
-  if (h2BackAttached) return;
+  if(h2BackAttached)
+    return;
 
-  const wrap =
-    h2Title.parentElement.parentElement;
+  const wrap=
+    h2Title.parentElement
+      .parentElement;
 
-  const backBtn =
-    document.createElement('button');
+  const backBtn=
+    document.createElement(
+      'button'
+    );
 
-  backBtn.id = 'h2Back';
+  backBtn.id='h2Back';
 
-  backBtn.style.cssText =
+  backBtn.style.cssText=
     'background:none;border:none;color:var(--gold-light);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;';
 
-  backBtn.innerHTML =
+  backBtn.innerHTML=
     svg('back');
 
   backBtn.addEventListener(
     'click',
     () => {
-      if (crumbBack){
+
+      if(crumbBack)
         crumbBack();
-      }
     }
   );
 
@@ -1732,7 +2271,7 @@ function ensureH2Back(){
     wrap.firstChild
   );
 
-  h2BackAttached = true;
+  h2BackAttached=true;
 }
 
 
@@ -1741,31 +2280,40 @@ ensureH2Back();
 
 function setH2(info){
 
-  document.getElementById(
-    'h2Back'
-  ).style.display =
-    crumbBack ? 'flex' : 'none';
+  document
+    .getElementById(
+      'h2Back'
+    )
+    .style.display=
+      crumbBack
+        ? 'flex'
+        : 'none';
 
-  h2Title.textContent =
+  h2Title.textContent=
     crumbs.join(' - ');
 
-  h2Info.textContent =
-    info || '';
+  h2Info.textContent=
+    info||'';
 }
 
 
-const menuScroll =
-  document.getElementById('menuScroll');
+const menuScroll=
+  document.getElementById(
+    'menuScroll'
+  );
 
-const slideMenu =
-  document.getElementById('slideMenu');
+const slideMenu=
+  document.getElementById(
+    'slideMenu'
+  );
 
-const expandTabEl =
-  document.getElementById('expandTab');
+const expandTabEl=
+  document.getElementById(
+    'expandTab'
+  );
 
-if (expandTabEl){
+if(expandTabEl)
   expandTabEl.remove();
-}
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -1774,17 +2322,18 @@ if (expandTabEl){
 
 function goToLayersHome(){
 
-  activeModule = 'layers';
+  activeModule='layers';
 
-  const l = activeLayer();
+  const l=
+    activeLayer();
 
-  crumbs = [
+  crumbs=[
     l ? l.name : 'Layers'
   ];
 
-  crumbBack = null;
+  crumbBack=null;
 
-  activeShapeId = null;
+  activeShapeId=null;
 
   render('layersHome');
 
@@ -1794,25 +2343,32 @@ function goToLayersHome(){
 
 function goToLayer(){
 
-  activeModule = 'layers';
+  const l=
+    activeLayer();
 
-  const l = activeLayer();
+  if(!l){
 
-  if (!l){
     goToLayersHome();
+
     return;
   }
 
-  crumbs = [l.name];
+  crumbs=[l.name];
 
-  crumbBack = () => {
+  crumbBack=() => {
 
-    activeLayerId = null;
+    activeShapeId=null;
 
-    goToLayersHome();
+    goToDrawingTools();
   };
 
   render('layersHome');
+
+  /*
+    Layers H1 is intentionally NOT
+    made active when returning from
+    Drawing Tools.
+  */
 
   renderH1();
 }
@@ -1820,68 +2376,87 @@ function goToLayer(){
 
 function goToShape(){
 
-  activeModule = 'layers';
+  const l=
+    activeLayer();
 
-  const l = activeLayer();
-  const s = activeShape();
+  const s=
+    activeShape();
 
-  if (!l || !s){
-    goToLayersHome();
+  if(!l || !s){
+
+    goToDrawingTools();
+
     return;
   }
 
-  crumbs = [
-    l.name,
+  crumbs=[
+    'Drawing Tools',
     shapeLabel(s)
   ];
 
-  crumbBack = () => {
-
-    activeShapeId = null;
-
-    goToLayer();
-  };
+  crumbBack=() =>
+    goToDrawingTools();
 
   render(
     'shapePanel',
-    'color'
+    'select'
   );
+
+  /*
+    Keep Drawing Tools active.
+    A shape is an H3 selection,
+    not an H1 module change.
+  */
+
+  activeModule='tools';
 
   renderH1();
 }
 
 
-function goToSubtool(toolLabel){
+function goToSubtool(
+  toolLabel
+){
 
-  const l = activeLayer();
-  const s = activeShape();
+  const l=
+    activeLayer();
 
-  crumbs = [
-    l.name,
+  const s=
+    activeShape();
+
+  crumbs=[
+    'Drawing Tools',
     shapeLabel(s),
     toolLabel
   ];
 
-  crumbBack = () => {
+  crumbBack=() =>
     goToShape();
-  };
 
   render(
     'shapePanel',
     toolLabel.toLowerCase()
   );
+
+  activeModule='tools';
+
+  renderH1();
 }
 
 
 function goToDrawingTools(){
 
-  activeModule = 'tools';
+  activeModule='tools';
 
-  crumbs = ['Drawing Tools'];
+  crumbs=[
+    'Drawing Tools'
+  ];
 
-  crumbBack = null;
+  crumbBack=null;
 
-  render('drawingToolsHome');
+  render(
+    'drawingToolsHome'
+  );
 
   renderH1();
 }
@@ -1889,45 +2464,34 @@ function goToDrawingTools(){
 
 function goToP2POptions(){
 
-  crumbs = [
+  crumbs=[
     'Drawing Tools',
     'P2P'
   ];
 
-  crumbBack = () =>
+  crumbBack=() =>
     goToDrawingTools();
 
-  render('p2pHome');
+  render(
+    'p2pHome'
+  );
 }
 
 
-function goToP2PShapePick(){
+function goToP2PFillPick(
+  shapeKey
+){
 
-  crumbs = [
-    'Drawing Tools',
-    'P2P',
-    'Shape'
-  ];
-
-  crumbBack = () =>
-    goToP2POptions();
-
-  render('p2pShapePick');
-}
-
-
-function goToP2PFillPick(shapeKey){
-
-  crumbs = [
+  crumbs=[
     'Drawing Tools',
     'P2P',
     'Shape',
-    shapeKey[0].toUpperCase() +
+    shapeKey[0].toUpperCase()+
     shapeKey.slice(1)
   ];
 
-  crumbBack = () =>
-    goToP2PShapePick();
+  crumbBack=() =>
+    goToP2POptions();
 
   render(
     'p2pFillPick',
@@ -1940,50 +2504,49 @@ function goToP2PFillPick(shapeKey){
    RENDER
 ───────────────────────────────────────────────────────────── */
 
-function render(view,subtool){
+function render(
+  view,
+  subtool
+){
 
-  slideMenu.classList.add('open');
+  slideMenu.classList.add(
+    'open'
+  );
 
-  if (view==='layersHome')
+  if(view==='layersHome')
     renderLayersHome();
 
-  else if (view==='shapePanel')
+  else if(view==='shapePanel')
     renderShapePanel(subtool);
 
-  else if (view==='drawingToolsHome')
+  else if(view==='drawingToolsHome')
     renderDrawingToolsHome();
 
-  else if (view==='p2pHome')
+  else if(view==='p2pHome')
     renderP2PHome();
 
-  else if (view==='p2pShapePick')
-    renderP2PShapePick();
-
-  else if (view==='p2pFillPick')
+  else if(view==='p2pFillPick')
     renderP2PFillPick(subtool);
 
-  else if (view==='p2pLineOptions')
+  else if(view==='p2pLineOptions')
     renderP2PLineOptions();
 
-  else if (view==='p2pShapeOptions')
+  else if(view==='p2pShapeOptions')
     renderP2PShapeOptions();
 
-  else if (view==='booleanPick')
+  else if(view==='booleanPick')
     renderBooleanPick();
 
-  else if (view==='settings')
+  else if(view==='settings')
     renderSettings();
 
-  else if (view==='help')
+  else if(view==='help')
     renderHelp();
 
-  else if (view==='drawMethod')
-    renderDrawMethod(subtool);
-
-  else if (view==='drawShapePick')
+  else if(view==='drawShapePick')
     renderDrawShapePick(subtool);
 
-  else if (view==='drawDivisionPick')
+  else if(view==='drawDivisionPick')
     renderDrawDivisionPick(
       subtool.method,
       subtool.shapeKey
@@ -1997,14 +2560,15 @@ function render(view,subtool){
 
 function renderLayersHome(){
 
-  if (!layers.length){
+  if(!layers.length){
 
-    const l = createLayer();
+    const l=
+      createLayer();
 
-    activeLayerId = l.id;
+    activeLayerId=l.id;
   }
 
-  const active =
+  const active=
     activeLayer();
 
   setH2(
@@ -2016,7 +2580,7 @@ function renderLayersHome(){
   refreshModeToggle();
 
 
-  const activeTile =
+  const activeTile=
     active
       ? `
         <div
@@ -2034,29 +2598,31 @@ function renderLayersHome(){
       : '';
 
 
-  const otherLayers =
+  const otherLayers=
     layers
-      .filter(l =>
-        !active ||
-        l.id !== active.id
+      .filter(
+        l =>
+          !active ||
+          l.id!==active.id
       )
-      .map(l => `
-        <div
-          class="tile3"
-          data-layer="${l.id}">
-          ${svg('layers')}
-          <span>${l.name}</span>
-          <button
-            class="tile-del"
-            data-del="${l.id}">
-            ${svg('trash')}
-          </button>
-        </div>
-      `)
-      .join('');
+      .map(
+        l => `
+          <div
+            class="tile3"
+            data-layer="${l.id}">
+            ${svg('layers')}
+            <span>${l.name}</span>
+            <button
+              class="tile-del"
+              data-del="${l.id}">
+              ${svg('trash')}
+            </button>
+          </div>
+        `
+      ).join('');
 
 
-  const addLayer =
+  const addLayer=
     `<button
       class="add-rect"
       id="addLayerTile">
@@ -2064,27 +2630,31 @@ function renderLayersHome(){
     </button>`;
 
 
-  let shapeTiles = '';
+  let shapeTiles='';
 
-  if (
+  if(
     active &&
     active.shapes.length
   ){
 
-    shapeTiles =
-      active.shapes.map(s => `
-        <div
-          class="tile3"
-          data-shape="${s.id}">
-          ${svg('shapes')}
-          <span>${s.geomId}</span>
-          <span class="tile-num">${s.num}</span>
-        </div>
-      `).join('');
+    shapeTiles=
+      active.shapes.map(
+        s => `
+          <div
+            class="tile3"
+            data-shape="${s.id}">
+            ${svg('shapes')}
+            <span>${s.geomId}</span>
+            <span class="tile-num">
+              ${s.num}
+            </span>
+          </div>
+        `
+      ).join('');
   }
 
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="h3-stack">
 
       ${activeTile}
@@ -2093,13 +2663,17 @@ function renderLayersHome(){
 
       ${
         otherLayers
-          ? `<div class="tile-row">${otherLayers}</div>`
+          ? `<div class="tile-row">
+              ${otherLayers}
+            </div>`
           : ''
       }
 
       ${
         shapeTiles
-          ? `<div class="tile-row">${shapeTiles}</div>`
+          ? `<div class="tile-row">
+              ${shapeTiles}
+            </div>`
           : ''
       }
 
@@ -2108,16 +2682,18 @@ function renderLayersHome(){
 
 
   document
-    .getElementById('addLayerTile')
+    .getElementById(
+      'addLayerTile'
+    )
     .addEventListener(
       'click',
       () => {
 
-        const l =
+        const l=
           createLayer();
 
-        activeLayerId = l.id;
-        activeShapeId = null;
+        activeLayerId=l.id;
+        activeShapeId=null;
 
         goToLayer();
       }
@@ -2125,63 +2701,64 @@ function renderLayersHome(){
 
 
   menuScroll
-    .querySelectorAll('[data-layer]')
-    .forEach(el => {
+    .querySelectorAll(
+      '[data-layer]'
+    )
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        'click',
-        e => {
+        el.addEventListener(
+          'click',
+          e => {
 
-          if (
-            e.target.closest(
-              '[data-del]'
+            if(
+              e.target.closest(
+                '[data-del]'
+              )
             )
-          ){
-            return;
+              return;
+
+            const id=
+              parseInt(
+                el.dataset.layer,
+                10
+              );
+
+            activeLayerId=id;
+            activeShapeId=null;
+
+            refreshShapeVisuals();
+
+            goToLayer();
           }
-
-          const id =
-            parseInt(
-              el.dataset.layer,
-              10
-            );
-
-          if (
-            activeLayerId === id
-          ){
-            return;
-          }
-
-          activeLayerId = id;
-          activeShapeId = null;
-
-          refreshShapeVisuals();
-
-          goToLayer();
-        }
-      );
-    });
+        );
+      }
+    );
 
 
   menuScroll
-    .querySelectorAll('[data-shape]')
-    .forEach(el => {
+    .querySelectorAll(
+      '[data-shape]'
+    )
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        'click',
-        () => {
+        el.addEventListener(
+          'click',
+          () => {
 
-          activeShapeId =
-            parseFloat(
-              el.dataset.shape
-            );
+            activeShapeId=
+              parseFloat(
+                el.dataset.shape
+              );
 
-          refreshShapeVisuals();
+            refreshShapeVisuals();
 
-          goToShape();
-        }
-      );
-    });
+            goToShape();
+          }
+        );
+      }
+    );
 
 
   wireLayerDelete();
@@ -2192,32 +2769,25 @@ function renderLayersHome(){
    DRAWING TOOLS
 ───────────────────────────────────────────────────────────── */
 
-const DRAW_METHOD_LABEL = {
-  freehand:'Freehand',
-  shapedrag:'Shape',
-  p2p:'P2P'
-};
-
-
 function renderDrawingToolsHome(){
 
-  if (!layers.length){
+  if(!layers.length){
 
-    const l = createLayer();
+    const l=
+      createLayer();
 
-    activeLayerId = l.id;
+    activeLayerId=l.id;
   }
 
-  const active =
+  const active=
     activeLayer();
-
 
   setH2(
     'Pick a drawing method'
   );
 
 
-  const activeLayerTile = `
+  const activeLayerTile=`
     <div
       class="tile3 layer-active"
       data-tool-layer="${active.id}">
@@ -2233,7 +2803,7 @@ function renderDrawingToolsHome(){
   `;
 
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="h3-stack">
 
       ${activeLayerTile}
@@ -2275,13 +2845,14 @@ function renderDrawingToolsHome(){
       'click',
       e => {
 
-        if (
+        if(
           e.target.closest(
             '[data-del-tool]'
           )
-        ){
+        )
           return;
-        }
+
+        activeModule='layers';
 
         goToLayer();
       }
@@ -2294,18 +2865,7 @@ function renderDrawingToolsHome(){
     )
     .addEventListener(
       'click',
-      () => {
-
-        crumbs = [
-          'Drawing Tools',
-          'Freehand'
-        ];
-
-        crumbBack = () =>
-          goToDrawingTools();
-
-        startFreehand();
-      }
+      startFreehand
     );
 
 
@@ -2317,21 +2877,14 @@ function renderDrawingToolsHome(){
       'click',
       () => {
 
-        if (!activeLayer()){
-
-          const l =
-            createLayer();
-
-          activeLayerId = l.id;
-        }
-
-        crumbs = [
+        crumbs=[
           'Drawing Tools',
           'Shape'
         ];
 
-        crumbBack = () =>
-          goToDrawingTools();
+        crumbBack=
+          () =>
+            goToDrawingTools();
 
         render(
           'drawShapePick',
@@ -2353,10 +2906,10 @@ function renderDrawingToolsHome(){
 
 
 /* ─────────────────────────────────────────────────────────────
-   DRAW METHOD
+   SHAPE DRAW
 ───────────────────────────────────────────────────────────── */
 
-const DIVISIONS = {
+const DIVISIONS={
   circle:[
     ['full','Full'],
     ['half','Half'],
@@ -2390,138 +2943,29 @@ const DIVISIONS = {
 };
 
 
-const LINE_TYPES = [
-  ['straight','Straight'],
-  ['arc','Arc'],
-  ['wave','Wave']
-];
-
-
-function goToDrawMethod(method){
-
-  const l =
-    activeLayer();
-
-  crumbs = [
-    'Layers',
-    l.name,
-    DRAW_METHOD_LABEL[method]
-  ];
-
-  crumbBack = () =>
-    goToLayer();
-
-  render(
-    'drawMethod',
-    method
-  );
-}
-
-
-function goToDrawShapePick(method){
-
-  const l =
-    activeLayer();
-
-  crumbs = [
-    'Layers',
-    l.name,
-    DRAW_METHOD_LABEL[method]
-  ];
-
-  crumbBack = () =>
-    goToDrawMethod(method);
-
-  render(
-    'drawShapePick',
-    method
-  );
-}
-
-
-function goToDrawDivisionPick(
-  method,
-  shapeKey
-){
-
-  const l =
-    activeLayer();
-
-  crumbs = [
-    'Layers',
-    l.name,
-    DRAW_METHOD_LABEL[method],
-    shapeKey[0].toUpperCase() +
-    shapeKey.slice(1)
-  ];
-
-  crumbBack = () =>
-    goToDrawShapePick(method);
-
-  render(
-    'drawDivisionPick',
-    {
-      method,
-      shapeKey
-    }
-  );
-}
-
-
-function renderDrawMethod(method){
-
-  if (method === 'freehand'){
-
-    crumbs = [
-      'Drawing Tools',
-      'Freehand'
-    ];
-
-    crumbBack = () =>
-      goToDrawingTools();
-
-    startFreehand();
-
-    return;
-  }
-
-
-  if (method === 'p2p'){
-
-    goToP2POptions();
-
-    return;
-  }
-
-
-  goToDrawShapePick(method);
-}
-
-
-function renderDrawShapePick(method){
+function renderDrawShapePick(){
 
   setH2(
     'Pick a shape to divide, or use it whole'
   );
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
       ${
         Object.keys(DIVISIONS)
-          .map(k => `
-            <div
-              class="tile3"
-              data-dshape="${k}">
-              ${svg('shapes')}
-              <span>
-                ${
-                  k[0].toUpperCase() +
+          .map(
+            k => `
+              <div
+                class="tile3"
+                data-dshape="${k}">
+                ${svg('shapes')}
+                <span>${
+                  k[0].toUpperCase()+
                   k.slice(1)
-                }
-              </span>
-            </div>
-          `)
-          .join('')
+                }</span>
+              </div>
+            `
+          ).join('')
       }
     </div>
   `;
@@ -2531,164 +2975,138 @@ function renderDrawShapePick(method){
     .querySelectorAll(
       '[data-dshape]'
     )
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        'click',
-        () =>
-          goToDrawDivisionPick(
-            method,
-            el.dataset.dshape
-          )
-      );
-    });
-}
+        el.addEventListener(
+          'click',
+          () => {
 
+            const key=
+              el.dataset.dshape;
 
-function renderDrawDivisionPick(
-  method,
-  shapeKey
-){
+            crumbs=[
+              'Drawing Tools',
+              key[0].toUpperCase()+
+              key.slice(1)
+            ];
 
-  setH2(
-    'Press and drag on the plate to size it'
-  );
+            crumbBack=
+              () =>
+                goToDrawingTools();
 
-  const divs =
-    DIVISIONS[shapeKey] ||
-    [['full','Full']];
-
-
-  menuScroll.innerHTML = `
-    <div class="tile-row">
-      ${
-        divs.map(
-          ([id,label]) => `
-            <div
-              class="tile3"
-              data-div="${id}">
-              ${svg('shapes')}
-              <span>${label}</span>
-            </div>
-          `
-        ).join('')
-      }
-    </div>
-  `;
-
-
-  menuScroll
-    .querySelectorAll('[data-div]')
-    .forEach(el => {
-
-      el.addEventListener(
-        'click',
-        () => {
-
-          if (
-            el.dataset.div !== 'full'
-          ){
-
-            showToast(
-              `${shapeKey} (${el.dataset.div}) is not wired yet. Use Full.`
+            startDragToSize(
+              key
             );
-
-            return;
           }
-
-          startDragToSize(shapeKey);
-        }
-      );
-    });
+        );
+      }
+    );
 }
 
 
 /* ─────────────────────────────────────────────────────────────
-   SHAPE DRAG
+   PLATE HIT
 ───────────────────────────────────────────────────────────── */
 
-function plateHit(clientX,clientY){
+function plateHit(
+  clientX,
+  clientY,
+  plane=dragGroundPlane
+){
 
-  const rect =
+  const rect=
     canvas.getBoundingClientRect();
 
-  ndc.x =
-    ((clientX-rect.left)/rect.width)*2-1;
+  ndc.x=
+    ((clientX-rect.left)/
+      rect.width)*2-1;
 
-  ndc.y =
-    -((clientY-rect.top)/rect.height)*2+1;
+  ndc.y=
+    -((clientY-rect.top)/
+      rect.height)*2+1;
 
   raycaster.setFromCamera(
     ndc,
     camera
   );
 
-  const pt =
+  const pt=
     new THREE.Vector3();
 
-  raycaster.ray.intersectPlane(
-    dragGroundPlane,
-    pt
-  );
+  if(
+    !raycaster.ray.intersectPlane(
+      plane,
+      pt
+    )
+  )
+    return null;
 
   return pt;
 }
 
+
+/* ─────────────────────────────────────────────────────────────
+   DRAG GEOMETRY
+───────────────────────────────────────────────────────────── */
 
 function buildDragGeometry(
   shapeKey,
   sizeMM
 ){
 
-  const H = 15;
+  const H=
+    Math.max(
+      GRID_SQUARE,
+      15
+    );
 
 
-  if (shapeMode === '2d'){
+  if(shapeMode==='2d'){
 
-    if (shapeKey === 'circle'){
+    if(shapeKey==='circle')
       return new THREE.CircleGeometry(
         sizeMM/2,
         64
       );
-    }
 
-    if (shapeKey === 'square'){
+    if(shapeKey==='square')
       return new THREE.PlaneGeometry(
         sizeMM,
         sizeMM
       );
-    }
 
-    if (shapeKey === 'rectangle'){
+    if(shapeKey==='rectangle')
       return new THREE.PlaneGeometry(
         sizeMM,
-        sizeMM*0.5
+        sizeMM*.5
       );
-    }
 
-    if (shapeKey === 'triangle'){
+    if(shapeKey==='triangle')
       return polygonGeometry(
         3,
         sizeMM/2
       );
-    }
 
-    if (shapeKey === 'octagon'){
+    if(shapeKey==='octagon')
       return polygonGeometry(
         8,
         sizeMM/2
       );
-    }
 
-    if (shapeKey === 'oval'){
+    if(shapeKey==='oval'){
 
-      const g =
+      const g=
         new THREE.CircleGeometry(
           sizeMM/2,
           64
         );
 
-      g.scale(1,0.6,1);
+      g.scale(
+        1,
+        .6,
+        1
+      );
 
       return g;
     }
@@ -2700,94 +3118,116 @@ function buildDragGeometry(
   }
 
 
-  if (shapeKey === 'circle')
+  if(shapeKey==='circle')
     return new THREE.SphereGeometry(
       sizeMM/2,
       32,
       24
     );
 
-  if (shapeKey === 'square')
+  if(shapeKey==='square')
     return new THREE.BoxGeometry(
       sizeMM,
       sizeMM,
       sizeMM
     );
 
-  if (shapeKey === 'rectangle')
+  if(shapeKey==='rectangle')
     return new THREE.BoxGeometry(
       sizeMM,
-      H,
-      sizeMM*0.5
+      sizeMM*.5,
+      H
     );
 
-  if (shapeKey === 'triangle')
-    return new THREE.CylinderGeometry(
-      sizeMM/2,
-      sizeMM/2,
-      H,
-      3
+  if(shapeKey==='triangle')
+    return rotateGeometryToZ(
+      new THREE.CylinderGeometry(
+        sizeMM/2,
+        sizeMM/2,
+        H,
+        3
+      )
     );
 
-  if (shapeKey === 'octagon')
-    return new THREE.CylinderGeometry(
-      sizeMM/2,
-      sizeMM/2,
-      H,
-      8
+  if(shapeKey==='octagon')
+    return rotateGeometryToZ(
+      new THREE.CylinderGeometry(
+        sizeMM/2,
+        sizeMM/2,
+        H,
+        8
+      )
     );
 
-  if (shapeKey === 'oval'){
+  if(shapeKey==='oval'){
 
-    const g =
+    const g=
       new THREE.SphereGeometry(
         sizeMM/2,
         32,
         24
       );
 
-    g.scale(1,0.6,1);
+    g.scale(
+      1,
+      .6,
+      1
+    );
 
     return g;
   }
 
   return new THREE.BoxGeometry(
     sizeMM,
-    H,
-    sizeMM
+    sizeMM,
+    H
   );
 }
 
 
-function startDragToSize(shapeKey){
+/* ─────────────────────────────────────────────────────────────
+   SHAPE DRAG
+───────────────────────────────────────────────────────────── */
+
+function startDragToSize(
+  shapeKey
+){
 
   setH2(
-    'Press on the plate, drag out to size, release to place'
+    'Press on the grid, drag to size, release'
   );
 
-  menuScroll.innerHTML = `
-    <div
-      style="padding:14px 6px;color:var(--muted);font-size:11px;text-align:center;max-width:220px;">
-      Dragging on the plate now sizes the ${shapeKey}...
+  menuScroll.innerHTML=`
+    <div style="
+      padding:14px 6px;
+      color:var(--muted);
+      font-size:11px;
+      text-align:center;
+      max-width:220px;">
+      Dragging on the grid now sizes the
+      ${shapeKey}...
     </div>
   `;
 
 
-  let startPt = null;
-  let previewMesh = null;
+  let startPt=null;
+  let previewMesh=null;
 
 
   function onDown(e){
 
-    startPt =
+    startPt=
       plateHit(
         e.clientX,
         e.clientY
       );
 
-    rotationLocked = true;
+    if(!startPt)
+      return;
 
-    controls.enableRotate = false;
+    rotationLocked=true;
+
+    controls.enableRotate=false;
 
     refreshLockBtn();
   }
@@ -2795,34 +3235,38 @@ function startDragToSize(shapeKey){
 
   function onMove(e){
 
-    if (!startPt) return;
+    if(!startPt)
+      return;
 
-    const cur =
+    const cur=
       plateHit(
         e.clientX,
         e.clientY
       );
 
-    const size =
+    if(!cur)
+      return;
+
+    const size=
       Math.max(
         GRID_SQUARE,
         startPt.distanceTo(cur)
       );
 
 
-    if (previewMesh){
+    if(previewMesh){
 
-      scene.remove(previewMesh);
+      scene.remove(
+        previewMesh
+      );
 
       previewMesh.geometry.dispose();
 
-      if (previewMesh.material){
-        previewMesh.material.dispose();
-      }
+      previewMesh.material.dispose();
     }
 
 
-    previewMesh =
+    previewMesh=
       new THREE.Mesh(
         buildDragGeometry(
           shapeKey,
@@ -2831,90 +3275,90 @@ function startDragToSize(shapeKey){
         new THREE.MeshStandardMaterial({
           color:0xe0c48f,
           transparent:true,
-          opacity:0.55
+          opacity:.55
         })
       );
 
 
-    if (shapeMode === '2d'){
-
-      previewMesh.position.set(
-        (startPt.x+cur.x)/2,
-        (startPt.y+cur.y)/2,
-        0
-      );
-
-    } else {
-
-      previewMesh.position.set(
-        (startPt.x+cur.x)/2,
-        0,
-        (startPt.z+cur.z)/2
-      );
-    }
-
+    previewMesh.position.set(
+      startPt.x,
+      startPt.y,
+      shapeMode==='3d'
+        ? size/2
+        : 0
+    );
 
     clampToPlate(
       previewMesh,
       false
     );
 
-    scene.add(previewMesh);
+    scene.add(
+      previewMesh
+    );
   }
 
 
   function onUp(e){
 
-    if (!startPt){
+    if(!startPt){
+
       cleanup();
+
       return;
     }
 
-
-    const cur =
+    const cur=
       plateHit(
         e.clientX,
         e.clientY
       );
 
+    if(!cur){
 
-    let size =
+      cleanup();
+
+      return;
+    }
+
+
+    let size=
       Math.max(
         GRID_SQUARE,
         startPt.distanceTo(cur)
       );
 
-
-    size =
+    size=
       Math.round(
-        size / GRID_SQUARE
-      ) * GRID_SQUARE;
+        size/GRID_SQUARE
+      )*GRID_SQUARE;
 
 
-    if (previewMesh){
+    if(previewMesh){
 
-      scene.remove(previewMesh);
+      scene.remove(
+        previewMesh
+      );
 
       previewMesh.geometry.dispose();
+      previewMesh.material.dispose();
 
-      if (previewMesh.material){
-        previewMesh.material.dispose();
-      }
-
-      previewMesh = null;
+      previewMesh=null;
     }
 
 
-    const active =
+    const active=
       activeLayer();
 
-    if (!active){
+    if(!active){
+
       cleanup();
+
       return;
     }
 
 
-    const mesh =
+    const mesh=
       new THREE.Mesh(
         buildDragGeometry(
           shapeKey,
@@ -2922,29 +3366,24 @@ function startDragToSize(shapeKey){
         ),
         new THREE.MeshStandardMaterial({
           color:SWATCHES[0],
-          metalness:0.15,
-          roughness:0.55
+          metalness:.15,
+          roughness:.55
         })
       );
 
 
-    if (shapeMode === '2d'){
+    /*
+      New objects snap to the
+      center of the grid.
+    */
 
-      mesh.position.set(
-        (startPt.x+cur.x)/2,
-        (startPt.y+cur.y)/2,
-        0
-      );
-
-    } else {
-
-      mesh.position.set(
-        (startPt.x+cur.x)/2,
-        0,
-        (startPt.z+cur.z)/2
-      );
-    }
-
+    mesh.position.set(
+      0,
+      0,
+      shapeMode==='3d'
+        ? geometryDimensions(mesh).z/2
+        : 0
+    );
 
     clampToPlate(
       mesh,
@@ -2956,19 +3395,24 @@ function startDragToSize(shapeKey){
     scene.add(mesh);
 
 
-    const rec = {
+    const rec={
       id:Date.now()+Math.random(),
       num:active.shapes.length+1,
       mesh,
       geomId:shapeKey,
-      fields:{size},
-      color:SWATCHES[0]
+      fields:{
+        size
+      },
+      color:SWATCHES[0],
+      baseDimensions:
+        storeDimensions(mesh)
     };
 
 
     active.shapes.push(rec);
 
-    activeShapeId = rec.id;
+    activeShapeId=
+      rec.id;
 
     armUndo(
       active.id,
@@ -3033,33 +3477,37 @@ function startFreehand(){
     'Press and hold on the grid, draw, then release'
   );
 
-  menuScroll.innerHTML = `
-    <div
-      style="padding:14px 6px;color:var(--muted);font-size:11px;text-align:center;max-width:220px;">
-      Draw directly on the plate with one finger.
+  menuScroll.innerHTML=`
+    <div style="
+      padding:14px 6px;
+      color:var(--muted);
+      font-size:11px;
+      text-align:center;
+      max-width:220px;">
+      Draw directly on the grid with one finger.
     </div>
   `;
 
 
-  let drawing = false;
-  let points = [];
+  let drawing=false;
+  let points=[];
 
 
   function getPoint(e){
 
-    const p =
+    const p=
       plateHit(
         e.clientX,
         e.clientY
       );
 
-    if (!p) return null;
+    if(!p)
+      return null;
 
-    if (shapeMode === '2d'){
-      p.z = 0;
-    } else {
-      p.y = 0;
-    }
+    if(shapeMode==='2d')
+      p.z=0;
+    else
+      p.z=0;
 
     return p;
   }
@@ -3067,18 +3515,19 @@ function startFreehand(){
 
   function onDown(e){
 
-    const p =
+    const p=
       getPoint(e);
 
-    if (!p) return;
+    if(!p)
+      return;
 
-    drawing = true;
+    drawing=true;
 
-    points = [p];
+    points=[p];
 
-    rotationLocked = true;
+    rotationLocked=true;
 
-    controls.enableRotate = false;
+    controls.enableRotate=false;
 
     refreshLockBtn();
   }
@@ -3086,22 +3535,25 @@ function startFreehand(){
 
   function onMove(e){
 
-    if (!drawing) return;
+    if(!drawing)
+      return;
 
-    const p =
+    const p=
       getPoint(e);
 
-    if (!p) return;
-
-    const last =
-      points[points.length-1];
-
-    if (
-      last &&
-      last.distanceTo(p) < 0.8
-    ){
+    if(!p)
       return;
-    }
+
+    const last=
+      points[
+        points.length-1
+      ];
+
+    if(
+      last &&
+      last.distanceTo(p)<.8
+    )
+      return;
 
     points.push(p);
   }
@@ -3109,14 +3561,17 @@ function startFreehand(){
 
   function onUp(){
 
-    if (!drawing){
+    if(!drawing){
+
       cleanup();
+
       return;
     }
 
-    drawing = false;
+    drawing=false;
 
-    if (points.length < 2){
+
+    if(points.length<2){
 
       cleanup();
 
@@ -3128,11 +3583,13 @@ function startFreehand(){
     }
 
 
-    const active =
+    const active=
       activeLayer();
 
-    if (!active){
+    if(!active){
+
       cleanup();
+
       return;
     }
 
@@ -3140,57 +3597,49 @@ function startFreehand(){
     let mesh;
 
 
-    if (shapeMode === '2d'){
+    if(shapeMode==='2d'){
 
-      const geo =
+      const geo=
         new THREE.BufferGeometry()
-          .setFromPoints(points);
+          .setFromPoints(
+            points
+          );
 
-      const material =
-        new THREE.LineBasicMaterial({
-          color:SWATCHES[0],
-          linewidth:1
-        });
-
-      mesh =
+      mesh=
         new THREE.Line(
           geo,
-          material
+          new THREE.LineBasicMaterial({
+            color:SWATCHES[0]
+          })
         );
 
-    } else {
+    }else{
 
-      const curve =
+      const curve=
         new THREE.CatmullRomCurve3(
           points
         );
 
-      const segments =
-        Math.max(
-          8,
-          points.length * 2
-        );
-
-      const geo =
+      const geo=
         new THREE.TubeGeometry(
           curve,
-          segments,
-          0.8,
+          Math.max(
+            8,
+            points.length*2
+          ),
+          .8,
           8,
           false
         );
 
-      const material =
-        new THREE.MeshStandardMaterial({
-          color:SWATCHES[0],
-          metalness:0.15,
-          roughness:0.55
-        });
-
-      mesh =
+      mesh=
         new THREE.Mesh(
           geo,
-          material
+          new THREE.MeshStandardMaterial({
+            color:SWATCHES[0],
+            metalness:.15,
+            roughness:.55
+          })
         );
 
       attachOutline(mesh);
@@ -3200,23 +3649,26 @@ function startFreehand(){
     scene.add(mesh);
 
 
-    const rec = {
+    const rec={
       id:Date.now()+Math.random(),
       num:active.shapes.length+1,
       mesh,
       geomId:'freehand',
       fields:{
-        points:points.map(p =>
-          p.toArray()
-        )
+        points:
+          points.map(
+            p => p.toArray()
+          )
       },
-      color:SWATCHES[0]
+      color:SWATCHES[0],
+      baseDimensions:
+        storeDimensions(mesh)
     };
 
 
     active.shapes.push(rec);
 
-    activeShapeId = rec.id;
+    activeShapeId=rec.id;
 
     armUndo(
       active.id,
@@ -3275,7 +3727,7 @@ function startFreehand(){
    P2P
 ───────────────────────────────────────────────────────────── */
 
-const P2P_SHAPES = [
+const P2P_SHAPES=[
   'rectangle',
   'square',
   'circle',
@@ -3284,8 +3736,13 @@ const P2P_SHAPES = [
   'oval'
 ];
 
+const LINE_TYPES=[
+  ['straight','Straight'],
+  ['arc','Arc'],
+  ['wave','Wave']
+];
 
-let pendingP2P = null;
+let pendingP2P=null;
 
 
 function renderP2PHome(){
@@ -3294,7 +3751,7 @@ function renderP2PHome(){
     'Place two points, then choose what to create'
   );
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
 
       <div
@@ -3338,16 +3795,16 @@ function renderP2PHome(){
 
 function startP2PLineCapture(){
 
-  crumbs = [
+  crumbs=[
     'Drawing Tools',
     'P2P',
     'Line'
   ];
 
-  crumbBack = () =>
-    goToP2POptions();
+  crumbBack=
+    () => goToP2POptions();
 
-  pendingP2P = {
+  pendingP2P={
     type:'line',
     points:[]
   };
@@ -3358,16 +3815,16 @@ function startP2PLineCapture(){
 
 function startP2PShapeCapture(){
 
-  crumbs = [
+  crumbs=[
     'Drawing Tools',
     'P2P',
     'Shape'
   ];
 
-  crumbBack = () =>
-    goToP2POptions();
+  crumbBack=
+    () => goToP2POptions();
 
-  pendingP2P = {
+  pendingP2P={
     type:'shape',
     points:[]
   };
@@ -3382,12 +3839,16 @@ function startP2PPointCapture(){
     'Tap the first point, then the second point'
   );
 
-  menuScroll.innerHTML = `
-    <div
-      style="padding:14px 6px;color:var(--muted);font-size:11px;text-align:center;max-width:220px;">
+  menuScroll.innerHTML=`
+    <div style="
+      padding:14px 6px;
+      color:var(--muted);
+      font-size:11px;
+      text-align:center;
+      max-width:220px;">
       ${
         pendingP2P &&
-        pendingP2P.type === 'line'
+        pendingP2P.type==='line'
           ? 'Place two endpoints.'
           : 'Place two opposite corners.'
       }
@@ -3395,56 +3856,46 @@ function startP2PPointCapture(){
   `;
 
 
-  let pointCount =
-    pendingP2P.points.length;
-
-
   function onUp(e){
 
-    const p =
+    const p=
       plateHit(
         e.clientX,
         e.clientY
       );
 
-    if (!p) return;
+    if(!p)
+      return;
 
-
-    const point =
+    const point=
       p.clone();
 
+    point.z=0;
 
-    if (shapeMode === '2d'){
-      point.z = 0;
-    } else {
-      point.y = 0;
-    }
-
-
-    pendingP2P.points.push(point);
-
-    pointCount++;
+    pendingP2P.points.push(
+      point
+    );
 
 
-    if (pointCount >= 2){
+    if(
+      pendingP2P.points.length>=2
+    ){
 
       cleanup();
 
-      if (
-        pendingP2P.type === 'line'
-      ){
+      if(
+        pendingP2P.type==='line'
+      )
         render(
           'p2pLineOptions'
         );
-      } else {
+      else
         render(
           'p2pShapeOptions'
         );
-      }
 
       return;
     }
-
 
     setH2(
       'First point placed — tap the second point'
@@ -3468,15 +3919,13 @@ function startP2PPointCapture(){
 }
 
 
-/* P2P line options */
-
 function renderP2PLineOptions(){
 
   setH2(
     'Choose how the two points connect'
   );
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
       ${
         LINE_TYPES.map(
@@ -3495,23 +3944,23 @@ function renderP2PLineOptions(){
 
 
   menuScroll
-    .querySelectorAll('[data-line]')
-    .forEach(el => {
+    .querySelectorAll(
+      '[data-line]'
+    )
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        'click',
-        () => {
-
-          createP2PLine(
-            el.dataset.line
-          );
-        }
-      );
-    });
+        el.addEventListener(
+          'click',
+          () =>
+            createP2PLine(
+              el.dataset.line
+            )
+        );
+      }
+    );
 }
 
-
-/* P2P shape options */
 
 function renderP2PShapeOptions(){
 
@@ -3519,7 +3968,7 @@ function renderP2PShapeOptions(){
     'Choose the shape between the two points'
   );
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
       ${
         P2P_SHAPES.map(
@@ -3528,12 +3977,10 @@ function renderP2PShapeOptions(){
               class="tile3"
               data-pshape="${k}">
               ${svg('shapes')}
-              <span>
-                ${
-                  k[0].toUpperCase() +
-                  k.slice(1)
-                }
-              </span>
+              <span>${
+                k[0].toUpperCase()+
+                k.slice(1)
+              }</span>
             </div>
           `
         ).join('')
@@ -3543,35 +3990,33 @@ function renderP2PShapeOptions(){
 
 
   menuScroll
-    .querySelectorAll('[data-pshape]')
-    .forEach(el => {
+    .querySelectorAll(
+      '[data-pshape]'
+    )
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        'click',
-        () => {
-
-          goToP2PFillPick(
-            el.dataset.pshape
-          );
-        }
-      );
-    });
+        el.addEventListener(
+          'click',
+          () =>
+            goToP2PFillPick(
+              el.dataset.pshape
+            )
+        );
+      }
+    );
 }
 
 
-function renderP2PShapePick(){
-
-  renderP2PShapeOptions();
-}
-
-
-function renderP2PFillPick(shapeKey){
+function renderP2PFillPick(
+  shapeKey
+){
 
   setH2(
     'Filled or hollow'
   );
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
 
       <div
@@ -3593,20 +4038,22 @@ function renderP2PFillPick(shapeKey){
 
 
   menuScroll
-    .querySelectorAll('[data-fill]')
-    .forEach(el => {
+    .querySelectorAll(
+      '[data-fill]'
+    )
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        'click',
-        () => {
-
-          createP2PShape(
-            shapeKey,
-            el.dataset.fill === 'hollow'
-          );
-        }
-      );
-    });
+        el.addEventListener(
+          'click',
+          () =>
+            createP2PShape(
+              shapeKey,
+              el.dataset.fill==='hollow'
+            )
+        );
+      }
+    );
 }
 
 
@@ -3616,275 +4063,173 @@ function makeP2PCurve(
   type
 ){
 
-  const points = [];
-
-  if (type === 'straight'){
-
-    points.push(
-      p1.clone(),
-      p2.clone()
+  if(type==='straight')
+    return new THREE.LineCurve3(
+      p1,
+      p2
     );
 
-  } else {
 
-    const dx =
-      p2.x-p1.x;
+  const dx=
+    p2.x-p1.x;
 
-    const dz =
-      p2.z-p1.z;
+  const dy=
+    p2.y-p1.y;
 
-    const dy =
-      p2.y-p1.y;
+  const length=
+    Math.sqrt(
+      dx*dx+dy*dy
+    );
 
-
-    let length;
-
-    if (shapeMode === '2d'){
-      length =
-        Math.sqrt(
-          dx*dx +
-          dy*dy
-        );
-    } else {
-      length =
-        Math.sqrt(
-          dx*dx +
-          dz*dz
-        );
-    }
+  if(length<.001)
+    return null;
 
 
-    if (length < 0.001){
-      return null;
-    }
+  const nx=
+    -dy/length;
+
+  const ny=
+    dx/length;
+
+  const offset=
+    Math.min(
+      15,
+      Math.max(
+        5,
+        length*.25
+      )
+    );
 
 
-    if (shapeMode === '2d'){
+  if(type==='arc'){
 
-      const nx =
-        -dy / length;
+    const mid=
+      p1.clone()
+        .lerp(p2,.5);
 
-      const ny =
-        dx / length;
+    mid.x+=nx*offset;
+    mid.y+=ny*offset;
 
-      const offset =
-        Math.min(
-          15,
-          Math.max(
-            5,
-            length*0.25
-          )
-        );
-
-
-      if (type === 'arc'){
-
-        const mid =
-          p1.clone()
-            .lerp(p2,0.5);
-
-        mid.x += nx*offset;
-        mid.y += ny*offset;
-
-        return new THREE.QuadraticBezierCurve3(
-          p1,
-          mid,
-          p2
-        );
-      }
-
-
-      for (let i=0; i<=24; i++){
-
-        const t = i/24;
-
-        const base =
-          p1.clone().lerp(p2,t);
-
-        const wave =
-          Math.sin(
-            t*Math.PI*4
-          ) *
-          Math.min(
-            5,
-            Math.max(
-              2,
-              length*0.08
-            )
-          );
-
-        base.x += nx*wave;
-        base.y += ny*wave;
-
-        points.push(base);
-      }
-
-      return new THREE.CatmullRomCurve3(
-        points
-      );
-    }
-
-
-    const nx =
-      -dz / length;
-
-    const nz =
-      dx / length;
-
-    const offset =
-      Math.min(
-        15,
-        Math.max(
-          5,
-          length*0.25
-        )
-      );
-
-
-    if (type === 'arc'){
-
-      const mid =
-        p1.clone()
-          .lerp(p2,0.5);
-
-      mid.x += nx*offset;
-      mid.z += nz*offset;
-
-      return new THREE.QuadraticBezierCurve3(
-        p1,
-        mid,
-        p2
-      );
-    }
-
-
-    for (let i=0; i<=24; i++){
-
-      const t = i/24;
-
-      const base =
-        p1.clone().lerp(p2,t);
-
-      const wave =
-        Math.sin(
-          t*Math.PI*4
-        ) *
-        Math.min(
-          5,
-          Math.max(
-            2,
-            length*0.08
-          )
-        );
-
-      base.x += nx*wave;
-      base.z += nz*wave;
-
-      points.push(base);
-    }
-
-    return new THREE.CatmullRomCurve3(
-      points
+    return new THREE.QuadraticBezierCurve3(
+      p1,
+      mid,
+      p2
     );
   }
 
 
-  return new THREE.LineCurve3(
-    p1,
-    p2
+  const points=[];
+
+  for(
+    let i=0;
+    i<=24;
+    i++
+  ){
+
+    const t=i/24;
+
+    const base=
+      p1.clone()
+        .lerp(p2,t);
+
+    const wave=
+      Math.sin(
+        t*Math.PI*4
+      )*
+      Math.min(
+        5,
+        Math.max(
+          2,
+          length*.08
+        )
+      );
+
+    base.x+=nx*wave;
+    base.y+=ny*wave;
+
+    points.push(base);
+  }
+
+  return new THREE.CatmullRomCurve3(
+    points
   );
 }
 
 
-function createP2PLine(type){
+function createP2PLine(
+  type
+){
 
-  if (
+  if(
     !pendingP2P ||
-    pendingP2P.points.length < 2
-  ){
+    pendingP2P.points.length<2
+  )
     return;
-  }
 
-
-  const p1 =
+  const p1=
     pendingP2P.points[0];
 
-  const p2 =
+  const p2=
     pendingP2P.points[1];
 
-
-  const curve =
+  const curve=
     makeP2PCurve(
       p1,
       p2,
       type
     );
 
-
-  if (!curve){
+  if(!curve)
     return;
-  }
 
-
-  const active =
+  const active=
     activeLayer();
 
-  if (!active){
+  if(!active)
     return;
-  }
 
 
   let mesh;
 
 
-  if (shapeMode === '2d'){
+  if(shapeMode==='2d'){
 
-    const points =
+    const points=
       curve.getPoints(
-        type === 'straight'
+        type==='straight'
           ? 1
           : 32
       );
 
-    const geo =
-      new THREE.BufferGeometry()
-        .setFromPoints(points);
-
-    const material =
-      new THREE.LineBasicMaterial({
-        color:SWATCHES[0]
-      });
-
-    mesh =
+    mesh=
       new THREE.Line(
-        geo,
-        material
+        new THREE.BufferGeometry()
+          .setFromPoints(
+            points
+          ),
+        new THREE.LineBasicMaterial({
+          color:SWATCHES[0]
+        })
       );
 
-  } else {
+  }else{
 
-    const geo =
-      new THREE.TubeGeometry(
-        curve,
-        type === 'straight'
-          ? 1
-          : 32,
-        0.8,
-        8,
-        false
-      );
-
-    const material =
-      new THREE.MeshStandardMaterial({
-        color:SWATCHES[0],
-        metalness:0.15,
-        roughness:0.55
-      });
-
-    mesh =
+    mesh=
       new THREE.Mesh(
-        geo,
-        material
+        new THREE.TubeGeometry(
+          curve,
+          type==='straight'
+            ? 1
+            : 32,
+          .8,
+          8,
+          false
+        ),
+        new THREE.MeshStandardMaterial({
+          color:SWATCHES[0],
+          metalness:.15,
+          roughness:.55
+        })
       );
 
     attachOutline(mesh);
@@ -3894,7 +4239,7 @@ function createP2PLine(type){
   scene.add(mesh);
 
 
-  const rec = {
+  const rec={
     id:Date.now()+Math.random(),
     num:active.shapes.length+1,
     mesh,
@@ -3905,13 +4250,15 @@ function createP2PLine(type){
         p2.toArray()
       ]
     },
-    color:SWATCHES[0]
+    color:SWATCHES[0],
+    baseDimensions:
+      storeDimensions(mesh)
   };
 
 
   active.shapes.push(rec);
 
-  activeShapeId = rec.id;
+  activeShapeId=rec.id;
 
   armUndo(
     active.id,
@@ -3920,7 +4267,7 @@ function createP2PLine(type){
 
   refreshShapeVisuals();
 
-  pendingP2P = null;
+  pendingP2P=null;
 
   showToast(
     `${type[0].toUpperCase()+type.slice(1)} line created`
@@ -3935,110 +4282,107 @@ async function createP2PShape(
   hollow
 ){
 
-  if (
+  if(
     !pendingP2P ||
-    pendingP2P.points.length < 2
-  ){
+    pendingP2P.points.length<2
+  )
     return;
-  }
 
 
-  if (!activeLayer()){
+  if(!activeLayer()){
 
-    const l =
+    const l=
       createLayer();
 
-    activeLayerId = l.id;
+    activeLayerId=l.id;
   }
 
 
-  const active =
+  const active=
     activeLayer();
 
-
-  const p1 =
+  const p1=
     pendingP2P.points[0];
 
-  const p2 =
+  const p2=
     pendingP2P.points[1];
 
 
-  const SIZE =
+  const width=
     Math.max(
       GRID_SQUARE,
-      p1.distanceTo(p2)
+      Math.abs(
+        p2.x-p1.x
+      )
+    );
+
+  const length=
+    Math.max(
+      GRID_SQUARE,
+      Math.abs(
+        p2.y-p1.y
+      )
+    );
+
+  const size=
+    Math.max(
+      width,
+      length
     );
 
 
   let outerGeo;
 
 
-  if (shapeMode === '2d'){
+  if(shapeMode==='2d'){
 
-    const width =
-      Math.max(
-        GRID_SQUARE,
-        Math.abs(p2.x-p1.x)
-      );
+    if(shapeKey==='rectangle'){
 
-    const height =
-      Math.max(
-        GRID_SQUARE,
-        Math.abs(p2.y-p1.y)
-      );
-
-
-    if (shapeKey === 'rectangle'){
-
-      outerGeo =
+      outerGeo=
         new THREE.PlaneGeometry(
           width,
-          height
+          length
         );
 
-    } else if (
-      shapeKey === 'square'
+    }else if(
+      shapeKey==='square'
     ){
 
-      const size =
+      const side=
         Math.max(
           width,
-          height
+          length
         );
 
-      outerGeo =
+      outerGeo=
         new THREE.PlaneGeometry(
-          size,
-          size
+          side,
+          side
         );
 
-    } else {
+    }else{
 
-      outerGeo =
+      outerGeo=
         buildDragGeometry(
           shapeKey,
-          Math.max(
-            width,
-            height
-          )
+          size
         );
     }
 
-  } else {
+  }else{
 
-    outerGeo =
+    outerGeo=
       buildDragGeometry(
         shapeKey,
-        SIZE
+        size
       );
   }
 
 
-  let finalGeo =
-    outerGeo;
+  let finalGeo=outerGeo;
 
 
-  if (hollow){
+  if(hollow){
 
     try{
 
@@ -4046,72 +4390,42 @@ async function createP2PShape(
         Evaluator,
         Brush,
         SUBTRACTION
-      } =
+      }=
         await import(
           'https://unpkg.com/three-bvh-csg@0.0.16/build/index.module.js'
         );
 
 
-      const wallRatio = 0.6;
+      const wallRatio=.6;
+
+      const innerGeo=
+        buildDragGeometry(
+          shapeKey,
+          size*wallRatio
+        );
 
 
-      let innerGeo;
-
-
-      if (
-        shapeMode === '2d' &&
-        (
-          shapeKey === 'rectangle' ||
-          shapeKey === 'square'
-        )
-      ){
-
-        const width =
-          Math.max(
-            GRID_SQUARE,
-            Math.abs(p2.x-p1.x)
-          );
-
-        const height =
-          Math.max(
-            GRID_SQUARE,
-            Math.abs(p2.y-p1.y)
-          );
-
-
-        innerGeo =
-          new THREE.PlaneGeometry(
-            width*wallRatio,
-            height*wallRatio
-          );
-
-      } else {
-
-        innerGeo =
-          buildDragGeometry(
-            shapeKey,
-            SIZE*wallRatio
-          );
-      }
-
-
-      const brushA =
-        new Brush(outerGeo);
+      const brushA=
+        new Brush(
+          outerGeo
+        );
 
       brushA.updateMatrixWorld();
 
 
-      const brushB =
-        new Brush(innerGeo);
+      const brushB=
+        new Brush(
+          innerGeo
+        );
 
       brushB.updateMatrixWorld();
 
 
-      const evaluator =
+      const evaluator=
         new Evaluator();
 
 
-      const result =
+      const result=
         evaluator.evaluate(
           brushA,
           brushB,
@@ -4122,10 +4436,10 @@ async function createP2PShape(
       result.geometry
         .computeVertexNormals();
 
-      finalGeo =
+      finalGeo=
         result.geometry;
 
-    } catch(err){
+    }catch(err){
 
       console.error(err);
 
@@ -4136,33 +4450,29 @@ async function createP2PShape(
   }
 
 
-  const mesh =
+  const mesh=
     new THREE.Mesh(
       finalGeo,
       new THREE.MeshStandardMaterial({
         color:SWATCHES[0],
-        metalness:0.15,
-        roughness:0.55
+        metalness:.15,
+        roughness:.55
       })
     );
 
 
-  if (shapeMode === '2d'){
+  /*
+    P2P placement remains based on
+    its two selected points.
+  */
 
-    mesh.position.set(
-      (p1.x+p2.x)/2,
-      (p1.y+p2.y)/2,
-      0
-    );
-
-  } else {
-
-    mesh.position.set(
-      (p1.x+p2.x)/2,
-      0,
-      (p1.z+p2.z)/2
-    );
-  }
+  mesh.position.set(
+    (p1.x+p2.x)/2,
+    (p1.y+p2.y)/2,
+    shapeMode==='3d'
+      ? geometryDimensions(mesh).z/2
+      : 0
+  );
 
 
   clampToPlate(
@@ -4175,22 +4485,29 @@ async function createP2PShape(
   scene.add(mesh);
 
 
-  const rec = {
+  const rec={
     id:Date.now()+Math.random(),
     num:active.shapes.length+1,
     mesh,
     geomId:shapeKey,
     fields:{
-      size:SIZE,
+      W:width,
+      L:length,
+      H:
+        shapeMode==='3d'
+          ? geometryDimensions(mesh).z
+          : 0,
       hollow
     },
-    color:SWATCHES[0]
+    color:SWATCHES[0],
+    baseDimensions:
+      storeDimensions(mesh)
   };
 
 
   active.shapes.push(rec);
 
-  activeShapeId = rec.id;
+  activeShapeId=rec.id;
 
   armUndo(
     active.id,
@@ -4199,7 +4516,7 @@ async function createP2PShape(
 
   refreshShapeVisuals();
 
-  pendingP2P = null;
+  pendingP2P=null;
 
   showToast(
     `${hollow?'Hollow':'Filled'} ${shapeKey} placed`
@@ -4210,77 +4527,694 @@ async function createP2PShape(
 
 
 /* ─────────────────────────────────────────────────────────────
+   OBJECT MANIPULATION
+───────────────────────────────────────────────────────────── */
+
+let selectedAxis=
+  shapeMode==='2d'
+    ? 'X'
+    : 'X';
+
+let manipulationActive=false;
+let manipulationCleanup=null;
+
+const moveCursor=
+  document.createElement(
+    'div'
+  );
+
+moveCursor.id='moveCursor';
+
+moveCursor.innerHTML=
+  '<span>➤</span>';
+
+document
+  .getElementById('plate')
+  .appendChild(
+    moveCursor
+  );
+
+
+const CURSOR_OFFSET_X=30;
+const CURSOR_OFFSET_Y=42;
+
+
+function setAxis(axis){
+
+  selectedAxis=axis;
+
+  document
+    .querySelectorAll(
+      '.step-lbl[data-axis]'
+    )
+    .forEach(
+      b =>
+        b.classList.toggle(
+          'axis-active',
+          b.dataset.axis===axis
+        )
+    );
+}
+
+
+function currentIncrement(){
+
+  return mmState==='2.5'
+    ? 2.5
+    : 5;
+}
+
+
+function updateMoveCursor(
+  clientX,
+  clientY
+){
+
+  const rect=
+    canvas.getBoundingClientRect();
+
+  moveCursor.style.left=
+    (
+      clientX-
+      rect.left-
+      CURSOR_OFFSET_X
+    )+'px';
+
+  moveCursor.style.top=
+    (
+      clientY-
+      rect.top-
+      CURSOR_OFFSET_Y
+    )+'px';
+}
+
+
+function cursorWorldPoint(
+  clientX,
+  clientY
+){
+
+  return plateHit(
+    clientX-CURSOR_OFFSET_X,
+    clientY-CURSOR_OFFSET_Y
+  );
+}
+
+
+function beginMove(){
+
+  const s=
+    activeShape();
+
+  if(!s)
+    return;
+
+
+  cleanupManipulation();
+
+  manipulationActive=true;
+
+  moveCursor.style.display=
+    'block';
+
+  setH2(
+    'Press and drag the cursor to move the selected object'
+  );
+
+
+  let dragging=false;
+  let pointerId=null;
+  let startFingerX=0;
+  let startFingerY=0;
+  let startPosition=
+    s.mesh.position.clone();
+
+  let startCursorPoint=null;
+
+  let zPlane=null;
+
+
+  function onDown(e){
+
+    pointerId=e.pointerId;
+
+    startFingerX=e.clientX;
+    startFingerY=e.clientY;
+
+    updateMoveCursor(
+      e.clientX,
+      e.clientY
+    );
+
+    const cp=
+      cursorWorldPoint(
+        e.clientX,
+        e.clientY
+      );
+
+    if(!cp)
+      return;
+
+
+    dragging=true;
+
+    startPosition=
+      s.mesh.position.clone();
+
+    startCursorPoint=
+      cp.clone();
+
+
+    if(
+      shapeMode==='3d' &&
+      selectedAxis==='Z'
+    ){
+
+      const normal=
+        new THREE.Vector3();
+
+      camera.getWorldDirection(
+        normal
+      );
+
+      zPlane=
+        new THREE.Plane()
+          .setFromNormalAndCoplanarPoint(
+            normal,
+            s.mesh.position
+          );
+    }
+
+
+    canvas.setPointerCapture(
+      e.pointerId
+    );
+
+    e.preventDefault();
+  }
+
+
+  function onMove(e){
+
+    updateMoveCursor(
+      e.clientX,
+      e.clientY
+    );
+
+    if(!dragging)
+      return;
+
+
+    let cp=
+      cursorWorldPoint(
+        e.clientX,
+        e.clientY
+      );
+
+
+    if(!cp)
+      return;
+
+
+    if(
+      shapeMode==='3d' &&
+      selectedAxis==='Z'
+    ){
+
+      const rect=
+        canvas.getBoundingClientRect();
+
+      const x=
+        ((e.clientX-rect.left)/
+          rect.width)*2-1;
+
+      const y=
+        -((e.clientY-rect.top)/
+          rect.height)*2+1;
+
+      const r=
+        new THREE.Raycaster();
+
+      r.setFromCamera(
+        new THREE.Vector2(
+          x,
+          y
+        ),
+        camera
+      );
+
+      const hit=
+        new THREE.Vector3();
+
+      if(
+        !r.ray.intersectPlane(
+          zPlane,
+          hit
+        )
+      )
+        return;
+
+      cp=hit;
+    }
+
+
+    const dx=
+      cp.x-startCursorPoint.x;
+
+    const dy=
+      cp.y-startCursorPoint.y;
+
+    const dz=
+      cp.z-startCursorPoint.z;
+
+
+    if(selectedAxis==='X'){
+
+      s.mesh.position.x=
+        startPosition.x+dx;
+
+    }else if(
+      selectedAxis==='Y'
+    ){
+
+      s.mesh.position.y=
+        startPosition.y+dy;
+
+    }else if(
+      selectedAxis==='Z'
+    ){
+
+      if(shapeMode==='3d'){
+
+        s.mesh.position.z=
+          startPosition.z+dz;
+
+      }
+    }
+
+
+    clampToPlate(
+      s.mesh,
+      true
+    );
+
+    refreshShapeVisuals();
+  }
+
+
+  function onUp(){
+
+    dragging=false;
+
+    if(pointerId!==null){
+
+      try{
+        canvas.releasePointerCapture(
+          pointerId
+        );
+      }catch(_){}
+    }
+
+    showToast(
+      'Object moved'
+    );
+  }
+
+
+  function cleanup(){
+
+    canvas.removeEventListener(
+      'pointerdown',
+      onDown
+    );
+
+    canvas.removeEventListener(
+      'pointermove',
+      onMove
+    );
+
+    canvas.removeEventListener(
+      'pointerup',
+      onUp
+    );
+
+    moveCursor.style.display=
+      'none';
+
+    manipulationActive=false;
+
+    if(
+      manipulationCleanup===
+      cleanup
+    )
+      manipulationCleanup=null;
+  }
+
+
+  canvas.addEventListener(
+    'pointerdown',
+    onDown
+  );
+
+  canvas.addEventListener(
+    'pointermove',
+    onMove
+  );
+
+  canvas.addEventListener(
+    'pointerup',
+    onUp
+  );
+
+  manipulationCleanup=
+    cleanup;
+}
+
+
+function beginRotate(){
+
+  const s=
+    activeShape();
+
+  if(!s)
+    return;
+
+
+  cleanupManipulation();
+
+  manipulationActive=true;
+
+  moveCursor.style.display=
+    'block';
+
+  setH2(
+    'Press and drag to rotate the selected object'
+  );
+
+
+  let dragging=false;
+  let pointerId=null;
+  let startAngle=0;
+  let startRotation=
+    s.mesh.rotation.clone();
+
+
+  function screenAngle(
+    clientX,
+    clientY
+  ){
+
+    const rect=
+      canvas.getBoundingClientRect();
+
+    const center=
+      s.mesh.position.clone()
+        .project(camera);
+
+    const cx=
+      rect.left+
+      (center.x+1)*
+      rect.width/2;
+
+    const cy=
+      rect.top+
+      (1-center.y)*
+      rect.height/2;
+
+    return Math.atan2(
+      clientY-cy,
+      clientX-cx
+    );
+  }
+
+
+  function onDown(e){
+
+    pointerId=e.pointerId;
+
+    updateMoveCursor(
+      e.clientX,
+      e.clientY
+    );
+
+    startAngle=
+      screenAngle(
+        e.clientX,
+        e.clientY
+      );
+
+    startRotation=
+      s.mesh.rotation.clone();
+
+    dragging=true;
+
+    canvas.setPointerCapture(
+      e.pointerId
+    );
+
+    e.preventDefault();
+  }
+
+
+  function onMove(e){
+
+    updateMoveCursor(
+      e.clientX,
+      e.clientY
+    );
+
+    if(!dragging)
+      return;
+
+
+    const angle=
+      screenAngle(
+        e.clientX,
+        e.clientY
+      );
+
+    let delta=
+      angle-startAngle;
+
+
+    while(delta>Math.PI)
+      delta-=Math.PI*2;
+
+    while(delta<-Math.PI)
+      delta+=Math.PI*2;
+
+
+    if(selectedAxis==='X'){
+
+      s.mesh.rotation.x=
+        startRotation.x+delta;
+
+    }else if(
+      selectedAxis==='Y'
+    ){
+
+      s.mesh.rotation.y=
+        startRotation.y+delta;
+
+    }else if(
+      selectedAxis==='Z'
+    ){
+
+      s.mesh.rotation.z=
+        startRotation.z+delta;
+    }
+
+    refreshShapeVisuals();
+  }
+
+
+  function onUp(){
+
+    dragging=false;
+
+    if(pointerId!==null){
+
+      try{
+        canvas.releasePointerCapture(
+          pointerId
+        );
+      }catch(_){}
+    }
+
+    showToast(
+      'Object rotated'
+    );
+  }
+
+
+  function cleanup(){
+
+    canvas.removeEventListener(
+      'pointerdown',
+      onDown
+    );
+
+    canvas.removeEventListener(
+      'pointermove',
+      onMove
+    );
+
+    canvas.removeEventListener(
+      'pointerup',
+      onUp
+    );
+
+    moveCursor.style.display=
+      'none';
+
+    manipulationActive=false;
+
+    if(
+      manipulationCleanup===
+      cleanup
+    )
+      manipulationCleanup=null;
+  }
+
+
+  canvas.addEventListener(
+    'pointerdown',
+    onDown
+  );
+
+  canvas.addEventListener(
+    'pointermove',
+    onMove
+  );
+
+  canvas.addEventListener(
+    'pointerup',
+    onUp
+  );
+
+  manipulationCleanup=
+    cleanup;
+}
+
+
+function cleanupManipulation(){
+
+  if(manipulationCleanup){
+
+    manipulationCleanup();
+
+    manipulationCleanup=null;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
    LAYER DELETE
 ───────────────────────────────────────────────────────────── */
 
 function wireLayerDelete(){
 
-  let armedId = null;
-  let armTimer = null;
+  let armedId=null;
+  let armTimer=null;
 
 
   menuScroll
     .querySelectorAll(
       '[data-del]'
     )
-    .forEach(btn => {
+    .forEach(
+      btn => {
 
-      btn.addEventListener(
-        'click',
-        e => {
+        btn.addEventListener(
+          'click',
+          e => {
 
-          e.stopPropagation();
+            e.stopPropagation();
 
-          const id =
-            parseInt(
-              btn.dataset.del,
-              10
-            );
-
-
-          if (armedId !== id){
-
-            menuScroll
-              .querySelectorAll(
-                '.tile-del'
-              )
-              .forEach(b =>
-                b.classList.remove(
-                  'armed'
-                )
+            const id=
+              parseInt(
+                btn.dataset.del,
+                10
               );
 
 
-            armedId = id;
+            if(armedId!==id){
 
-            btn.classList.add(
-              'armed'
-            );
+              menuScroll
+                .querySelectorAll(
+                  '.tile-del'
+                )
+                .forEach(
+                  b =>
+                    b.classList.remove(
+                      'armed'
+                    )
+                );
 
-            clearTimeout(
-              armTimer
-            );
+              armedId=id;
 
+              btn.classList.add(
+                'armed'
+              );
 
-            armTimer =
-              setTimeout(
+              clearTimeout(
+                armTimer
+              );
+
+              armTimer=
+                setTimeout(
+                  () => {
+
+                    armedId=null;
+
+                    btn.classList.remove(
+                      'armed'
+                    );
+
+                  },
+                  3000
+                );
+
+            }else{
+
+              clearTimeout(
+                armTimer
+              );
+
+              showConfirm(
+                'Delete this layer?',
                 () => {
 
-                  armedId = null;
+                  deleteLayer(id);
 
-                  btn.classList.remove(
-                    'armed'
-                  );
-
-                },
-                3000
+                  goToLayersHome();
+                }
               );
+            }
+          }
+        );
+      }
+    );
 
-          } else {
 
-            clearTimeout(
-              armTimer
-            );
+  menuScroll
+    .querySelectorAll(
+      '[data-del-tool]'
+    )
+    .forEach(
+      btn => {
+
+        btn.addEventListener(
+          'click',
+          e => {
+
+            e.stopPropagation();
+
+            const id=
+              parseInt(
+                btn.dataset.delTool,
+                10
+              );
 
             showConfirm(
               'Delete this layer?',
@@ -4288,54 +5222,21 @@ function wireLayerDelete(){
 
                 deleteLayer(id);
 
-                goToLayersHome();
+                if(!layers.length){
+
+                  const l=
+                    createLayer();
+
+                  activeLayerId=l.id;
+                }
+
+                renderDrawingToolsHome();
               }
             );
           }
-        }
-      );
-    });
-
-
-  menuScroll
-    .querySelectorAll(
-      '[data-del-tool]'
-    )
-    .forEach(btn => {
-
-      btn.addEventListener(
-        'click',
-        e => {
-
-          e.stopPropagation();
-
-          const id =
-            parseInt(
-              btn.dataset.delTool,
-              10
-            );
-
-
-          showConfirm(
-            'Delete this layer?',
-            () => {
-
-              deleteLayer(id);
-
-              if (!layers.length){
-
-                const l =
-                  createLayer();
-
-                activeLayerId = l.id;
-              }
-
-              renderDrawingToolsHome();
-            }
-          );
-        }
-      );
-    });
+        );
+      }
+    );
 }
 
 
@@ -4343,7 +5244,7 @@ function wireLayerDelete(){
    SHAPE PANEL
 ───────────────────────────────────────────────────────────── */
 
-const ACTIONS = [
+const ACTIONS=[
   {
     id:'select',
     label:'Select',
@@ -4353,6 +5254,11 @@ const ACTIONS = [
     id:'move',
     label:'Move',
     icon:'move'
+  },
+  {
+    id:'rotate',
+    label:'Rotate',
+    icon:'rotate'
   },
   {
     id:'scale',
@@ -4377,18 +5283,20 @@ const ACTIONS = [
 ];
 
 
-function renderShapePanel(subtool){
+function renderShapePanel(
+  subtool
+){
 
-  const l =
+  const l=
     activeLayer();
 
-  const s =
+  const s=
     activeShape();
 
 
-  if (!l || !s){
+  if(!l || !s){
 
-    goToLayersHome();
+    goToDrawingTools();
 
     return;
   }
@@ -4397,23 +5305,25 @@ function renderShapePanel(subtool){
   setH2('');
 
 
-  const totalShapes =
+  const totalShapes=
     layers.reduce(
       (n,ly) =>
-        n + ly.shapes.length,
+        n+ly.shapes.length,
       0
     );
 
 
-  const booleanDisabled =
-    totalShapes < 2 ||
+  const booleanDisabled=
+    totalShapes<2 ||
     !s.mesh.isMesh;
 
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
 
-      <div class="tile3 layer-active">
+      <div
+        class="tile3 layer-active"
+        data-selected-shape>
         ${svg('shapes')}
         <span>${shapeLabel(s)}</span>
       </div>
@@ -4429,18 +5339,19 @@ function renderShapePanel(subtool){
           a => `
             <button
               data-action="${a.id}"
-              class="${a.id===subtool?'active':''}"
+              class="${
+                a.id===subtool
+                  ? 'active'
+                  : ''
+              }"
               ${
                 a.id==='boolean' &&
                 booleanDisabled
                   ? 'disabled'
                   : ''
               }>
-
               ${svg(a.icon)}
-
               <span>${a.label}</span>
-
             </button>
           `
         ).join('')
@@ -4456,76 +5367,100 @@ function renderShapePanel(subtool){
 
 
   menuScroll
+    .querySelector(
+      '[data-selected-shape]'
+    )
+    .addEventListener(
+      'click',
+      () => {
+
+        activeShapeId=s.id;
+
+        refreshShapeVisuals();
+
+        renderShapePanel(
+          subtool
+        );
+      }
+    );
+
+
+  menuScroll
     .querySelectorAll(
       '[data-action]'
     )
-    .forEach(b => {
+    .forEach(
+      b => {
 
-      b.addEventListener(
-        'click',
-        () => {
+        b.addEventListener(
+          'click',
+          () => {
 
-          const id =
-            b.dataset.action;
+            const id=
+              b.dataset.action;
 
 
-          if (id === 'delete'){
+            if(id==='delete'){
 
-            deleteShape(
-              l.id,
-              s.id
+              deleteShape(
+                l.id,
+                s.id
+              );
+
+              goToDrawingTools();
+
+              showToast(
+                'Shape deleted'
+              );
+
+              return;
+            }
+
+
+            if(id==='select'){
+
+              activateCrosshair();
+
+              return;
+            }
+
+
+            if(id==='boolean'){
+
+              crumbs=[
+                'Drawing Tools',
+                shapeLabel(s),
+                'Boolean'
+              ];
+
+              crumbBack=
+                () =>
+                  goToShape();
+
+              render(
+                'booleanPick'
+              );
+
+              return;
+            }
+
+
+            goToSubtool(
+              id[0].toUpperCase()+
+              id.slice(1)
             );
-
-            goToLayer();
-
-            showToast(
-              'Shape deleted'
-            );
-
-            return;
           }
+        );
+      }
+    );
 
 
-          if (id === 'select'){
-
-            activateCrosshair();
-
-            return;
-          }
-
-
-          if (id === 'boolean'){
-
-            crumbs = [
-              l.name,
-              shapeLabel(s),
-              'Boolean'
-            ];
-
-            crumbBack = () =>
-              goToShape();
-
-            render(
-              'booleanPick'
-            );
-
-            return;
-          }
-
-
-          goToSubtool(
-            id[0].toUpperCase() +
-            id.slice(1)
-          );
-        }
-      );
-    });
-
-
-  if (
+  if(
     subtool &&
-    subtool !== 'boolean'
+    subtool!=='boolean' &&
+    subtool!=='select'
   ){
+
     fillSubtool(
       subtool,
       l,
@@ -4535,85 +5470,111 @@ function renderShapePanel(subtool){
 }
 
 
+/* ─────────────────────────────────────────────────────────────
+   SUBTOOLS
+───────────────────────────────────────────────────────────── */
+
+function getDimension(
+  s,
+  axis
+){
+
+  const d=
+    s.baseDimensions ||
+    geometryDimensions(
+      s.mesh
+    );
+
+  return d[
+    axis.toLowerCase()
+  ];
+}
+
+
+function setDimension(
+  s,
+  axis,
+  value
+){
+
+  const key=
+    axis.toLowerCase();
+
+  const base=
+    s.baseDimensions ||
+    geometryDimensions(
+      s.mesh
+    );
+
+  if(!base[key])
+    return;
+
+  s.mesh.scale[key]=
+    value/base[key];
+
+  clampToPlate(
+    s.mesh,
+    true
+  );
+}
+
+
 function fillSubtool(
   tool,
   l,
   s
 ){
 
-  const slot =
+  const slot=
     document.getElementById(
       'subtoolSlot'
     );
 
-  if (!slot) return;
+  if(!slot)
+    return;
 
 
-  if (tool === 'move'){
-
-    const axes =
-      shapeMode === '2d'
-        ? ['X','Y']
-        : ['X','Y','Z'];
+  const axes=
+    shapeMode==='2d'
+      ? ['X','Y']
+      : ['X','Y','Z'];
 
 
-    slot.innerHTML = `
+  if(tool==='move'){
+
+    slot.innerHTML=`
       <div class="stepper-stack">
         ${
-          axes.map(axis => {
-
-            let value = 0;
-
-            if (axis === 'X')
-              value = s.mesh.position.x;
-
-            if (axis === 'Y')
-              value = s.mesh.position.y;
-
-            if (axis === 'Z')
-              value = s.mesh.position.z;
-
-            const min =
-              axis === 'Y' &&
-              shapeMode === '3d'
-                ? 0
-                : -half;
-
-            const max =
-              axis === 'Y' &&
-              shapeMode === '3d'
-                ? PLATE_SIZE
-                : half;
-
-            return stepperRow(
-              axis,
-              value,
-              min,
-              max
-            );
-          }).join('')
+          axes.map(
+            axis =>
+              stepperRow(
+                axis,
+                s.mesh.position[
+                  axis.toLowerCase()
+                ],
+                -half,
+                half,
+                'mm'
+              )
+          ).join('')
         }
       </div>
     `;
 
+
+    wireAxisButtons(
+      slot,
+      axes
+    );
 
     wireSteppers(
       slot,
       axes,
       (axis,val) => {
 
-        if (axis === 'X')
-          s.mesh.position.x = val;
-
-        if (axis === 'Y')
-          s.mesh.position.y =
-            shapeMode === '3d'
-              ? Math.max(0,val)
-              : val;
-
-        if (axis === 'Z')
-          s.mesh.position.z = val;
-
+        s.mesh.position[
+          axis.toLowerCase()
+        ]=val;
 
         clampToPlate(
           s.mesh,
@@ -4629,27 +5590,125 @@ function fillSubtool(
     );
 
 
-  } else if (tool === 'scale'){
+  }else if(tool==='rotate'){
 
-    const axes =
-      shapeMode === '2d'
-        ? ['X','Y']
+    const rotateAxes=
+      shapeMode==='2d'
+        ? ['Z']
         : ['X','Y','Z'];
 
 
-    slot.innerHTML = `
+    slot.innerHTML=`
+      <div class="stepper-stack">
+        ${
+          rotateAxes.map(
+            axis =>
+              stepperRow(
+                axis,
+                THREE.MathUtils.radToDeg(
+                  s.mesh.rotation[
+                    axis.toLowerCase()
+                  ]
+                ),
+                -360,
+                360,
+                'deg'
+              )
+          ).join('')
+        }
+      </div>
+    `;
+
+
+    wireAxisButtons(
+      slot,
+      rotateAxes
+    );
+
+
+    slot
+      .querySelectorAll(
+        '.stepper-row[data-axis]'
+      )
+      .forEach(
+        row => {
+
+          row
+            .querySelectorAll(
+              '[data-step]'
+            )
+            .forEach(
+              btn => {
+
+                btn.addEventListener(
+                  'click',
+                  () => {
+
+                    const axis=
+                      row.dataset.axis;
+
+                    const key=
+                      axis.toLowerCase();
+
+                    const current=
+                      THREE.MathUtils.radToDeg(
+                        s.mesh.rotation[key]
+                      );
+
+                    const v=
+                      current+
+                      parseFloat(
+                        btn.dataset.step
+                      )*5;
+
+                    s.mesh.rotation[key]=
+                      THREE.MathUtils.degToRad(
+                        v
+                      );
+
+                    fillSubtool(
+                      'rotate',
+                      l,
+                      s
+                    );
+                  }
+                );
+              }
+            );
+        }
+      );
+
+
+    menuScroll
+      .querySelector(
+        '[data-action="rotate"]'
+      )
+      ?.classList.add(
+        'active'
+      );
+
+
+    beginRotate();
+
+
+  }else if(tool==='scale'){
+
+    slot.innerHTML=`
       <div class="stepper-stack">
 
-        ${allAxisStepper()}
-
         ${
-          axes.map(axis =>
-            stepperRow(
-              axis,
-              s.mesh.scale[axis.toLowerCase()],
-              0.1,
-              10
-            )
+          axes.map(
+            axis =>
+              stepperRow(
+                axis,
+                getDimension(
+                  s,
+                  axis
+                ),
+                GRID_SQUARE,
+                PLATE_SIZE,
+                'mm'
+              )
           ).join('')
         }
 
@@ -4657,18 +5716,21 @@ function fillSubtool(
     `;
 
 
+    wireAxisButtons(
+      slot,
+      axes
+    );
+
+
     wireSteppers(
       slot,
       axes,
       (axis,val) => {
 
-        s.mesh.scale[
-          axis.toLowerCase()
-        ] = val;
-
-        clampToPlate(
-          s.mesh,
-          true
+        setDimension(
+          s,
+          axis,
+          val
         );
 
         fillSubtool(
@@ -4680,80 +5742,25 @@ function fillSubtool(
     );
 
 
-    const all =
-      slot.querySelector(
-        '.all-axes'
-      );
+  }else if(tool==='color'){
 
-
-    if (all){
-
-      all
-        .querySelectorAll(
-          '[data-step]'
-        )
-        .forEach(btn => {
-
-          btn.addEventListener(
-            'click',
-            () => {
-
-              const d =
-                parseFloat(
-                  btn.dataset.step
-                ) * 0.1;
-
-
-              axes.forEach(axis => {
-
-                const key =
-                  axis.toLowerCase();
-
-                s.mesh.scale[key] =
-                  Math.min(
-                    10,
-                    Math.max(
-                      0.1,
-                      s.mesh.scale[key] + d
-                    )
-                  );
-              });
-
-
-              clampToPlate(
-                s.mesh,
-                true
-              );
-
-
-              fillSubtool(
-                'scale',
-                l,
-                s
-              );
-            }
-          );
-        });
-    }
-
-
-  } else if (tool === 'color'){
-
-    slot.innerHTML = `
+    slot.innerHTML=`
       <div class="swatch-row">
-
         ${
           SWATCHES.map(
             c => `
               <div
-                class="swatch ${s.color===c?'selected':''}"
+                class="swatch ${
+                  s.color===c
+                    ? 'selected'
+                    : ''
+                }"
                 data-c="${c}"
                 style="background:${c}">
               </div>
             `
           ).join('')
         }
-
       </div>
     `;
 
@@ -4762,60 +5769,28 @@ function fillSubtool(
       .querySelectorAll(
         '[data-c]'
       )
-      .forEach(sw => {
+      .forEach(
+        sw => {
 
-        sw.addEventListener(
-          'click',
-          () => {
+          sw.addEventListener(
+            'click',
+            () => {
 
-            s.color =
-              sw.dataset.c;
+              s.color=
+                sw.dataset.c;
 
-            refreshShapeVisuals();
+              refreshShapeVisuals();
 
-            fillSubtool(
-              'color',
-              l,
-              s
-            );
-          }
-        );
-      });
+              fillSubtool(
+                'color',
+                l,
+                s
+              );
+            }
+          );
+        }
+      );
   }
-}
-
-
-function allAxisStepper(){
-
-  const axes =
-    shapeMode === '2d'
-      ? 'X/Y'
-      : 'X/Y/Z';
-
-
-  return `
-    <div
-      class="stepper-row all-axes">
-
-      <span class="step-lbl">
-        All
-      </span>
-
-      <button data-step="-1">
-        −
-      </button>
-
-      <input
-        type="text"
-        value="${axes}"
-        readonly>
-
-      <button data-step="1">
-        +
-      </button>
-
-    </div>
-  `;
 }
 
 
@@ -4823,34 +5798,91 @@ function stepperRow(
   axis,
   val,
   min,
-  max
+  max,
+  unit
 ){
+
+  const display=
+    unit==='mm'
+      ? `${Number(val).toFixed(2)} mm`
+      : `${Number(val).toFixed(1)}°`;
+
 
   return `
     <div
       class="stepper-row"
       data-axis="${axis}">
 
-      <span class="step-lbl">
+      <button
+        class="step-lbl ${
+          selectedAxis===axis
+            ? 'axis-active'
+            : ''
+        }"
+        data-axis="${axis}">
         ${axis}
-      </span>
+      </button>
 
-      <button data-step="-1">
+      <button
+        data-step="-1">
         −
       </button>
 
-      <input
-        type="number"
-        value="${Number(val).toFixed(2)}"
+      <div
+        class="value-button"
         data-min="${min}"
         data-max="${max}">
+        ${display}
+      </div>
 
-      <button data-step="1">
+      <button
+        data-step="1">
         +
       </button>
 
     </div>
   `;
+}
+
+
+function wireAxisButtons(
+  scope,
+  axes
+){
+
+  scope
+    .querySelectorAll(
+      '.step-lbl[data-axis]'
+    )
+    .forEach(
+      btn => {
+
+        btn.addEventListener(
+          'click',
+          e => {
+
+            e.stopPropagation();
+
+            setAxis(
+              btn.dataset.axis
+            );
+
+            scope
+              .querySelectorAll(
+                '.step-lbl[data-axis]'
+              )
+              .forEach(
+                b =>
+                  b.classList.toggle(
+                    'axis-active',
+                    b.dataset.axis===
+                    selectedAxis
+                  )
+              );
+          }
+        );
+      }
+    );
 }
 
 
@@ -4860,99 +5892,82 @@ function wireSteppers(
   onChange
 ){
 
-  axes.forEach(axis => {
+  axes.forEach(
+    axis => {
 
-    const row =
-      scope.querySelector(
-        `.stepper-row[data-axis="${axis}"]`
-      );
+      const row=
+        scope.querySelector(
+          `.stepper-row[data-axis="${axis}"]`
+        );
 
-    if (!row) return;
-
-
-    const input =
-      row.querySelector('input');
+      if(!row)
+        return;
 
 
-    const min =
-      parseFloat(
-        input.dataset.min
-      );
+      const valueEl=
+        row.querySelector(
+          '.value-button'
+        );
 
-    const max =
-      parseFloat(
-        input.dataset.max
-      );
+      const min=
+        parseFloat(
+          valueEl.dataset.min
+        );
 
-
-    row
-      .querySelectorAll(
-        '[data-step]'
-      )
-      .forEach(btn => {
-
-        btn.addEventListener(
-          'click',
-          () => {
-
-            /*
-              Position = 2.5mm steps.
-              Scale = 0.1 steps.
-            */
-
-            const stepSize =
-              max <= 10
-                ? 0.1
-                : GRID_SQUARE;
+      const max=
+        parseFloat(
+          valueEl.dataset.max
+        );
 
 
-            const current =
-              parseFloat(
-                input.value
-              ) || 0;
+      row
+        .querySelectorAll(
+          '[data-step]'
+        )
+        .forEach(
+          btn => {
 
+            btn.addEventListener(
+              'click',
+              () => {
 
-            const v =
-              Math.min(
-                max,
-                Math.max(
-                  min,
-                  current +
+                const current=
                   parseFloat(
-                    btn.dataset.step
-                  ) * stepSize
-                )
-              );
+                    valueEl.textContent
+                      .replace(
+                        /[^0-9.-]/g,
+                        ''
+                      )
+                  )||0;
 
 
-            onChange(
-              axis,
-              v
+                const step=
+                  currentIncrement();
+
+
+                const v=
+                  Math.min(
+                    max,
+                    Math.max(
+                      min,
+                      current+
+                      parseFloat(
+                        btn.dataset.step
+                      )*step
+                    )
+                  );
+
+
+                onChange(
+                  axis,
+                  v
+                );
+              }
             );
           }
         );
-      });
-
-
-    input.addEventListener(
-      'change',
-      () => {
-
-        onChange(
-          axis,
-          Math.min(
-            max,
-            Math.max(
-              min,
-              parseFloat(
-                input.value
-              ) || 0
-            )
-          )
-        );
-      }
-    );
-  });
+    }
+  );
 }
 
 
@@ -4962,13 +5977,12 @@ function wireSteppers(
 
 function renderBooleanPick(){
 
-  const s =
+  const s=
     activeShape();
 
+  if(!s){
 
-  if (!s){
-
-    goToLayersHome();
+    goToDrawingTools();
 
     return;
   }
@@ -4979,48 +5993,51 @@ function renderBooleanPick(){
   );
 
 
-  const others = [];
+  const others=[];
 
+  layers.forEach(
+    l =>
+      l.shapes.forEach(
+        sh => {
 
-  layers.forEach(l =>
-    l.shapes.forEach(sh => {
+          if(
+            !(
+              l.id===activeLayerId &&
+              sh.id===activeShapeId
+            )
+          ){
 
-      if (
-        !(
-          l.id === activeLayerId &&
-          sh.id === activeShapeId
-        )
-      ){
-        others.push({
-          l,
-          sh
-        });
-      }
-    })
+            others.push({
+              l,
+              sh
+            });
+          }
+        }
+      )
   );
 
 
-  let targetId = null;
+  let targetId=null;
 
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
-
       ${
         others.map(
           o => `
             <div
               class="tile3"
-              data-target="${o.l.id}:${o.sh.id}">
+              data-target="${
+                o.l.id
+              }:${o.sh.id}">
               ${svg('shapes')}
-              <span>
-                ${shapeLabel(o.sh)}
-              </span>
+              <span>${
+                shapeLabel(o.sh)
+              }</span>
             </div>
           `
         ).join('')
       }
-
     </div>
 
     <div
@@ -5056,73 +6073,76 @@ function renderBooleanPick(){
     .querySelectorAll(
       '[data-target]'
     )
-    .forEach(b => {
+    .forEach(
+      b => {
 
-      b.addEventListener(
-        'click',
-        () => {
+        b.addEventListener(
+          'click',
+          () => {
 
-          targetId =
-            b.dataset.target;
+            targetId=
+              b.dataset.target;
 
-
-          menuScroll
-            .querySelectorAll(
-              '[data-target]'
-            )
-            .forEach(x =>
-              x.classList.remove(
-                'layer-active'
+            menuScroll
+              .querySelectorAll(
+                '[data-target]'
               )
+              .forEach(
+                x =>
+                  x.classList.remove(
+                    'layer-active'
+                  )
+              );
+
+            b.classList.add(
+              'layer-active'
             );
 
-
-          b.classList.add(
-            'layer-active'
-          );
-
-
-          menuScroll
-            .querySelectorAll(
-              '[data-op]'
-            )
-            .forEach(
-              x => x.disabled = false
-            );
-        }
-      );
-    });
+            menuScroll
+              .querySelectorAll(
+                '[data-op]'
+              )
+              .forEach(
+                x =>
+                  x.disabled=false
+              );
+          }
+        );
+      }
+    );
 
 
   menuScroll
     .querySelectorAll(
       '[data-op]'
     )
-    .forEach(b => {
+    .forEach(
+      b => {
 
-      b.addEventListener(
-        'click',
-        () => {
+        b.addEventListener(
+          'click',
+          () => {
 
-          if (!targetId) return;
+            if(!targetId)
+              return;
 
-          const parts =
-            targetId.split(':');
+            const parts=
+              targetId.split(':');
 
-
-          runBoolean(
-            b.dataset.op,
-            parseInt(
-              parts[0],
-              10
-            ),
-            parseFloat(
-              parts[1]
-            )
-          );
-        }
-      );
-    });
+            runBoolean(
+              b.dataset.op,
+              parseInt(
+                parts[0],
+                10
+              ),
+              parseFloat(
+                parts[1]
+              )
+            );
+          }
+        );
+      }
+    );
 }
 
 
@@ -5132,39 +6152,28 @@ async function runBoolean(
   targetShapeId
 ){
 
-  const a =
+  const a=
     activeShape();
 
-  const aLayer =
+  const aLayer=
     activeLayer();
 
-  const bLayer =
+  const bLayer=
     findLayer(
       targetLayerId
     );
 
-  const b =
+  const b=
     bLayer
       ? bLayer.shapes.find(
-          s => s.id === targetShapeId
+          s =>
+            s.id===targetShapeId
         )
       : null;
 
 
-  if (!a || !b) return;
-
-
-  if (
-    !a.mesh.isMesh ||
-    !b.mesh.isMesh
-  ){
-
-    showToast(
-      'Boolean requires solid shapes'
-    );
-
+  if(!a || !b)
     return;
-  }
 
 
   try{
@@ -5175,13 +6184,13 @@ async function runBoolean(
       ADDITION,
       SUBTRACTION,
       INTERSECTION
-    } =
+    }=
       await import(
         'https://unpkg.com/three-bvh-csg@0.0.16/build/index.module.js'
       );
 
 
-    const opMap = {
+    const opMap={
       union:ADDITION,
       subtract:SUBTRACTION,
       intersect:INTERSECTION
@@ -5192,13 +6201,17 @@ async function runBoolean(
     b.mesh.updateMatrixWorld();
 
 
-    const brushA =
+    const brushA=
       new Brush(
         a.mesh.geometry.clone()
       );
 
     brushA.position.copy(
       a.mesh.position
+    );
+
+    brushA.rotation.copy(
+      a.mesh.rotation
     );
 
     brushA.scale.copy(
@@ -5208,13 +6221,17 @@ async function runBoolean(
     brushA.updateMatrixWorld();
 
 
-    const brushB =
+    const brushB=
       new Brush(
         b.mesh.geometry.clone()
       );
 
     brushB.position.copy(
       b.mesh.position
+    );
+
+    brushB.rotation.copy(
+      b.mesh.rotation
     );
 
     brushB.scale.copy(
@@ -5224,12 +6241,8 @@ async function runBoolean(
     brushB.updateMatrixWorld();
 
 
-    const evaluator =
-      new Evaluator();
-
-
-    const result =
-      evaluator.evaluate(
+    const result=
+      new Evaluator().evaluate(
         brushA,
         brushB,
         opMap[mode]
@@ -5240,17 +6253,13 @@ async function runBoolean(
       .computeVertexNormals();
 
 
-    const color =
-      a.color;
-
-
-    const mesh =
+    const mesh=
       new THREE.Mesh(
         result.geometry,
         new THREE.MeshStandardMaterial({
-          color,
-          metalness:0.15,
-          roughness:0.55
+          color:a.color,
+          metalness:.15,
+          roughness:.55
         })
       );
 
@@ -5265,13 +6274,15 @@ async function runBoolean(
     scene.add(mesh);
 
 
-    const rec = {
+    const rec={
       id:Date.now()+Math.random(),
       num:aLayer.shapes.length,
       mesh,
       geomId:'solid',
       fields:null,
-      color
+      color:a.color,
+      baseDimensions:
+        storeDimensions(mesh)
     };
 
 
@@ -5286,35 +6297,35 @@ async function runBoolean(
     );
 
 
-    aLayer.shapes.push(rec);
+    aLayer.shapes.push(
+      rec
+    );
 
     aLayer.shapes.forEach(
       (s2,i) =>
-        s2.num = i+1
+        s2.num=i+1
     );
 
 
-    activeLayerId =
+    activeLayerId=
       aLayer.id;
 
-    activeShapeId =
+    activeShapeId=
       rec.id;
 
 
     refreshShapeVisuals();
 
-
     showToast(
       `${
-        mode[0].toUpperCase() +
+        mode[0].toUpperCase()+
         mode.slice(1)
       } created`
     );
 
-
     goToShape();
 
-  } catch(err){
+  }catch(err){
 
     console.error(err);
 
@@ -5336,7 +6347,7 @@ function renderSettings(){
   );
 
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
 
       <div
@@ -5365,7 +6376,9 @@ function renderSettings(){
 
 
   document
-    .getElementById('saveBtn')
+    .getElementById(
+      'saveBtn'
+    )
     .addEventListener(
       'click',
       () => {
@@ -5380,7 +6393,9 @@ function renderSettings(){
 
 
   document
-    .getElementById('loadBtn')
+    .getElementById(
+      'loadBtn'
+    )
     .addEventListener(
       'click',
       () =>
@@ -5391,7 +6406,9 @@ function renderSettings(){
 
 
   document
-    .getElementById('stlBtn')
+    .getElementById(
+      'stlBtn'
+    )
     .addEventListener(
       'click',
       () => {
@@ -5413,9 +6430,8 @@ function renderHelp(){
   );
 
 
-  menuScroll.innerHTML = `
+  menuScroll.innerHTML=`
     <div class="tile-row">
-
       ${
         MODULES
           .filter(
@@ -5428,7 +6444,7 @@ function renderHelp(){
             m => `
               <div
                 class="tile3"
-                style="opacity:0.6">
+                style="opacity:.6">
                 ${svg(m.icon)}
                 <span>${m.label}</span>
               </div>
@@ -5436,7 +6452,6 @@ function renderHelp(){
           )
           .join('')
       }
-
     </div>
   `;
 }
@@ -5446,17 +6461,19 @@ function renderHelp(){
    CONFIRMATION
 ───────────────────────────────────────────────────────────── */
 
-const confirmOverlay =
-  document.createElement('div');
+const confirmOverlay=
+  document.createElement(
+    'div'
+  );
 
-confirmOverlay.id =
+confirmOverlay.id=
   'confirmOverlay';
 
 confirmOverlay.classList.add(
   'hidden'
 );
 
-confirmOverlay.innerHTML = `
+confirmOverlay.innerHTML=`
   <div class="confirm-box">
 
     <p id="confirmMsg"></p>
@@ -5493,8 +6510,10 @@ function showConfirm(
 ){
 
   document
-    .getElementById('confirmMsg')
-    .textContent = msg;
+    .getElementById(
+      'confirmMsg'
+    )
+    .textContent=msg;
 
 
   confirmOverlay
@@ -5503,18 +6522,18 @@ function showConfirm(
     );
 
 
-  const yes =
+  const yes=
     document.getElementById(
       'confirmYes'
     );
 
-  const no =
+  const no=
     document.getElementById(
       'confirmNo'
     );
 
 
-  const cleanup = () => {
+  const cleanup=() => {
 
     confirmOverlay
       .classList.add(
@@ -5532,7 +6551,9 @@ function showConfirm(
 
 
   document
-    .getElementById('confirmYes')
+    .getElementById(
+      'confirmYes'
+    )
     .addEventListener(
       'click',
       () => {
@@ -5545,7 +6566,9 @@ function showConfirm(
 
 
   document
-    .getElementById('confirmNo')
+    .getElementById(
+      'confirmNo'
+    )
     .addEventListener(
       'click',
       cleanup
@@ -5559,21 +6582,23 @@ function showConfirm(
 
 function exportSTL(){
 
-  const meshes = [];
+  const meshes=[];
 
-  layers.forEach(l =>
-    l.shapes.forEach(s => {
+  layers.forEach(
+    l =>
+      l.shapes.forEach(
+        s => {
 
-      if (s.mesh.isMesh){
-        meshes.push(
-          s.mesh
-        );
-      }
-    })
+          if(s.mesh.isMesh)
+            meshes.push(
+              s.mesh
+            );
+        }
+      )
   );
 
 
-  if (!meshes.length){
+  if(!meshes.length){
 
     showToast(
       'Nothing to export'
@@ -5583,28 +6608,30 @@ function exportSTL(){
   }
 
 
-  const group =
+  const group=
     new THREE.Group();
 
 
-  meshes.forEach(m => {
+  meshes.forEach(
+    m => {
 
-    const c =
-      m.clone();
+      const c=
+        m.clone();
 
-    c.remove(
-      ...c.children
-    );
+      c.remove(
+        ...c.children
+      );
 
-    group.add(c);
-  });
+      group.add(c);
+    }
+  );
 
 
-  const exporter =
+  const exporter=
     new STLExporter();
 
 
-  const result =
+  const result=
     exporter.parse(
       group,
       {
@@ -5617,7 +6644,8 @@ function exportSTL(){
     new Blob(
       [result],
       {
-        type:'application/octet-stream'
+        type:
+          'application/octet-stream'
       }
     ),
     'stl-maker-model.stl'
@@ -5627,23 +6655,32 @@ function exportSTL(){
 
 function saveSceneJSON(){
 
-  const data =
-    layers.map(l => ({
-      name:l.name,
+  const data=
+    layers.map(
+      l => ({
+        name:l.name,
 
-      shapes:
-        l.shapes.map(
-          s => ({
-            geomId:s.geomId,
-            fields:s.fields,
-            color:s.color,
-            position:
-              s.mesh.position.toArray(),
-            scale:
-              s.mesh.scale.toArray()
-          })
-        )
-    }));
+        shapes:
+          l.shapes.map(
+            s => ({
+              geomId:s.geomId,
+              fields:s.fields,
+              color:s.color,
+              position:
+                s.mesh.position.toArray(),
+              rotation:[
+                s.mesh.rotation.x,
+                s.mesh.rotation.y,
+                s.mesh.rotation.z
+              ],
+              scale:
+                s.mesh.scale.toArray(),
+              baseDimensions:
+                s.baseDimensions
+            })
+          )
+      })
+    );
 
 
   downloadBlob(
@@ -5669,18 +6706,19 @@ function downloadBlob(
   filename
 ){
 
-  const url =
+  const url=
     URL.createObjectURL(
       blob
     );
 
-  const a =
-    document.createElement('a');
+  const a=
+    document.createElement(
+      'a'
+    );
 
-  a.href = url;
+  a.href=url;
 
-  a.download =
-    filename;
+  a.download=filename;
 
   document.body.appendChild(a);
 
@@ -5690,7 +6728,9 @@ function downloadBlob(
 
   setTimeout(
     () =>
-      URL.revokeObjectURL(url),
+      URL.revokeObjectURL(
+        url
+      ),
     2000
   );
 }
@@ -5700,17 +6740,17 @@ function downloadBlob(
    TOAST
 ───────────────────────────────────────────────────────────── */
 
-let toastTimer = null;
+let toastTimer=null;
 
 
 function showToast(msg){
 
-  const t =
+  const t=
     document.getElementById(
       'toast'
     );
 
-  t.textContent = msg;
+  t.textContent=msg;
 
   t.classList.add(
     'show'
@@ -5720,7 +6760,7 @@ function showToast(msg){
     toastTimer
   );
 
-  toastTimer =
+  toastTimer=
     setTimeout(
       () =>
         t.classList.remove(
