@@ -12,8 +12,7 @@ style.textContent = `
 .module-btn.active-blue svg{ color:#fff !important; }
 
 #slideMenu{ transition:none !important; }
-#slideMenu.open{ width:76px; min-width:76px; }
-#slideMenu.open.expanded{ width:120px; min-width:120px; }
+#slideMenu.open{ width:92px; min-width:92px; }
 .toggle-row2{ display:flex; gap:4px; width:100%; }
 .toggle-row2 button{ flex:1; padding:6px 1px; border-radius:7px; border:1px solid var(--line); background:var(--navy-3); color:var(--ink); font-size:9.5px; font-weight:700; }
 .toggle-row2 button.toggle-active{ background:#3a6fd8; color:#fff; border-color:#3a6fd8; }
@@ -26,10 +25,10 @@ style.textContent = `
   width:62px; aspect-ratio:1; border-radius:12px; background:var(--navy-3); border:1px solid var(--line);
   color:var(--ink); padding:4px 3px; position:relative;
 }
-#slideMenu.expanded .tile3{ width:100px; }
+.tile3{ width:72px; }
 .tile3 svg{ width:16px; height:16px; color:var(--gold-light); flex:0 0 auto; }
 .tile3 span{ font-size:7.5px; font-weight:600; text-align:center; line-height:1.1; display:block; overflow:hidden; text-overflow:ellipsis; max-height:2.2em; }
-#slideMenu.expanded .tile3 span{ font-size:9.5px; }
+.tile3 span{ font-size:8.5px; }
 .tile3.toggle-active{ background:#3a6fd8; border-color:#3a6fd8; color:#fff; }
 .tile3.toggle-active svg{ color:#fff; }
 .tile3.layer-active{ background:#fff; border:2px solid #3a6fd8; color:#111; }
@@ -43,22 +42,22 @@ style.textContent = `
 
 .stepper-row{ display:flex; align-items:center; gap:3px; width:100%; }
 .stepper-row .step-lbl{ display:none; width:12px; font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--gold); flex:0 0 auto; }
-#slideMenu.expanded .stepper-row .step-lbl{ display:block; }
+.stepper-row .step-lbl{ display:block; }
 .stepper-row button{ width:20px; height:20px; flex:0 0 auto; background:var(--navy-3); border:1px solid var(--line); border-radius:5px; color:var(--gold-light); font-size:13px; font-weight:700; line-height:1; padding:0; }
-#slideMenu.expanded .stepper-row button{ width:26px; height:26px; font-size:15px; }
+.stepper-row button{ width:22px; height:22px; font-size:13px; }
 .stepper-row button:active{ background:var(--gold); color:var(--navy); }
 .stepper-row input{ flex:1 1 0; min-width:0; width:0; background:#fff; color:#111; border:1px solid var(--line); border-radius:5px; font-family:'JetBrains Mono',monospace; font-size:8.5px; padding:4px 1px; text-align:center; }
-#slideMenu.expanded .stepper-row input{ font-size:10.5px; padding:5px 2px; }
+.stepper-row input{ font-size:9px; padding:4px 1px; }
 .stepper-row.all-axes .step-lbl{ width:auto; font-size:8px; text-transform:uppercase; }
 .stepper-stack{ display:flex; flex-direction:column; gap:4px; width:100%; padding:0 1px; }
 
 .action-col{ display:flex; flex-direction:column; gap:4px; width:100%; }
 .action-col button{ display:flex; flex-direction:column; align-items:center; gap:2px; background:var(--navy-3); border:1px solid var(--line); border-radius:8px; color:var(--ink); padding:6px 2px; width:100%; }
-#slideMenu.expanded .action-col button{ flex-direction:row; padding:9px 8px; gap:8px; }
+.action-col button{ flex-direction:row; padding:7px 6px; gap:6px; }
 .action-col button svg{ width:15px; height:15px; color:var(--gold-light); flex:0 0 auto; }
-#slideMenu.expanded .action-col button svg{ width:17px; height:17px; }
+.action-col button svg{ width:15px; height:15px; }
 .action-col button span{ font-size:7.5px; font-weight:600; }
-#slideMenu.expanded .action-col button span{ font-size:10.5px; }
+.action-col button span{ font-size:9px; }
 .action-col button.active{ border-color:var(--gold); background:var(--navy-4); }
 
 .tile-row{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; width:100%; }
@@ -123,20 +122,23 @@ scene.add(new THREE.LineLoop(
   new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-half,0.06,-half),new THREE.Vector3(half,0.06,-half),new THREE.Vector3(half,0.06,half),new THREE.Vector3(-half,0.06,half)]),
   new THREE.LineBasicMaterial({ color:0xe0c48f })
 ));
-const axisOrigin = new THREE.Vector3(-half-4, 0.1, -half-4);
-scene.add(new THREE.ArrowHelper(new THREE.Vector3(1,0,0), axisOrigin, 18, 0xd9534f, 4, 3));
-scene.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,1), axisOrigin, 18, 0x4a90d9, 4, 3));
-scene.add(new THREE.ArrowHelper(new THREE.Vector3(0,1,0), axisOrigin, 18, 0x5cb85c, 4, 3));
-
-function makeLabelSprite(text){
+function makeLabelSprite(text, color){
   const cvs = document.createElement('canvas'); cvs.width = 64; cvs.height = 32;
   const ctx = cvs.getContext('2d');
-  ctx.fillStyle = '#e0c48f'; ctx.font = 'bold 22px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = color || '#e0c48f'; ctx.font = 'bold 22px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText(text, 32, 16);
   const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map:new THREE.CanvasTexture(cvs), depthTest:false }));
   spr.scale.set(6,3,1);
   return spr;
 }
+const axisOrigin = new THREE.Vector3(-half-4, 0.1, -half-4);
+scene.add(new THREE.ArrowHelper(new THREE.Vector3(1,0,0), axisOrigin, 18, 0xd9534f, 4, 3));
+scene.add(new THREE.ArrowHelper(new THREE.Vector3(0,0,1), axisOrigin, 18, 0x4a90d9, 4, 3));
+scene.add(new THREE.ArrowHelper(new THREE.Vector3(0,1,0), axisOrigin, 18, 0x5cb85c, 4, 3));
+const xLabel = makeLabelSprite('X', '#d9534f'); xLabel.position.set(axisOrigin.x+10, axisOrigin.y, axisOrigin.z); scene.add(xLabel);
+const zLabel = makeLabelSprite('Z', '#4a90d9'); zLabel.position.set(axisOrigin.x, axisOrigin.y, axisOrigin.z+10); scene.add(zLabel);
+const yLabel = makeLabelSprite('Y', '#5cb85c'); yLabel.position.set(axisOrigin.x, axisOrigin.y+10, axisOrigin.z); scene.add(yLabel);
+
 let mmLabelGroup = null;
 function buildMmLabels(step){
   if (mmLabelGroup) scene.remove(mmLabelGroup);
@@ -322,15 +324,20 @@ function shapeLabel(s){ return `${s.geomId[0].toUpperCase()+s.geomId.slice(1)} #
    ===================================================================== */
 const h1 = document.getElementById('h1');
 const MODULE_ORDER = ['tools','layers','settings','help'];
+const MODULE_OVERRIDE = { tools: { label:'Drawing Tools', icon:'pencil' } };
+Object.assign(ICONS, { pencil: '<path d="m14 4 6 6-11 11H3v-6L14 4Z"/><path d="m13.5 5.5 5 5"/>' });
 let activeModule = 'layers';
 function renderH1(){
   const mods = MODULE_ORDER.map(id => MODULES.find(m=>m.id===id)).filter(Boolean);
-  h1.innerHTML = mods.map(m => `<button class="module-btn ${m.id===activeModule?'active-blue':''}" data-module="${m.id}">${svg(m.icon)}<span>${m.label}</span></button>`).join('');
+  h1.innerHTML = mods.map(m => {
+    const o = MODULE_OVERRIDE[m.id] || {};
+    return `<button class="module-btn ${m.id===activeModule?'active-blue':''}" data-module="${m.id}">${svg(o.icon||m.icon)}<span>${o.label||m.label}</span></button>`;
+  }).join('');
   h1.querySelectorAll('[data-module]').forEach(btn => btn.addEventListener('click', () => {
     const id = btn.dataset.module;
     activeModule = id;
     if (id==='layers') goToLayersHome();
-    else if (id==='tools') goToTools();
+    else if (id==='tools') goToDrawingTools();
     else if (id==='settings'){ crumbs=['Settings']; crumbBack=null; render('settings'); }
     else if (id==='help'){ crumbs=['Help']; crumbBack=null; render('help'); }
     renderH1();
@@ -379,8 +386,8 @@ function setH2(info){
 
 const menuScroll = document.getElementById('menuScroll');
 const slideMenu = document.getElementById('slideMenu');
-document.getElementById('expandTab').innerHTML = svg('back');
-document.getElementById('expandTab').addEventListener('click', () => slideMenu.classList.toggle('expanded'));
+const expandTabEl = document.getElementById('expandTab');
+if (expandTabEl) expandTabEl.remove(); // H3 is a fixed panel now, not a slide-out — no expand control needed
 
 /* =====================================================================
    SHAPE MODE (2D/3D) — now drives the camera too (see setShapeMode)
@@ -427,16 +434,34 @@ function goToSubtool(toolLabel){
   crumbBack = () => { goToShape(); };
   render('shapePanel', toolLabel.toLowerCase());
 }
-function goToTools(){
-  crumbs = ['Tools']; crumbBack = null;
-  render('toolsHome');
+function goToDrawingTools(){
+  crumbs = ['Drawing Tools']; crumbBack = null;
+  render('drawingToolsHome');
+}
+function goToP2POptions(){
+  crumbs = ['Drawing Tools','P2P'];
+  crumbBack = () => goToDrawingTools();
+  render('p2pHome');
+}
+function goToP2PShapePick(){
+  crumbs = ['Drawing Tools','P2P','Shape'];
+  crumbBack = () => goToP2POptions();
+  render('p2pShapePick');
+}
+function goToP2PFillPick(shapeKey){
+  crumbs = ['Drawing Tools','P2P','Shape', shapeKey[0].toUpperCase()+shapeKey.slice(1)];
+  crumbBack = () => goToP2PShapePick();
+  render('p2pFillPick', shapeKey);
 }
 
 function render(view, subtool){
   slideMenu.classList.add('open');
   if (view==='layersHome') renderLayersHome();
   else if (view==='shapePanel') renderShapePanel(subtool);
-  else if (view==='toolsHome') renderToolsHome();
+  else if (view==='drawingToolsHome') renderDrawingToolsHome();
+  else if (view==='p2pHome') renderP2PHome();
+  else if (view==='p2pShapePick') renderP2PShapePick();
+  else if (view==='p2pFillPick') renderP2PFillPick(subtool);
   else if (view==='booleanPick') renderBooleanPick();
   else if (view==='settings') renderSettings();
   else if (view==='help') renderHelp();
@@ -679,16 +704,18 @@ const ACTIONS = [
   { id:'move',   label:'Move',   icon:'move' },
   { id:'scale',  label:'Scale',  icon:'scale' },
   { id:'color',  label:'Color',  icon:'color' },
+  { id:'boolean',label:'Boolean',icon:'boolean' },
   { id:'delete', label:'Delete', icon:'trash' },
 ];
 function renderShapePanel(subtool){
   const l = activeLayer(), s = activeShape();
   if (!l || !s){ goToLayersHome(); return; }
   setH2('');
+  const totalShapes = layers.reduce((n,ly)=>n+ly.shapes.length,0);
   menuScroll.innerHTML = `
     <div class="tile-row"><div class="tile3 layer-active">${svg('shapes')}<span>${shapeLabel(s)}</span></div></div>
     <div class="action-col" style="margin-top:8px;">
-      ${ACTIONS.map(a => `<button data-action="${a.id}" class="${a.id===subtool?'active':''}">${svg(a.icon)}<span>${a.label}</span></button>`).join('')}
+      ${ACTIONS.map(a => `<button data-action="${a.id}" class="${a.id===subtool?'active':''}" ${a.id==='boolean'&&totalShapes<2?'disabled':''}>${svg(a.icon)}<span>${a.label}</span></button>`).join('')}
     </div>
     <div id="subtoolSlot" style="margin-top:8px;"></div>
   `;
@@ -696,9 +723,14 @@ function renderShapePanel(subtool){
     const id = b.dataset.action;
     if (id==='delete'){ deleteShape(l.id, s.id); goToLayer(); showToast('Shape deleted'); return; }
     if (id==='select'){ activateCrosshair(); return; }
+    if (id==='boolean'){
+      crumbs = [l.name, shapeLabel(s), 'Boolean']; crumbBack = () => goToShape();
+      render('booleanPick');
+      return;
+    }
     goToSubtool(id[0].toUpperCase()+id.slice(1));
   }));
-  if (subtool) fillSubtool(subtool, l, s);
+  if (subtool && subtool!=='boolean') fillSubtool(subtool, l, s);
 }
 function fillSubtool(tool, l, s){
   const slot = document.getElementById('subtoolSlot');
@@ -751,24 +783,95 @@ function wireSteppers(scope, axes, onChange){
   });
 }
 
-/* ---- TOOLS: Boolean, Select ---- */
-function renderToolsHome(){
-  setH2('Boolean and selection helpers');
-  const totalShapes = layers.reduce((n,l)=>n+l.shapes.length,0);
+/* ---- DRAWING TOOLS: Freehand, Shape, P2P ---- */
+function renderDrawingToolsHome(){
+  setH2('Pick a drawing method');
   menuScroll.innerHTML = `<div class="tile-row">
-    <div class="tile3" data-t="select">${svg('select')}<span>Select</span></div>
-    <div class="tile3" data-t="boolean" style="${totalShapes<2?'opacity:0.4':''}">${svg('boolean')}<span>Boolean</span></div>
+    <div class="tile3" data-dt="freehand">${svg('shapes')}<span>Freehand</span></div>
+    <div class="tile3" data-dt="shapedrag">${svg('shapes')}<span>Shape</span></div>
+    <div class="tile3" data-dt="p2p">${svg('shapes')}<span>P2P</span></div>
   </div>`;
-  menuScroll.querySelector('[data-t="select"]').addEventListener('click', () => activateCrosshair());
-  menuScroll.querySelector('[data-t="boolean"]').addEventListener('click', () => {
-    if (!activeShape()){ showToast('Select a shape first (via Layers), then open Boolean'); return; }
-    crumbs = ['Tools','Boolean']; crumbBack = () => goToTools();
-    render('booleanPick');
+  menuScroll.querySelector('[data-dt="freehand"]').addEventListener('click', () => {
+    crumbs = ['Drawing Tools','Freehand']; crumbBack = () => goToDrawingTools();
+    setH2('Drag one finger on the plate to trace a line');
+    menuScroll.innerHTML = `<div style="padding:14px 6px;color:var(--muted);font-size:11px;text-align:center;max-width:220px;">Freehand tracing isn\u2019t wired up yet \u2014 next build.</div>`;
   });
+  menuScroll.querySelector('[data-dt="shapedrag"]').addEventListener('click', () => {
+    if (!activeLayer()){ const l = createLayer(); activeLayerId = l.id; }
+    crumbs = ['Drawing Tools','Shape']; crumbBack = () => goToDrawingTools();
+    render('drawShapePick', 'shapedrag');
+  });
+  menuScroll.querySelector('[data-dt="p2p"]').addEventListener('click', goToP2POptions);
 }
+function renderP2PHome(){
+  setH2('Line connects two points; Shape places a solid');
+  menuScroll.innerHTML = `<div class="tile-row">
+    <div class="tile3" data-p2p="line">${svg('shapes')}<span>Line</span></div>
+    <div class="tile3" data-p2p="shape">${svg('shapes')}<span>Shape</span></div>
+  </div>`;
+  menuScroll.querySelector('[data-p2p="line"]').addEventListener('click', () => {
+    crumbs = ['Drawing Tools','P2P','Line']; crumbBack = () => goToP2POptions();
+    setH2('Tap two points on the plate; pick how they connect');
+    menuScroll.innerHTML = `<div class="tile-row">${LINE_TYPES.map(([id,label]) => `<div class="tile3" data-line="${id}">${svg('shapes')}<span>${label}</span></div>`).join('')}</div>
+      <div style="padding:10px 6px;color:var(--muted);font-size:10px;text-align:center;max-width:200px;">Point placement isn\u2019t wired up yet \u2014 next build. This picks the connector for when it is.</div>`;
+    menuScroll.querySelectorAll('[data-line]').forEach(el => el.addEventListener('click', () => showToast(`${el.dataset.line} connector selected`)));
+  });
+  menuScroll.querySelector('[data-p2p="shape"]').addEventListener('click', goToP2PShapePick);
+}
+const P2P_SHAPES = ['rectangle','square','circle','triangle','octagon','oval'];
+function renderP2PShapePick(){
+  setH2('Pick a shape \u2014 starts small, scale it up after');
+  menuScroll.innerHTML = `<div class="tile-row">${P2P_SHAPES.map(k => `<div class="tile3" data-pshape="${k}">${svg('shapes')}<span>${k[0].toUpperCase()+k.slice(1)}</span></div>`).join('')}</div>`;
+  menuScroll.querySelectorAll('[data-pshape]').forEach(el => el.addEventListener('click', () => goToP2PFillPick(el.dataset.pshape)));
+}
+function renderP2PFillPick(shapeKey){
+  setH2('Filled = solid. Hollow = open top and bottom (walls only)');
+  menuScroll.innerHTML = `<div class="tile-row">
+    <div class="tile3" data-fill="filled">${svg('shapes')}<span>Filled</span></div>
+    <div class="tile3" data-fill="hollow">${svg('shapes')}<span>Hollow</span></div>
+  </div>`;
+  menuScroll.querySelectorAll('[data-fill]').forEach(el => el.addEventListener('click', () => createP2PShape(shapeKey, el.dataset.fill==='hollow')));
+}
+async function createP2PShape(shapeKey, hollow){
+  if (!activeLayer()){ const l = createLayer(); activeLayerId = l.id; }
+  const active = activeLayer();
+  const SIZE = GRID_SQUARE; // 2.5mm on every axis by default, per his instruction
+  const outerGeo = buildDragGeometry(shapeKey, SIZE);
+  let finalGeo = outerGeo;
+  if (hollow){
+    try{
+      const { Evaluator, Brush, SUBTRACTION } = await import('https://unpkg.com/three-bvh-csg@0.0.16/build/index.module.js');
+      const wallRatio = 0.6; // inner cavity is 60% of the outer size — a fixed wall thickness for v1
+      const innerGeo = buildDragGeometry(shapeKey, SIZE*wallRatio);
+      const brushA = new Brush(outerGeo); brushA.updateMatrixWorld();
+      const brushB = new Brush(innerGeo); brushB.updateMatrixWorld();
+      const evaluator = new Evaluator();
+      const result = evaluator.evaluate(brushA, brushB, SUBTRACTION);
+      result.geometry.computeVertexNormals();
+      finalGeo = result.geometry;
+    } catch(err){
+      console.error(err);
+      showToast('Hollow tool could not load \u2014 check your connection, placed filled instead');
+    }
+  }
+  const mesh = new THREE.Mesh(finalGeo, new THREE.MeshStandardMaterial({ color:SWATCHES[0], metalness:0.15, roughness:0.55 }));
+  mesh.position.set(0,0,0);
+  clampToPlate(mesh, false);
+  attachOutline(mesh);
+  scene.add(mesh);
+  const rec = { id: Date.now()+Math.random(), num: active.shapes.length+1, mesh, geomId:shapeKey, fields:{ size:SIZE, hollow }, color: SWATCHES[0] };
+  active.shapes.push(rec);
+  activeShapeId = rec.id;
+  armUndo(active.id, rec.id);
+  refreshShapeVisuals();
+  showToast(`${hollow?'Hollow':'Filled'} ${shapeKey} placed at ${SIZE}mm \u2014 use Scale to grow it`);
+  activeModule = 'layers'; renderH1();
+  goToShape();
+}
+
 function renderBooleanPick(){
   const s = activeShape();
-  if (!s){ goToTools(); return; }
+  if (!s){ goToLayersHome(); return; }
   setH2('Pick a second shape, then an operation');
   const others = [];
   layers.forEach(l => l.shapes.forEach(sh => { if (!(l.id===activeLayerId && sh.id===activeShapeId)) others.push({l,sh}); }));
