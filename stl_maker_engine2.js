@@ -3062,84 +3062,149 @@ function buildDragGeometry(
     );
 
 
+  /* ─── 2D: XY PLANE ─── */
+
   if(shapeMode==='2d'){
 
-    if(shapeKey==='circle')
-      return new THREE.CircleGeometry(
-        sizeMM/2,
-        64
-      );
+    let geometry;
 
-    if(shapeKey==='square')
-      return new THREE.PlaneGeometry(
-        sizeMM,
-        sizeMM
-      );
 
-    if(shapeKey==='rectangle')
-      return new THREE.PlaneGeometry(
-        sizeMM,
-        sizeMM*.5
-      );
+    if(shapeKey==='circle'){
 
-    if(shapeKey==='triangle')
-      return polygonGeometry(
-        3,
-        sizeMM/2
-      );
-
-    if(shapeKey==='octagon')
-      return polygonGeometry(
-        8,
-        sizeMM/2
-      );
-
-    if(shapeKey==='oval'){
-
-      const g=
+      geometry=
         new THREE.CircleGeometry(
           sizeMM/2,
           64
         );
 
-      g.scale(
+    }else if(shapeKey==='square'){
+
+      geometry=
+        new THREE.PlaneGeometry(
+          sizeMM,
+          sizeMM
+        );
+
+    }else if(shapeKey==='rectangle'){
+
+      geometry=
+        new THREE.PlaneGeometry(
+          sizeMM,
+          sizeMM*.5
+        );
+
+    }else if(shapeKey==='triangle'){
+
+      geometry=
+        polygonGeometry(
+          3,
+          sizeMM/2
+        );
+
+    }else if(shapeKey==='octagon'){
+
+      geometry=
+        polygonGeometry(
+          8,
+          sizeMM/2
+        );
+
+    }else if(shapeKey==='oval'){
+
+      geometry=
+        new THREE.CircleGeometry(
+          sizeMM/2,
+          64
+        );
+
+      geometry.scale(
         1,
         .6,
         1
       );
 
-      return g;
+    }else{
+
+      geometry=
+        new THREE.PlaneGeometry(
+          sizeMM,
+          sizeMM
+        );
     }
 
-    return new THREE.PlaneGeometry(
-      sizeMM,
-      sizeMM
-    );
+
+    /*
+      All 2D drawing geometry must lie
+      directly on the XY plane.
+
+      Local Z must remain exactly 0.
+    */
+
+    geometry.computeBoundingBox();
+
+    return geometry;
   }
 
 
-  if(shapeKey==='circle')
+  /* ─── 3D ─── */
+
+  if(shapeKey==='circle'){
+
     return new THREE.SphereGeometry(
       sizeMM/2,
       32,
       24
     );
 
-  if(shapeKey==='square')
+  }
+
+  if(shapeKey==='square'){
+
     return new THREE.BoxGeometry(
       sizeMM,
       sizeMM,
-      sizeMM
+      H
     );
 
-  if(shapeKey==='rectangle')
+  }
+
+  if(shapeKey==='rectangle'){
+
     return new THREE.BoxGeometry(
       sizeMM,
       sizeMM*.5,
       H
     );
 
-  if(shapeKey==='triangle')
+  }
+
+  if(shapeKey==='cylinder'){
+
+    return rotateGeometryToZ(
+      new THREE.CylinderGeometry(
+        sizeMM/2,
+        sizeMM/2,
+        H,
+        32
+      )
+    );
+
+  }
+
+  if(shapeKey==='cone'){
+
+    return rotateGeometryToZ(
+      new THREE.ConeGeometry(
+        sizeMM/2,
+        H,
+        32
+      )
+    );
+
+  }
+
+  if(shapeKey==='triangle'){
+
     return rotateGeometryToZ(
       new THREE.CylinderGeometry(
         sizeMM/2,
@@ -3149,7 +3214,10 @@ function buildDragGeometry(
       )
     );
 
-  if(shapeKey==='octagon')
+  }
+
+  if(shapeKey==='octagon'){
+
     return rotateGeometryToZ(
       new THREE.CylinderGeometry(
         sizeMM/2,
@@ -3159,23 +3227,26 @@ function buildDragGeometry(
       )
     );
 
+  }
+
   if(shapeKey==='oval'){
 
-    const g=
+    const geometry=
       new THREE.SphereGeometry(
         sizeMM/2,
         32,
         24
       );
 
-    g.scale(
+    geometry.scale(
       1,
       .6,
       1
     );
 
-    return g;
+    return geometry;
   }
+
 
   return new THREE.BoxGeometry(
     sizeMM,
@@ -3185,6 +3256,283 @@ function buildDragGeometry(
 }
 
 
+/* ─────────────────────────────────────────────────────────────
+   START DRAG TO SIZE
+───────────────────────────────────────────────────────────── */
+
+function startDragToSize(
+  shapeKey
+){
+
+  const l=
+    activeLayer();
+
+  if(!l)
+    return;
+
+
+  const startPt=
+    plateHit(
+      window._lastPointerX,
+      window._lastPointerY
+    );
+
+  if(!startPt)
+    return;
+
+
+  const size=
+    GRID_SQUARE;
+
+
+  const geometry=
+    buildDragGeometry(
+      shapeKey,
+      size
+    );
+
+
+  const previewMesh=
+    new THREE.Mesh(
+      geometry,
+      new THREE.MeshStandardMaterial({
+        color:SWATCHES[0],
+        transparent:true,
+        opacity:.45,
+        depthWrite:false
+      })
+    );
+
+
+  /*
+    2D geometry is already centered on
+    its local origin and that origin is
+    exactly on Z=0.
+
+    Therefore the preview stays on
+    the XY face of the plate.
+  */
+
+  previewMesh.position.set(
+    startPt.x,
+    startPt.y,
+    shapeMode==='2d'
+      ? 0
+      : size/2
+  );
+
+
+  scene.add(
+    previewMesh
+  );
+
+
+  let drawing=true;
+
+
+  function move(e){
+
+    if(!drawing)
+      return;
+
+    const p=
+      plateHit(
+        e.clientX,
+        e.clientY
+      );
+
+    if(!p)
+      return;
+
+
+    const dx=
+      p.x-startPt.x;
+
+    const dy=
+      p.y-startPt.y;
+
+    const distance=
+      Math.max(
+        Math.abs(dx),
+        Math.abs(dy)
+      );
+
+
+    const newSize=
+      Math.max(
+        GRID_SQUARE,
+        distance
+      );
+
+
+    scene.remove(
+      previewMesh
+    );
+
+    previewMesh.geometry.dispose();
+
+
+    previewMesh.geometry=
+      buildDragGeometry(
+        shapeKey,
+        newSize
+      );
+
+
+    /*
+      Keep the 2D object's local origin
+      directly on the XY plane.
+    */
+
+    previewMesh.position.set(
+      startPt.x,
+      startPt.y,
+      shapeMode==='2d'
+        ? 0
+        : newSize/2
+    );
+
+
+    scene.add(
+      previewMesh
+    );
+  }
+
+
+  function finish(e){
+
+    if(!drawing)
+      return;
+
+    drawing=false;
+
+
+    canvas.removeEventListener(
+      'pointermove',
+      move
+    );
+
+    canvas.removeEventListener(
+      'pointerup',
+      finish
+    );
+
+
+    const p=
+      plateHit(
+        e.clientX,
+        e.clientY
+      );
+
+
+    scene.remove(
+      previewMesh
+    );
+
+    previewMesh.geometry.dispose();
+
+
+    if(!p)
+      return;
+
+
+    const dx=
+      p.x-startPt.x;
+
+    const dy=
+      p.y-startPt.y;
+
+
+    const size=
+      Math.max(
+        GRID_SQUARE,
+        Math.max(
+          Math.abs(dx),
+          Math.abs(dy)
+        )
+      );
+
+
+    const fields=
+      shapeMode==='2d'
+        ? {
+            D:size,
+            W:size,
+            L:size
+          }
+        : {
+            D:size,
+            W:size,
+            L:size,
+            H:size
+          };
+
+
+    const rec=
+      insertShape(
+        l.id,
+        shapeKey,
+        fields
+      );
+
+
+    /*
+      2D object origin = XY plate face.
+
+      Do not give a 2D object any Z
+      offset.
+    */
+
+    if(shapeMode==='2d'){
+
+      rec.mesh.position.z=0;
+
+    }else{
+
+      rec.mesh.position.z=
+        geometryDimensions(
+          rec.mesh
+        ).z/2;
+    }
+
+
+    clampToPlate(
+      rec.mesh,
+      false
+    );
+
+
+    activeLayerId=
+      l.id;
+
+    activeShapeId=
+      rec.id;
+
+
+    refreshShapeVisuals();
+
+    armUndo(
+      l.id,
+      rec.id
+    );
+
+    goToShape();
+  }
+
+
+  canvas.addEventListener(
+    'pointermove',
+    move
+  );
+
+  canvas.addEventListener(
+    'pointerup',
+    finish,
+    {
+      once:true
+    }
+  );
+}
 /* ─────────────────────────────────────────────────────────────
    SHAPE DRAG
 ───────────────────────────────────────────────────────────── */
