@@ -1051,7 +1051,7 @@ function refreshModeScene(){
     controls.target.set(
       0,
       0,
-      10
+      0
     );
 
     controls.enableRotate =
