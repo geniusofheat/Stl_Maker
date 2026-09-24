@@ -889,162 +889,6 @@ const dragGroundPlane =
   );
 
 
-/* GRID ROTATION MODE */
-
-let gridRotationAxis = 'x';
-
-let gridRotationEnabled = false;
-
-let gridRotationDragging = false;
-
-let gridRotationLastX = 0;
-
-let gridRotationLastY = 0;
-
-const GRID_ROTATION_SPEED = .01;
-
-
-function setGridRotationAxis(
-  axis
-){
-
-  if(
-    axis!=='x' &&
-    axis!=='y' &&
-    axis!=='z'
-  )
-    return;
-
-  gridRotationAxis=axis;
-}
-
-
-function setGridRotationEnabled(
-  enabled
-){
-
-  gridRotationEnabled=!!enabled;
-
-  gridRotationDragging=false;
-
-  controls.enableRotate=false;
-}
-
-
-function startGridRotation(
-  e
-){
-
-  if(!gridRotationEnabled)
-    return;
-
-  if(e.pointerType==='mouse' &&
-     e.button!==0)
-    return;
-
-  gridRotationDragging=true;
-
-  gridRotationLastX=e.clientX;
-
-  gridRotationLastY=e.clientY;
-
-  controls.enabled=false;
-
-  if(canvas.setPointerCapture)
-    canvas.setPointerCapture(
-      e.pointerId
-    );
-}
-
-
-function moveGridRotation(
-  e
-){
-
-  if(!gridRotationDragging)
-    return;
-
-  const dx=
-    e.clientX-gridRotationLastX;
-
-  const dy=
-    e.clientY-gridRotationLastY;
-
-  gridRotationLastX=e.clientX;
-  gridRotationLastY=e.clientY;
-
-  if(
-    gridRotationAxis==='x'
-  ){
-
-    grid.rotation.x +=
-      dy*GRID_ROTATION_SPEED;
-
-  }else if(
-    gridRotationAxis==='y'
-  ){
-
-    grid.rotation.y +=
-      dx*GRID_ROTATION_SPEED;
-
-  }else if(
-    gridRotationAxis==='z'
-  ){
-
-    grid.rotation.z +=
-      dx*GRID_ROTATION_SPEED;
-  }
-}
-
-
-function stopGridRotation(
-  e
-){
-
-  if(!gridRotationDragging)
-    return;
-
-  gridRotationDragging=false;
-
-  controls.enabled=true;
-
-  if(
-    e &&
-    canvas.releasePointerCapture
-  ){
-
-    try{
-
-      canvas.releasePointerCapture(
-        e.pointerId
-      );
-
-    }catch(err){}
-  }
-}
-
-
-canvas.addEventListener(
-  'pointerdown',
-  startGridRotation
-);
-
-canvas.addEventListener(
-  'pointermove',
-  moveGridRotation
-);
-
-canvas.addEventListener(
-  'pointerup',
-  stopGridRotation
-);
-
-canvas.addEventListener(
-  'pointercancel',
-  stopGridRotation
-);
-
-
 function refreshModeScene(){
 
   if(shapeMode==='2d'){
@@ -1162,17 +1006,9 @@ function refreshModeScene(){
       .06
     );
 
-    xArrow.position.copy(
-      axisOrigin
-    );
-
-    yArrow.position.copy(
-      axisOrigin
-    );
-
-    zArrow.position.copy(
-      axisOrigin
-    );
+    xArrow.position.copy(axisOrigin);
+    yArrow.position.copy(axisOrigin);
+    zArrow.position.copy(axisOrigin);
 
     xArrow.setDirection(
       new THREE.Vector3(1,0,0)
@@ -1218,7 +1054,8 @@ function refreshModeScene(){
       0
     );
 
-    controls.enableRotate=false;
+    controls.enableRotate =
+      !rotationLocked;
 
     dragGroundPlane.set(
       new THREE.Vector3(0,0,1),
@@ -1239,6 +1076,7 @@ function refreshModeScene(){
     mmLabelGroup.visible=true;
   }
 }
+
 
 function refreshModeToggle(){
 
