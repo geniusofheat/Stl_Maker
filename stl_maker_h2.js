@@ -41,6 +41,50 @@ btnUndo.disabled=true;
 btnRedo.disabled=true;
 
 
+/* Undo / redo history.
+   Each entry is { kind, undo(), redo() } — redo is optional.
+   Placed shapes can be undone (removed); grid turns can be undone and redone. */
+
+const undoStack=[];
+const redoStack=[];
+
+
+function refreshUndoRedo(){
+
+  btnUndo.disabled=
+    undoStack.length===0;
+
+  btnRedo.disabled=
+    redoStack.length===0;
+}
+
+
+export function pushHistory(entry){
+
+  undoStack.push(entry);
+
+  redoStack.length=0;
+
+  refreshUndoRedo();
+}
+
+
+// drops history entries of one kind (used when the camera is reset)
+export function clearHistoryKind(kind){
+
+  for(const st of [undoStack,redoStack]){
+
+    for(let i=st.length-1;i>=0;i--){
+
+      if(st[i].kind===kind)
+        st.splice(i,1);
+    }
+  }
+
+  refreshUndoRedo();
+}
+
+
 export function armUndo(
   layerId,
   shapeId
@@ -51,7 +95,27 @@ export function armUndo(
     shapeId
   };
 
-  btnUndo.disabled=false;
+  // only the latest placed shape can be undone
+  clearHistoryKind('shape');
+
+  pushHistory({
+    kind:'shape',
+    undo:() => {
+
+      deleteShape(
+        layerId,
+        shapeId
+      );
+
+      goToDrawingTools();
+
+      showToast(
+        'Shape removed'
+      );
+
+      S.lastPlaced=null;
+    }
+  });
 }
 
 
@@ -59,23 +123,37 @@ btnUndo.addEventListener(
   'click',
   () => {
 
-    if(!S.lastPlaced)
+    const entry=
+      undoStack.pop();
+
+    if(!entry)
       return;
 
-    deleteShape(
-      S.lastPlaced.layerId,
-      S.lastPlaced.shapeId
-    );
+    entry.undo();
 
-    goToDrawingTools();
+    if(entry.redo)
+      redoStack.push(entry);
 
-    showToast(
-      'Shape removed'
-    );
+    refreshUndoRedo();
+  }
+);
 
-    S.lastPlaced=null;
 
-    btnUndo.disabled=true;
+btnRedo.addEventListener(
+  'click',
+  () => {
+
+    const entry=
+      redoStack.pop();
+
+    if(!entry)
+      return;
+
+    entry.redo();
+
+    undoStack.push(entry);
+
+    refreshUndoRedo();
   }
 );
 

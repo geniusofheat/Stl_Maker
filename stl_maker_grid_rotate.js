@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { S } from './stl_maker_state.js';
 import { camera, canvas, controls } from './stl_maker_three.js';
+import { clearHistoryKind, pushHistory } from './stl_maker_h2.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -72,10 +73,15 @@ function refreshBarVisibility(){
       : 'none';
 }
 
-// three.js announces 2D / 3D changes
+// three.js announces 2D / 3D changes (the camera resets, so old turns can't be undone)
 document.addEventListener(
   'stlmodechange',
-  refreshBarVisibility
+  () => {
+
+    refreshBarVisibility();
+
+    clearHistoryKind('grid');
+  }
 );
 
 refreshAxisButtons();
@@ -105,12 +111,16 @@ bar
       'click',
       () => {
 
-        spinGrid(
-          gridAxis,
+        const axis=gridAxis;
+
+        const angle=
           THREE.MathUtils.degToRad(
             parseFloat(b.dataset.deg)
-          )
-        );
+          );
+
+        spinGrid(axis,angle);
+
+        recordTurn(axis,angle);
       }
     );
   });
@@ -131,6 +141,17 @@ function turnGrid(axisName, angle){
   camera.lookAt(controls.target);
 
   controls.update();
+}
+
+
+// undo / redo for grid turns
+function recordTurn(axis, angle){
+
+  pushHistory({
+    kind:'grid',
+    undo:() => spinGrid(axis,-angle),
+    redo:() => spinGrid(axis,angle)
+  });
 }
 
 
@@ -271,7 +292,8 @@ canvas.addEventListener(
       angle:originAngle(
         e.clientX,
         e.clientY
-      )
+      ),
+      total:0
     };
   }
 );
@@ -286,7 +308,7 @@ canvas.addEventListener(
 
     if(!canDrag() || pointers.size!==1){
 
-      drag=null;
+      finishDrag();
 
       return;
     }
@@ -370,18 +392,32 @@ canvas.addEventListener(
     drag.x=e.clientX;
     drag.y=e.clientY;
 
-    if(plateAngle)
+    if(plateAngle){
+
       turnGrid(gridAxis,plateAngle);
+
+      drag.total+=plateAngle;
+      drag.axis=gridAxis;
+    }
   }
 );
 
+
+// one undo step for the whole finger drag
+function finishDrag(){
+
+  if(drag && Math.abs(drag.total)>0.02)
+    recordTurn(drag.axis,drag.total);
+
+  drag=null;
+}
 
 function endPointer(e){
 
   pointers.delete(e.pointerId);
 
   if(drag && drag.id===e.pointerId)
-    drag=null;
+    finishDrag();
 }
 
 canvas.addEventListener('pointerup',endPointer);
