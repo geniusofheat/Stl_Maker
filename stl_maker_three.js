@@ -529,8 +529,15 @@ export function refreshModeScene(){
       0
     );
 
+    camera.up.set(
+      0,
+      1,
+      0
+    );
+
+    // finger turning of the grid is handled by stl_maker_grid_rotate.js
     controls.enableRotate =
-      !S.rotationLocked;
+      false;
 
     dragGroundPlane.set(
       new THREE.Vector3(0,0,1),
@@ -564,6 +571,11 @@ export function refreshModeToggle(){
         b.dataset.m===S.shapeMode
       );
     });
+
+  // lets the grid-rotate buttons show only in 3D
+  document.dispatchEvent(
+    new Event('stlmodechange')
+  );
 }
 
 
@@ -635,9 +647,9 @@ lockBtn.addEventListener(
     S.rotationLocked=
       !S.rotationLocked;
 
+    // finger turning of the grid is handled by stl_maker_grid_rotate.js
     controls.enableRotate =
-      S.shapeMode==='3d' &&
-      !S.rotationLocked;
+      false;
 
     refreshLockBtn();
   }

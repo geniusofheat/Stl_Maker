@@ -25,6 +25,7 @@ import './stl_maker_settings_help.js';
 import './stl_maker_confirmation.js';
 import './stl_maker_export_save.js';
 import './stl_maker_toast.js';
+import './stl_maker_grid_rotate.js';
 import { refreshModeScene, refreshModeToggle } from './stl_maker_three.js';
 import { renderH1 } from './stl_maker_module_h1.js';
 import { goToDrawingTools } from './stl_maker_navigation.js';

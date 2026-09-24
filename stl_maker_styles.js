@@ -424,6 +424,53 @@ style.textContent = `
   width:36px;
 }
 
+#gridRotBar{
+  position:absolute;
+  top:62px;
+  left:10px;
+  right:10px;
+  z-index:6;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  pointer-events:none;
+}
+
+#gridRotBar .grp{
+  display:flex;
+  gap:3px;
+  height:32px;
+  padding:3px;
+  box-sizing:border-box;
+  background:rgba(32,33,58,.9);
+  border:1px solid var(--line);
+  border-radius:9px;
+  pointer-events:auto;
+}
+
+#gridRotBar button{
+  height:100%;
+  min-width:30px;
+  padding:0 8px;
+  border-radius:6px;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;
+  font-weight:700;
+}
+
+#gridRotBar button.toggle-active{
+  background:#3a6fd8;
+  color:#fff;
+}
+
+#gridRotBar button:active{
+  background:var(--gold);
+  color:var(--navy);
+}
+
 #lockBtn svg{
   width:17px;
   height:17px;
