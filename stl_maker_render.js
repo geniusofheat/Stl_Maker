@@ -6,6 +6,7 @@ import { renderP2PFillPick, renderP2PHome, renderP2PLineOptions, renderP2PShapeO
 import { renderBooleanPick } from './stl_maker_boolean.js';
 import { renderHelp, renderSettings } from './stl_maker_settings_help.js';
 import { renderDrawShapePick } from './stl_maker_shape_draw.js';
+import { cleanupManipulation } from './stl_maker_object_manipulation.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -16,6 +17,10 @@ export function render(
   view,
   subtool
 ){
+
+  // Leaving the rotate tool (back arrow, other buttons) must end rotate mode
+  if(!(view==='shapePanel' && subtool==='rotate'))
+    cleanupManipulation();
 
   slideMenu.classList.add(
     'open'

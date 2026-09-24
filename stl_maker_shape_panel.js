@@ -8,6 +8,7 @@ import { deleteShape } from './stl_maker_geometry.js';
 import { showToast } from './stl_maker_toast.js';
 import { render } from './stl_maker_render.js';
 import { fillSubtool } from './stl_maker_subtools.js';
+import { cleanupManipulation } from './stl_maker_object_manipulation.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -168,6 +169,9 @@ export function renderShapePanel(
 
             const id=
               b.dataset.action;
+
+            if(id!=='rotate')
+              cleanupManipulation();
 
 
             if(id==='delete'){

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { S } from './stl_maker_state.js';
-import { camera, canvas } from './stl_maker_three.js';
+import { camera, canvas, controls, refreshLockBtn } from './stl_maker_three.js';
 import { plateHit } from './stl_maker_plate_hit.js';
 import { activeShape, refreshShapeVisuals } from './stl_maker_layer_data.js';
 import { setH2 } from './stl_maker_h2.js';
@@ -377,6 +377,13 @@ export function beginRotate(){
 
   cleanupManipulation();
 
+  // Lock the grid automatically so only the shape rotates
+  S.rotationLocked=true;
+
+  controls.enableRotate=false;
+
+  refreshLockBtn();
+
   S.manipulationActive=true;
 
   moveCursor.style.display=
@@ -572,7 +579,7 @@ export function beginRotate(){
 }
 
 
-function cleanupManipulation(){
+export function cleanupManipulation(){
 
   if(S.manipulationCleanup){
 
