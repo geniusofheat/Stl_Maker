@@ -154,8 +154,7 @@ export function fillSubtool(
                 ),
                 -360,
                 360,
-                'deg',
-                true
+                'deg'
               )
           ).join('')
         }
@@ -164,26 +163,10 @@ export function fillSubtool(
 
 
     // The value button of an axis locks that axis for rotating
-    slot
-      .querySelectorAll(
-        '.value-button[data-axis]'
-      )
-      .forEach(
-        v => {
-
-          v.addEventListener(
-            'click',
-            e => {
-
-              e.stopPropagation();
-
-              setAxis(
-                v.dataset.axis
-              );
-            }
-          );
-        }
-      );
+    wireAxisButtons(
+      slot,
+      rotateAxes
+    );
 
 
     slot
@@ -359,8 +342,7 @@ function stepperRow(
   val,
   min,
   max,
-  unit,
-  valueSelects
+  unit
 ){
 
   const display=
@@ -369,52 +351,39 @@ function stepperRow(
       : `${Number(val).toFixed(1)}°`;
 
 
+  // Two lines so it fits the narrow panel:
+  // line 1 = axis + value (tap to lock the axis), line 2 = − and +
   return `
     <div
       class="stepper-row"
       data-axis="${axis}">
 
-      <button
-        class="step-lbl ${
-          !valueSelects &&
-          S.selectedAxis===axis
-            ? 'axis-active'
-            : ''
-        }"
-        ${
-          valueSelects
-            ? ''
-            : `data-axis="${axis}"`
-        }>
-        ${axis}
-      </button>
-
-      <button
-        data-step="-1">
-        −
-      </button>
-
       <div
         class="value-button ${
-          valueSelects &&
           S.selectedAxis===axis
             ? 'axis-active'
             : ''
         }"
-        ${
-          valueSelects
-            ? `data-axis="${axis}"`
-            : ''
-        }
+        data-axis="${axis}"
         data-min="${min}"
         data-max="${max}">
-        ${display}
+        <b class="ax">${axis}</b>
+        <span>${display}</span>
       </div>
 
-      <button
-        data-step="1">
-        +
-      </button>
+      <div class="step-btns">
+
+        <button
+          data-step="-1">
+          −
+        </button>
+
+        <button
+          data-step="1">
+          +
+        </button>
+
+      </div>
 
     </div>
   `;
@@ -428,33 +397,20 @@ function wireAxisButtons(
 
   scope
     .querySelectorAll(
-      '.step-lbl[data-axis]'
+      '.value-button[data-axis]'
     )
     .forEach(
-      btn => {
+      v => {
 
-        btn.addEventListener(
+        v.addEventListener(
           'click',
           e => {
 
             e.stopPropagation();
 
             setAxis(
-              btn.dataset.axis
+              v.dataset.axis
             );
-
-            scope
-              .querySelectorAll(
-                '.step-lbl[data-axis]'
-              )
-              .forEach(
-                b =>
-                  b.classList.toggle(
-                    'axis-active',
-                    b.dataset.axis===
-                    S.selectedAxis
-                  )
-              );
           }
         );
       }

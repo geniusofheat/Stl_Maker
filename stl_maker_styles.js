@@ -172,12 +172,26 @@ style.textContent = `
 
 .stepper-row{
   display:flex;
-  align-items:center;
+  flex-direction:column;
+  align-items:stretch;
   gap:3px;
   width:100%;
   min-width:0;
   padding:0 3px;
   box-sizing:border-box;
+}
+
+.stepper-row .step-btns{
+  display:flex;
+  gap:3px;
+  width:100%;
+}
+
+.stepper-row .step-btns button{
+  flex:1 1 0;
+  width:auto;
+  min-width:0;
+  height:26px;
 }
 
 .stepper-row .step-lbl{
@@ -240,8 +254,16 @@ style.textContent = `
 }
 
 .stepper-row .value-button{
-  flex:1 1 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  flex:0 0 auto;
+  width:100%;
   min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  box-sizing:border-box;
   height:28px;
   background:#fff;
   color:#111;
@@ -255,6 +277,15 @@ style.textContent = `
 
 .stepper-row .value-button[data-axis]{
   cursor:pointer;
+}
+
+.stepper-row .value-button .ax{
+  color:var(--gold);
+  font-size:9px;
+}
+
+.stepper-row .value-button.axis-active .ax{
+  color:#fff;
 }
 
 .stepper-row .value-button.axis-active{
@@ -273,7 +304,7 @@ style.textContent = `
 .stepper-stack{
   display:flex;
   flex-direction:column;
-  gap:5px;
+  gap:8px;
   width:100%;
   padding:0;
   box-sizing:border-box;
