@@ -253,6 +253,16 @@ style.textContent = `
   text-align:center;
 }
 
+.stepper-row .value-button[data-axis]{
+  cursor:pointer;
+}
+
+.stepper-row .value-button.axis-active{
+  background:#3a6fd8;
+  border-color:#3a6fd8;
+  color:#fff;
+}
+
 .stepper-row.all-axes .step-lbl{
   width:28px;
   min-width:28px;

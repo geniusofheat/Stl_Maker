@@ -173,6 +173,13 @@ export function renderShapePanel(
             if(id!=='rotate')
               cleanupManipulation();
 
+            // Rotate always starts on the X axis (Z in 2D)
+            if(id==='rotate')
+              S.selectedAxis=
+                S.shapeMode==='2d'
+                  ? 'Z'
+                  : 'X';
+
 
             if(id==='delete'){
 

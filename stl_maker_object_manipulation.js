@@ -49,6 +49,18 @@ export function setAxis(axis){
           b.dataset.axis===axis
         )
     );
+
+  document
+    .querySelectorAll(
+      '.value-button[data-axis]'
+    )
+    .forEach(
+      b =>
+        b.classList.toggle(
+          'axis-active',
+          b.dataset.axis===axis
+        )
+    );
 }
 
 

@@ -135,6 +135,10 @@ export function fillSubtool(
         ? ['Z']
         : ['X','Y','Z'];
 
+    // Keep the chosen axis valid (X by default, Z in 2D)
+    if(!rotateAxes.includes(S.selectedAxis))
+      S.selectedAxis=rotateAxes[0];
+
 
     slot.innerHTML=`
       <div class="stepper-stack">
@@ -150,7 +154,8 @@ export function fillSubtool(
                 ),
                 -360,
                 360,
-                'deg'
+                'deg',
+                true
               )
           ).join('')
         }
@@ -158,10 +163,27 @@ export function fillSubtool(
     `;
 
 
-    wireAxisButtons(
-      slot,
-      rotateAxes
-    );
+    // The value button of an axis locks that axis for rotating
+    slot
+      .querySelectorAll(
+        '.value-button[data-axis]'
+      )
+      .forEach(
+        v => {
+
+          v.addEventListener(
+            'click',
+            e => {
+
+              e.stopPropagation();
+
+              setAxis(
+                v.dataset.axis
+              );
+            }
+          );
+        }
+      );
 
 
     slot
@@ -337,7 +359,8 @@ function stepperRow(
   val,
   min,
   max,
-  unit
+  unit,
+  valueSelects
 ){
 
   const display=
@@ -353,11 +376,16 @@ function stepperRow(
 
       <button
         class="step-lbl ${
+          !valueSelects &&
           S.selectedAxis===axis
             ? 'axis-active'
             : ''
         }"
-        data-axis="${axis}">
+        ${
+          valueSelects
+            ? ''
+            : `data-axis="${axis}"`
+        }>
         ${axis}
       </button>
 
@@ -367,7 +395,17 @@ function stepperRow(
       </button>
 
       <div
-        class="value-button"
+        class="value-button ${
+          valueSelects &&
+          S.selectedAxis===axis
+            ? 'axis-active'
+            : ''
+        }"
+        ${
+          valueSelects
+            ? `data-axis="${axis}"`
+            : ''
+        }
         data-min="${min}"
         data-max="${max}">
         ${display}
