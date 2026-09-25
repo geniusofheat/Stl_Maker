@@ -3,7 +3,7 @@ import { S } from './stl_maker_state.js';
 import { camera, canvas, controls, onFrame } from './stl_maker_three.js';
 import { clearHistoryKind, pushHistory } from './stl_maker_h2.js';
 import { scene } from './stl_maker_three.js';
-import { half, PLATE_SIZE } from './stl_maker_three.js';
+import { activeShape } from './stl_maker_layer_data.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -31,14 +31,17 @@ const AXES = {
 let gridAxis = 'Z';
 
 
-/* ── grid axis tripod ──
-   A small X/Y/Z tripod for the GRID (the grid is what owns the
-   axes — a shape just sits on it). It hovers above the plate, at
-   a fixed spot, so its lines never mix with whatever's on the
-   grid. It's built in real 3D space, not attached to the screen,
-   so as the grid/camera orbits it turns right along with
-   everything else. Visible any time you're in 3D mode, on load
-   and with or without a shape selected. */
+/* ── shape orientation tripod ──
+   A small X/Y/Z tripod that hovers above the active object (not
+   centered on it, so its lines never mix with the shape). It's
+   built in real 3D space, not attached to the screen, so as the
+   grid/camera orbits it turns right along with everything else —
+   showing which way each axis currently points.
+
+   This first pass tracks the object's POSITION and SIZE; it
+   doesn't yet follow the object's own rotation if you spin the
+   object itself with the Rotate tool (only grid turning, above,
+   is reflected). */
 
 const AXIS_COLOR = {
   X:0xd9534f,
@@ -186,29 +189,64 @@ shapeHud
   );
 
 
-const HUD_SCALE = PLATE_SIZE*.12;
-
-// fixed above the grid's origin corner — added lazily (not at module
-// load) so this file doesn't need "scene" before three.js finishes loading
+// repositions/resizes the tripod each frame to sit above the active shape
 function updateShapeHud(){
 
+  // added lazily (not at module load) so this file doesn't need
+  // "scene" from stl_maker_three.js before that file finishes loading
   if(!shapeHudAdded){
 
     scene.add(shapeHud);
 
-    shapeHud.scale.setScalar(HUD_SCALE);
-
-    shapeHud.position.set(
-      -half,
-      -half,
-      HUD_SCALE
-    );
-
     shapeHudAdded=true;
+  }
+
+  const s=activeShape();
+
+  if(!s || !s.mesh){
+
+    shapeHud.visible=false;
+
+    return;
   }
 
   shapeHud.visible=
     S.shapeMode==='3d';
+
+  if(!shapeHud.visible)
+    return;
+
+  const box=
+    new THREE.Box3()
+      .setFromObject(s.mesh);
+
+  const center=
+    box.getCenter(
+      new THREE.Vector3()
+    );
+
+  const size=
+    box.getSize(
+      new THREE.Vector3()
+    );
+
+  const span=
+    Math.max(size.x,size.y,size.z);
+
+  const scale=
+    THREE.MathUtils.clamp(
+      span*.35,
+      6,
+      30
+    );
+
+  shapeHud.scale.setScalar(scale);
+
+  shapeHud.position.set(
+    center.x,
+    center.y,
+    box.max.z+scale*.9
+  );
 }
 
 

@@ -11,15 +11,6 @@ import { svg } from './stl_maker_icons.js';
    THREE.JS
 ───────────────────────────────────────────────────────────── */
 
-// lets other files (stl_maker_grid_rotate.js) hook into the render loop
-// without three.js having to import them back (that would be circular)
-const frameHooks = [];
-
-export function onFrame(fn){
-  frameHooks.push(fn);
-}
-
-
 export const canvas = document.getElementById('viewport3d');
 
 const renderer = new THREE.WebGLRenderer({
@@ -682,10 +673,6 @@ setTimeout(
   );
 
   controls.update();
-
-  frameHooks.forEach(
-    fn => fn()
-  );
 
   renderer.render(
     scene,
