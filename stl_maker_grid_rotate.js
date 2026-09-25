@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { S } from './stl_maker_state.js';
-import { camera, canvas, controls } from './stl_maker_three.js';
+import { camera, canvas, controls, onFrame } from './stl_maker_three.js';
 import { clearHistoryKind, pushHistory } from './stl_maker_h2.js';
 import { scene } from './stl_maker_three.js';
+import { activeShape } from './stl_maker_layer_data.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -30,12 +31,17 @@ const AXES = {
 let gridAxis = 'Z';
 
 
-/* ── centered axis indicator ──
-   A line + arrowhead + letter showing which axis the grid currently
-   turns on. It's a child of the camera, so it always sits in the
-   same spot on screen (top-center, above the grid) no matter how
-   the grid is turned, and it switches to match the X/Y/Z button
-   that's selected. */
+/* ── shape orientation tripod ──
+   A small X/Y/Z tripod that hovers above the active object (not
+   centered on it, so its lines never mix with the shape). It's
+   built in real 3D space, not attached to the screen, so as the
+   grid/camera orbits it turns right along with everything else —
+   showing which way each axis currently points.
+
+   This first pass tracks the object's POSITION and SIZE; it
+   doesn't yet follow the object's own rotation if you spin the
+   object itself with the Rotate tool (only grid turning, above,
+   is reflected). */
 
 const AXIS_COLOR = {
   X:0xd9534f,
@@ -43,13 +49,9 @@ const AXIS_COLOR = {
   Z:0x4a90d9
 };
 
-const hud = new THREE.Group();
+const shapeHud = new THREE.Group();
 
-hud.position.set(0,10,-70);
-
-camera.add(hud);
-
-scene.add(camera);
+let shapeHudAdded=false;
 
 
 function makeHudLabel(text, color){
@@ -82,178 +84,170 @@ function makeHudLabel(text, color){
       })
     );
 
-  spr.scale.set(6,6,1);
-
   spr.renderOrder=999;
 
   return spr;
 }
 
-const hudLine=
-  new THREE.Line(
-    new THREE.BufferGeometry()
-      .setFromPoints([
-        new THREE.Vector3(-9,0,0),
-        new THREE.Vector3(9,0,0)
-      ]),
-    new THREE.LineBasicMaterial({
-      color:AXIS_COLOR.Z,
-      depthTest:false
-    })
-  );
+function hudArm(color, dir){
 
-hudLine.renderOrder=998;
+  const g=new THREE.Group();
 
-hud.add(hudLine);
-
-
-const hudHead=
-  new THREE.Mesh(
-    new THREE.ConeGeometry(1.4,3,10),
-    new THREE.MeshBasicMaterial({
-      color:AXIS_COLOR.Z,
-      depthTest:false
-    })
-  );
-
-hudHead.rotation.z=-Math.PI/2;
-hudHead.position.set(9,0,0);
-hudHead.renderOrder=998;
-
-hud.add(hudHead);
-
-
-let hudLabel=
-  makeHudLabel('Z',
-    '#'+AXIS_COLOR.Z.toString(16)
-  );
-
-hud.add(hudLabel);
-
-
-function refreshHud(){
-
-  const color=AXIS_COLOR[gridAxis];
-
-  hudLine.material.color.set(color);
-  hudHead.material.color.set(color);
-
-  hud.remove(hudLabel);
-
-  hudLabel=
-    makeHudLabel(
-      gridAxis,
-      '#'+color.toString(16)
-        .padStart(6,'0')
+  const line=
+    new THREE.Line(
+      new THREE.BufferGeometry()
+        .setFromPoints([
+          new THREE.Vector3(0,0,0),
+          dir
+        ]),
+      new THREE.LineBasicMaterial({
+        color,
+        depthTest:false
+      })
     );
 
-  hud.add(hudLabel);
+  line.renderOrder=998;
 
-  hud.visible=
-    S.shapeMode==='3d';
-}
+  g.add(line);
 
-refreshHud();
-
-
-
-/* ── buttons over the grid ── */
-
-const bar =
-  document.createElement('div');
-
-bar.id='gridRotBar';
-
-bar.innerHTML=
-  `<div class="grp">`+
-    `<button data-ga="X">X</button>`+
-    `<button data-ga="Y">Y</button>`+
-    `<button data-ga="Z" title="Spin around the origin">Z</button>`+
-  `</div>`+
-  `<div class="grp">`+
-    `<button data-deg="-90">−90°</button>`+
-    `<button data-deg="90">90°</button>`+
-    `<button data-deg="180">180°</button>`+
-  `</div>`;
-
-document
-  .getElementById('plate')
-  .appendChild(bar);
-
-
-function refreshAxisButtons(){
-
-  bar
-    .querySelectorAll('[data-ga]')
-    .forEach(b =>
-      b.classList.toggle(
-        'toggle-active',
-        b.dataset.ga===gridAxis
-      )
+  const head=
+    new THREE.Mesh(
+      new THREE.ConeGeometry(.18,.5,10),
+      new THREE.MeshBasicMaterial({
+        color,
+        depthTest:false
+      })
     );
+
+  head.position.copy(dir);
+
+  head.quaternion.setFromUnitVectors(
+    new THREE.Vector3(0,1,0),
+    dir.clone().normalize()
+  );
+
+  head.renderOrder=998;
+
+  g.add(head);
+
+  return g;
 }
 
-function refreshBarVisibility(){
-
-  bar.style.display =
-    S.shapeMode==='3d'
-      ? 'flex'
-      : 'none';
-}
-
-// three.js announces 2D / 3D changes (the camera resets, so old turns can't be undone)
-document.addEventListener(
-  'stlmodechange',
-  () => {
-
-    refreshBarVisibility();
-    refreshHud();
-
-    clearHistoryKind('grid');
-  }
+// tripod shape: Z straight up, X down-left, Y down-right (matches Jeff's sketch)
+shapeHud.add(
+  hudArm(
+    AXIS_COLOR.Z,
+    new THREE.Vector3(0,0,1)
+  )
 );
 
-refreshAxisButtons();
-refreshBarVisibility();
+shapeHud.add(
+  hudArm(
+    AXIS_COLOR.X,
+    new THREE.Vector3(-.8,0,-.6)
+  )
+);
+
+shapeHud.add(
+  hudArm(
+    AXIS_COLOR.Y,
+    new THREE.Vector3(.8,0,-.6)
+  )
+);
+
+shapeHud.add(
+  makeHudLabel('Z','#4a90d9')
+    .translateOnAxis(
+      new THREE.Vector3(0,0,1),
+      1.35
+    )
+);
+
+shapeHud.add(
+  makeHudLabel('X','#d9534f')
+    .translateOnAxis(
+      new THREE.Vector3(-.8,0,-.6)
+        .normalize(),
+      1.55
+    )
+);
+
+shapeHud.add(
+  makeHudLabel('Y','#5cb85c')
+    .translateOnAxis(
+      new THREE.Vector3(.8,0,-.6)
+        .normalize(),
+      1.55
+    )
+);
+
+shapeHud
+  .children
+  .filter(c => c.isSprite)
+  .forEach(spr =>
+    spr.scale.set(2,2,1)
+  );
 
 
-bar
-  .querySelectorAll('[data-ga]')
-  .forEach(b => {
+// repositions/resizes the tripod each frame to sit above the active shape
+function updateShapeHud(){
 
-    b.addEventListener(
-      'click',
-      () => {
+  // added lazily (not at module load) so this file doesn't need
+  // "scene" from stl_maker_three.js before that file finishes loading
+  if(!shapeHudAdded){
 
-        gridAxis=b.dataset.ga;
+    scene.add(shapeHud);
 
-        refreshAxisButtons();
-        refreshHud();
-      }
+    shapeHudAdded=true;
+  }
+
+  const s=activeShape();
+
+  if(!s || !s.mesh){
+
+    shapeHud.visible=false;
+
+    return;
+  }
+
+  shapeHud.visible=
+    S.shapeMode==='3d';
+
+  if(!shapeHud.visible)
+    return;
+
+  const box=
+    new THREE.Box3()
+      .setFromObject(s.mesh);
+
+  const center=
+    box.getCenter(
+      new THREE.Vector3()
     );
-  });
 
-bar
-  .querySelectorAll('[data-deg]')
-  .forEach(b => {
-
-    b.addEventListener(
-      'click',
-      () => {
-
-        const axis=gridAxis;
-
-        const angle=
-          THREE.MathUtils.degToRad(
-            parseFloat(b.dataset.deg)
-          );
-
-        spinGrid(axis,angle);
-
-        recordTurn(axis,angle);
-      }
+  const size=
+    box.getSize(
+      new THREE.Vector3()
     );
-  });
+
+  const span=
+    Math.max(size.x,size.y,size.z);
+
+  const scale=
+    THREE.MathUtils.clamp(
+      span*.35,
+      6,
+      30
+    );
+
+  shapeHud.scale.setScalar(scale);
+
+  shapeHud.position.set(
+    center.x,
+    center.y,
+    box.max.z+scale*.9
+  );
+}
 
 
 /* ── turning the grid ──
@@ -552,3 +546,5 @@ function endPointer(e){
 
 canvas.addEventListener('pointerup',endPointer);
 canvas.addEventListener('pointercancel',endPointer);
+
+onFrame(updateShapeHud);
