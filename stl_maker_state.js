@@ -10,7 +10,7 @@ export const S = {
   shapeMode: '2d',  // was top-level let in "THREE.JS"
   mmLabelGroup: null,  // was top-level let in "THREE.JS"
   mmState: 'off',  // was top-level let in "THREE.JS"
-  rotationLocked: true,  // was top-level let in "THREE.JS"
+  rotationLocked: false,  // was top-level let in "THREE.JS" — grid starts unlocked
   nextLayerId: 1,  // was top-level let in "DATA"
   activeLayerId: null,  // was top-level let in "DATA"
   activeShapeId: null,  // was top-level let in "DATA"

@@ -35,6 +35,9 @@ const DEFAULT_CAM =
 
 camera.position.copy(DEFAULT_CAM);
 
+// lets objects parented to the camera (the axis HUD in stl_maker_grid_rotate.js) render
+scene.add(camera);
+
 scene.add(
   new THREE.HemisphereLight(
     0xfff4e0,
@@ -481,43 +484,15 @@ export function refreshModeScene(){
       .06
     );
 
-    xArrow.position.copy(axisOrigin);
-    yArrow.position.copy(axisOrigin);
-    zArrow.position.copy(axisOrigin);
+    // the corner arrows are only used in 2D now; 3D shows the
+    // centered axis HUD from stl_maker_grid_rotate.js instead
+    xArrow.visible=false;
+    yArrow.visible=false;
+    zArrow.visible=false;
 
-    xArrow.setDirection(
-      new THREE.Vector3(1,0,0)
-    );
-
-    yArrow.setDirection(
-      new THREE.Vector3(0,1,0)
-    );
-
-    zArrow.setDirection(
-      new THREE.Vector3(0,0,1)
-    );
-
-    xLabel.position.set(
-      axisOrigin.x+10,
-      axisOrigin.y,
-      axisOrigin.z
-    );
-
-    yLabel.position.set(
-      axisOrigin.x,
-      axisOrigin.y+10,
-      axisOrigin.z
-    );
-
-    zLabel.position.set(
-      axisOrigin.x,
-      axisOrigin.y,
-      axisOrigin.z+10
-    );
-
-    xLabel.visible=true;
-    yLabel.visible=true;
-    zLabel.visible=true;
+    xLabel.visible=false;
+    yLabel.visible=false;
+    zLabel.visible=false;
 
     camera.position.copy(
       DEFAULT_CAM

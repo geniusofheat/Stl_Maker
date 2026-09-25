@@ -14,10 +14,7 @@ export function buildDragGeometry(
 ){
 
   const H=
-    Math.max(
-      GRID_SQUARE,
-      15
-    );
+    GRID_SQUARE;
 
 
   if(S.shapeMode==='2d'){

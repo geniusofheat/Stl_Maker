@@ -17,15 +17,21 @@ function getDimension(
   axis
 ){
 
-  const d=
+  const key=
+    axis.toLowerCase();
+
+  const base=
     s.baseDimensions ||
     geometryDimensions(
       s.mesh
     );
 
-  return d[
-    axis.toLowerCase()
-  ];
+  // the button must reflect the shape's CURRENT size, not the size
+  // it was created at, or the − button looks like it stops working
+  return (
+    base[key] *
+    (s.mesh.scale[key] || 1)
+  );
 }
 
 

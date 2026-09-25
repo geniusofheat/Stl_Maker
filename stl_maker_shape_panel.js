@@ -33,7 +33,7 @@ const ACTIONS=[
   },
   {
     id:'scale',
-    label:'Scale',
+    label:'Size',
     icon:'scale'
   },
   {

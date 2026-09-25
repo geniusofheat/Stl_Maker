@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { S } from './stl_maker_state.js';
 import { camera, canvas, controls } from './stl_maker_three.js';
 import { clearHistoryKind, pushHistory } from './stl_maker_h2.js';
+import { scene } from './stl_maker_three.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -27,6 +28,133 @@ const AXES = {
 };
 
 let gridAxis = 'Z';
+
+
+/* ── centered axis indicator ──
+   A line + arrowhead + letter showing which axis the grid currently
+   turns on. It's a child of the camera, so it always sits in the
+   same spot on screen (top-center, above the grid) no matter how
+   the grid is turned, and it switches to match the X/Y/Z button
+   that's selected. */
+
+const AXIS_COLOR = {
+  X:0xd9534f,
+  Y:0x5cb85c,
+  Z:0x4a90d9
+};
+
+const hud = new THREE.Group();
+
+hud.position.set(0,10,-70);
+
+camera.add(hud);
+
+scene.add(camera);
+
+
+function makeHudLabel(text, color){
+
+  const cvs=
+    document.createElement(
+      'canvas'
+    );
+
+  cvs.width=64;
+  cvs.height=64;
+
+  const ctx=cvs.getContext('2d');
+
+  ctx.fillStyle=color;
+  ctx.font=
+    'bold 46px "JetBrains Mono", monospace';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText(text,32,34);
+
+  const spr=
+    new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map:
+          new THREE.CanvasTexture(
+            cvs
+          ),
+        depthTest:false
+      })
+    );
+
+  spr.scale.set(6,6,1);
+
+  spr.renderOrder=999;
+
+  return spr;
+}
+
+const hudLine=
+  new THREE.Line(
+    new THREE.BufferGeometry()
+      .setFromPoints([
+        new THREE.Vector3(-9,0,0),
+        new THREE.Vector3(9,0,0)
+      ]),
+    new THREE.LineBasicMaterial({
+      color:AXIS_COLOR.Z,
+      depthTest:false
+    })
+  );
+
+hudLine.renderOrder=998;
+
+hud.add(hudLine);
+
+
+const hudHead=
+  new THREE.Mesh(
+    new THREE.ConeGeometry(1.4,3,10),
+    new THREE.MeshBasicMaterial({
+      color:AXIS_COLOR.Z,
+      depthTest:false
+    })
+  );
+
+hudHead.rotation.z=-Math.PI/2;
+hudHead.position.set(9,0,0);
+hudHead.renderOrder=998;
+
+hud.add(hudHead);
+
+
+let hudLabel=
+  makeHudLabel('Z',
+    '#'+AXIS_COLOR.Z.toString(16)
+  );
+
+hud.add(hudLabel);
+
+
+function refreshHud(){
+
+  const color=AXIS_COLOR[gridAxis];
+
+  hudLine.material.color.set(color);
+  hudHead.material.color.set(color);
+
+  hud.remove(hudLabel);
+
+  hudLabel=
+    makeHudLabel(
+      gridAxis,
+      '#'+color.toString(16)
+        .padStart(6,'0')
+    );
+
+  hud.add(hudLabel);
+
+  hud.visible=
+    S.shapeMode==='3d';
+}
+
+refreshHud();
+
 
 
 /* ── buttons over the grid ── */
@@ -79,6 +207,7 @@ document.addEventListener(
   () => {
 
     refreshBarVisibility();
+    refreshHud();
 
     clearHistoryKind('grid');
   }
@@ -99,6 +228,7 @@ bar
         gridAxis=b.dataset.ga;
 
         refreshAxisButtons();
+        refreshHud();
       }
     );
   });
