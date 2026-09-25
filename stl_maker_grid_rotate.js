@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { S } from './stl_maker_state.js';
-import { camera, canvas, controls } from './stl_maker_three.js';
+import { camera, canvas, controls, onFrame } from './stl_maker_three.js';
 import { clearHistoryKind, pushHistory } from './stl_maker_h2.js';
 import { scene } from './stl_maker_three.js';
+import { half, PLATE_SIZE } from './stl_maker_three.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -30,12 +31,14 @@ const AXES = {
 let gridAxis = 'Z';
 
 
-/* ── centered axis indicator ──
-   A line + arrowhead + letter showing which axis the grid currently
-   turns on. It's a child of the camera, so it always sits in the
-   same spot on screen (top-center, above the grid) no matter how
-   the grid is turned, and it switches to match the X/Y/Z button
-   that's selected. */
+/* ── grid axis tripod ──
+   A small X/Y/Z tripod for the GRID (the grid is what owns the
+   axes — a shape just sits on it). It hovers above the plate, at
+   a fixed spot, so its lines never mix with whatever's on the
+   grid. It's built in real 3D space, not attached to the screen,
+   so as the grid/camera orbits it turns right along with
+   everything else. Visible any time you're in 3D mode, on load
+   and with or without a shape selected. */
 
 const AXIS_COLOR = {
   X:0xd9534f,
@@ -43,13 +46,9 @@ const AXIS_COLOR = {
   Z:0x4a90d9
 };
 
-const hud = new THREE.Group();
+const shapeHud = new THREE.Group();
 
-hud.position.set(0,10,-70);
-
-camera.add(hud);
-
-scene.add(camera);
+let shapeHudAdded=false;
 
 
 function makeHudLabel(text, color){
@@ -82,79 +81,135 @@ function makeHudLabel(text, color){
       })
     );
 
-  spr.scale.set(6,6,1);
-
   spr.renderOrder=999;
 
   return spr;
 }
 
-const hudLine=
-  new THREE.Line(
-    new THREE.BufferGeometry()
-      .setFromPoints([
-        new THREE.Vector3(-9,0,0),
-        new THREE.Vector3(9,0,0)
-      ]),
-    new THREE.LineBasicMaterial({
-      color:AXIS_COLOR.Z,
-      depthTest:false
-    })
-  );
+function hudArm(color, dir){
 
-hudLine.renderOrder=998;
+  const g=new THREE.Group();
 
-hud.add(hudLine);
-
-
-const hudHead=
-  new THREE.Mesh(
-    new THREE.ConeGeometry(1.4,3,10),
-    new THREE.MeshBasicMaterial({
-      color:AXIS_COLOR.Z,
-      depthTest:false
-    })
-  );
-
-hudHead.rotation.z=-Math.PI/2;
-hudHead.position.set(9,0,0);
-hudHead.renderOrder=998;
-
-hud.add(hudHead);
-
-
-let hudLabel=
-  makeHudLabel('Z',
-    '#'+AXIS_COLOR.Z.toString(16)
-  );
-
-hud.add(hudLabel);
-
-
-function refreshHud(){
-
-  const color=AXIS_COLOR[gridAxis];
-
-  hudLine.material.color.set(color);
-  hudHead.material.color.set(color);
-
-  hud.remove(hudLabel);
-
-  hudLabel=
-    makeHudLabel(
-      gridAxis,
-      '#'+color.toString(16)
-        .padStart(6,'0')
+  const line=
+    new THREE.Line(
+      new THREE.BufferGeometry()
+        .setFromPoints([
+          new THREE.Vector3(0,0,0),
+          dir
+        ]),
+      new THREE.LineBasicMaterial({
+        color,
+        depthTest:false
+      })
     );
 
-  hud.add(hudLabel);
+  line.renderOrder=998;
 
-  hud.visible=
-    S.shapeMode==='3d';
+  g.add(line);
+
+  const head=
+    new THREE.Mesh(
+      new THREE.ConeGeometry(.18,.5,10),
+      new THREE.MeshBasicMaterial({
+        color,
+        depthTest:false
+      })
+    );
+
+  head.position.copy(dir);
+
+  head.quaternion.setFromUnitVectors(
+    new THREE.Vector3(0,1,0),
+    dir.clone().normalize()
+  );
+
+  head.renderOrder=998;
+
+  g.add(head);
+
+  return g;
 }
 
-refreshHud();
+// tripod shape: Z straight up, X down-left, Y down-right (matches Jeff's sketch)
+shapeHud.add(
+  hudArm(
+    AXIS_COLOR.Z,
+    new THREE.Vector3(0,0,1)
+  )
+);
 
+shapeHud.add(
+  hudArm(
+    AXIS_COLOR.X,
+    new THREE.Vector3(-.8,0,-.6)
+  )
+);
+
+shapeHud.add(
+  hudArm(
+    AXIS_COLOR.Y,
+    new THREE.Vector3(.8,0,-.6)
+  )
+);
+
+shapeHud.add(
+  makeHudLabel('Z','#4a90d9')
+    .translateOnAxis(
+      new THREE.Vector3(0,0,1),
+      1.35
+    )
+);
+
+shapeHud.add(
+  makeHudLabel('X','#d9534f')
+    .translateOnAxis(
+      new THREE.Vector3(-.8,0,-.6)
+        .normalize(),
+      1.55
+    )
+);
+
+shapeHud.add(
+  makeHudLabel('Y','#5cb85c')
+    .translateOnAxis(
+      new THREE.Vector3(.8,0,-.6)
+        .normalize(),
+      1.55
+    )
+);
+
+shapeHud
+  .children
+  .filter(c => c.isSprite)
+  .forEach(spr =>
+    spr.scale.set(2,2,1)
+  );
+
+
+const HUD_SCALE = PLATE_SIZE*.12;
+
+// fixed above the grid's origin corner — added lazily (not at module
+// load) so this file doesn't need "scene" before three.js finishes loading
+function updateShapeHud(){
+
+  if(!shapeHudAdded){
+
+    scene.add(shapeHud);
+
+    shapeHud.scale.setScalar(HUD_SCALE);
+
+    shapeHud.position.set(
+      -half,
+      -half,
+      HUD_SCALE
+    );
+
+    shapeHudAdded=true;
+  }
+
+  shapeHud.visible=
+    S.shapeMode==='3d';
+}
 
 
 /* ── buttons over the grid ── */
@@ -207,7 +262,6 @@ document.addEventListener(
   () => {
 
     refreshBarVisibility();
-    refreshHud();
 
     clearHistoryKind('grid');
   }
@@ -228,7 +282,6 @@ bar
         gridAxis=b.dataset.ga;
 
         refreshAxisButtons();
-        refreshHud();
       }
     );
   });
@@ -552,3 +605,5 @@ function endPointer(e){
 
 canvas.addEventListener('pointerup',endPointer);
 canvas.addEventListener('pointercancel',endPointer);
+
+onFrame(updateShapeHud);
