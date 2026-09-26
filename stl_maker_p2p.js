@@ -513,10 +513,8 @@ function createP2PLine(
           8,
           false
         ),
-        new THREE.MeshStandardMaterial({
-          color:SWATCHES[0],
-          metalness:.15,
-          roughness:.55
+        new THREE.MeshBasicMaterial({
+          color:SWATCHES[0]
         })
       );
 
@@ -741,10 +739,8 @@ async function createP2PShape(
   const mesh=
     new THREE.Mesh(
       finalGeo,
-      new THREE.MeshStandardMaterial({
-        color:SWATCHES[0],
-        metalness:.15,
-        roughness:.55
+      new THREE.MeshBasicMaterial({
+        color:SWATCHES[0]
       })
     );
 

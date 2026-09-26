@@ -178,10 +178,8 @@ export function startFreehand(){
       mesh=
         new THREE.Mesh(
           geo,
-          new THREE.MeshStandardMaterial({
-            color:SWATCHES[0],
-            metalness:.15,
-            roughness:.55
+          new THREE.MeshBasicMaterial({
+            color:SWATCHES[0]
           })
         );
 

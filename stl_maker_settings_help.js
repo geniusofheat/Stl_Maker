@@ -1,6 +1,6 @@
 import { MODULES } from './stl_maker_data.js';
 import { menuScroll, setH2 } from './stl_maker_h2.js';
-import { GRID_SQUARE, PLATE_SIZE } from './stl_maker_three.js';
+import { GRID_SQUARE, PLATE_W, PLATE_L, PLATE_H } from './stl_maker_three.js';
 import { svg } from './stl_maker_icons.js';
 import { exportSTL, saveSceneJSON } from './stl_maker_export_save.js';
 import { showToast } from './stl_maker_toast.js';
@@ -14,7 +14,7 @@ import { MODULE_ORDER } from './stl_maker_module_h1.js';
 export function renderSettings(){
 
   setH2(
-    `Plate fixed at ${PLATE_SIZE}×${PLATE_SIZE}mm, ${GRID_SQUARE}mm grid`
+    `Plate fixed at ${PLATE_W}×${PLATE_L}×${PLATE_H}mm, ${GRID_SQUARE}mm grid`
   );
 
 

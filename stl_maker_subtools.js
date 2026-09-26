@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { SWATCHES } from './stl_maker_data.js';
 import { S } from './stl_maker_state.js';
 import { clampToPlate, geometryDimensions } from './stl_maker_geometry.js';
-import { GRID_SQUARE, PLATE_SIZE, half } from './stl_maker_three.js';
+import { GRID_SQUARE, PLATE_W, PLATE_L, PLATE_H, halfX, halfY } from './stl_maker_three.js';
 import { menuScroll } from './stl_maker_h2.js';
 import { beginRotate, currentIncrement, setAxis } from './stl_maker_object_manipulation.js';
 import { refreshShapeVisuals } from './stl_maker_layer_data.js';
@@ -86,6 +86,12 @@ export function fillSubtool(
 
   if(tool==='move'){
 
+    const moveBounds={
+      X:[-halfX,halfX],
+      Y:[-halfY,halfY],
+      Z:[0,PLATE_H]
+    };
+
     slot.innerHTML=`
       <div class="stepper-stack">
         ${
@@ -96,8 +102,8 @@ export function fillSubtool(
                 s.mesh.position[
                   axis.toLowerCase()
                 ],
-                -half,
-                half,
+                moveBounds[axis][0],
+                moveBounds[axis][1],
                 'mm'
               )
           ).join('')
@@ -242,6 +248,12 @@ export function fillSubtool(
 
   }else if(tool==='scale'){
 
+    const sizeMax={
+      X:PLATE_W,
+      Y:PLATE_L,
+      Z:PLATE_H
+    };
+
     slot.innerHTML=`
       <div class="stepper-stack">
 
@@ -255,7 +267,7 @@ export function fillSubtool(
                   axis
                 ),
                 GRID_SQUARE,
-                PLATE_SIZE,
+                sizeMax[axis],
                 'mm'
               )
           ).join('')

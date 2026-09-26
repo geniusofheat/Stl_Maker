@@ -74,25 +74,66 @@ fillL.position.set(-60,30,-40);
 scene.add(fillL);
 
 
-export const PLATE_SIZE = 100;
+// build-plate size — matches the 3D printer's build volume
+export const PLATE_W = 155;   // X (wide)
+export const PLATE_L = 175;   // Y (long)
+export const PLATE_H = 210;   // Z (high)
 export const GRID_SQUARE = 5;
-export const half = PLATE_SIZE / 2;
+
+export const halfX = PLATE_W / 2;
+export const halfY = PLATE_L / 2;
+
+// kept so files that only need a rough/single value (like the
+// paused grid-axis-indicator code) still work without changes
+export const PLATE_SIZE = Math.max(PLATE_W, PLATE_L);
+export const half = halfX;
 
 
-/* GRID — X/Y PLANE */
+/* GRID — X/Y PLANE (rectangular: PLATE_W × PLATE_L, true 5mm squares) */
 
-const grid =
-  new THREE.GridHelper(
-    PLATE_SIZE,
-    PLATE_SIZE / GRID_SQUARE,
-    0xc8a96e,
-    0x34355a
-  );
+function buildGrid(){
 
-grid.material.transparent = true;
-grid.material.opacity = .4;
+  const pts=[];
 
-grid.rotation.x = Math.PI / 2;
+  for(
+    let x=-halfX;
+    x<=halfX+.001;
+    x+=GRID_SQUARE
+  ){
+
+    pts.push(
+      new THREE.Vector3(x,-halfY,0),
+      new THREE.Vector3(x,halfY,0)
+    );
+  }
+
+  for(
+    let y=-halfY;
+    y<=halfY+.001;
+    y+=GRID_SQUARE
+  ){
+
+    pts.push(
+      new THREE.Vector3(-halfX,y,0),
+      new THREE.Vector3(halfX,y,0)
+    );
+  }
+
+  const g=
+    new THREE.LineSegments(
+      new THREE.BufferGeometry()
+        .setFromPoints(pts),
+      new THREE.LineBasicMaterial({
+        color:0x34355a,
+        transparent:true,
+        opacity:.4
+      })
+    );
+
+  return g;
+}
+
+const grid = buildGrid();
 
 scene.add(grid);
 
@@ -101,10 +142,10 @@ scene.add(grid);
 
 const borderGeometry =
   new THREE.BufferGeometry().setFromPoints([
-    new THREE.Vector3(-half,-half,0),
-    new THREE.Vector3(half,-half,0),
-    new THREE.Vector3(half,half,0),
-    new THREE.Vector3(-half,half,0)
+    new THREE.Vector3(-halfX,-halfY,0),
+    new THREE.Vector3(halfX,-halfY,0),
+    new THREE.Vector3(halfX,halfY,0),
+    new THREE.Vector3(-halfX,halfY,0)
   ]);
 
 const plateBorder =
@@ -166,8 +207,8 @@ function makeLabelSprite(
 
 const axisOrigin =
   new THREE.Vector3(
-    -half-4,
-    -half-4,
+    -halfX-4,
+    -halfY-4,
     .1
   );
 
@@ -246,7 +287,7 @@ function buildMmLabels(step){
 
   for (
     let v=0;
-    v<=PLATE_SIZE;
+    v<=PLATE_W;
     v+=step
   ){
 
@@ -254,20 +295,26 @@ function buildMmLabels(step){
       makeLabelSprite(String(v));
 
     sx.position.set(
-      -half+v,
-      -half-5,
+      -halfX+v,
+      -halfY-5,
       .2
     );
 
     S.mmLabelGroup.add(sx);
+  }
 
+  for (
+    let v=0;
+    v<=PLATE_L;
+    v+=step
+  ){
 
     const sy =
       makeLabelSprite(String(v));
 
     sy.position.set(
-      -half-5,
-      -half+v,
+      -halfX-5,
+      -halfY+v,
       .2
     );
 
@@ -280,6 +327,143 @@ function buildMmLabels(step){
 }
 
 buildMmLabels(5);
+
+
+/* AXIS EDGE INDICATORS (3D only) —
+   two red lines along the grid's X-running edges (with arrows on
+   both ends and an "X" at the middle), two green lines along the
+   Y-running edges, and a small blue up-arrow at each of the 4
+   corners for Z. */
+
+function edgeArrowLine(p1, p2, color){
+
+  const g = new THREE.Group();
+
+  const dir = p2.clone().sub(p1);
+  const len = dir.length();
+  const unit = dir.clone().normalize();
+
+  g.add(
+    new THREE.Line(
+      new THREE.BufferGeometry()
+        .setFromPoints([p1,p2]),
+      new THREE.LineBasicMaterial({color})
+    )
+  );
+
+  [
+    [p1, unit.clone().negate()],
+    [p2, unit.clone()]
+  ].forEach(([pos,headDir]) => {
+
+    const head =
+      new THREE.Mesh(
+        new THREE.ConeGeometry(2,5,10),
+        new THREE.MeshBasicMaterial({color})
+      );
+
+    head.position.copy(pos);
+
+    head.quaternion.setFromUnitVectors(
+      new THREE.Vector3(0,1,0),
+      headDir
+    );
+
+    g.add(head);
+  });
+
+  const mid = p1.clone().lerp(p2,.5);
+
+  const label =
+    makeLabelSprite(
+      color===0xd9534f ? 'X' : 'Y',
+      '#'+color.toString(16).padStart(6,'0'),
+      32
+    );
+
+  label.position.copy(mid);
+  label.renderOrder=999;
+
+  g.add(label);
+
+  return g;
+}
+
+const axisEdgeGroup = new THREE.Group();
+
+const EDGE_GAP = 8;
+
+axisEdgeGroup.add(
+  edgeArrowLine(
+    new THREE.Vector3(-halfX,-halfY-EDGE_GAP,0),
+    new THREE.Vector3(halfX,-halfY-EDGE_GAP,0),
+    0xd9534f
+  )
+);
+
+axisEdgeGroup.add(
+  edgeArrowLine(
+    new THREE.Vector3(-halfX,halfY+EDGE_GAP,0),
+    new THREE.Vector3(halfX,halfY+EDGE_GAP,0),
+    0xd9534f
+  )
+);
+
+axisEdgeGroup.add(
+  edgeArrowLine(
+    new THREE.Vector3(-halfX-EDGE_GAP,-halfY,0),
+    new THREE.Vector3(-halfX-EDGE_GAP,halfY,0),
+    0x5cb85c
+  )
+);
+
+axisEdgeGroup.add(
+  edgeArrowLine(
+    new THREE.Vector3(halfX+EDGE_GAP,-halfY,0),
+    new THREE.Vector3(halfX+EDGE_GAP,halfY,0),
+    0x5cb85c
+  )
+);
+
+[
+  [-halfX,-halfY],
+  [halfX,-halfY],
+  [halfX,halfY],
+  [-halfX,halfY]
+].forEach(([cx,cy]) => {
+
+  const corner = new THREE.Group();
+
+  corner.add(
+    new THREE.Line(
+      new THREE.BufferGeometry()
+        .setFromPoints([
+          new THREE.Vector3(cx,cy,0),
+          new THREE.Vector3(cx,cy,10)
+        ]),
+      new THREE.LineBasicMaterial({
+        color:0x4a90d9
+      })
+    )
+  );
+
+  const head=
+    new THREE.Mesh(
+      new THREE.ConeGeometry(1.6,4,10),
+      new THREE.MeshBasicMaterial({
+        color:0x4a90d9
+      })
+    );
+
+  head.position.set(cx,cy,10);
+  head.rotation.x=Math.PI/2;
+
+  corner.add(head);
+
+  axisEdgeGroup.add(corner);
+});
+
+scene.add(axisEdgeGroup);
 
 
 const mmBtn =
@@ -427,6 +611,8 @@ export function refreshModeScene(){
     zArrow.visible=false;
     zLabel.visible=false;
 
+    axisEdgeGroup.visible=false;
+
     xLabel.position.set(
       -half-4+10,
       -half-4,
@@ -494,7 +680,7 @@ export function refreshModeScene(){
     );
 
     // the corner arrows are only used in 2D now; 3D shows the
-    // centered axis HUD from stl_maker_grid_rotate.js instead
+    // axis edge indicators instead
     xArrow.visible=false;
     yArrow.visible=false;
     zArrow.visible=false;
@@ -502,6 +688,8 @@ export function refreshModeScene(){
     xLabel.visible=false;
     yLabel.visible=false;
     zLabel.visible=false;
+
+    axisEdgeGroup.visible=true;
 
     camera.position.copy(
       DEFAULT_CAM

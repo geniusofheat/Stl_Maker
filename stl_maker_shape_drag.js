@@ -98,7 +98,7 @@ export function startDragToSize(
           shapeKey,
           size
         ),
-        new THREE.MeshStandardMaterial({
+        new THREE.MeshBasicMaterial({
           color:0xe0c48f,
           transparent:true,
           opacity:.55
@@ -190,10 +190,8 @@ export function startDragToSize(
           shapeKey,
           size
         ),
-        new THREE.MeshStandardMaterial({
-          color:SWATCHES[0],
-          metalness:.15,
-          roughness:.55
+        new THREE.MeshBasicMaterial({
+          color:SWATCHES[0]
         })
       );
 
