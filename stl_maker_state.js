@@ -25,7 +25,4 @@ export const S = {
   manipulationActive: false,  // was top-level let in "OBJECT MANIPULATION"
   manipulationCleanup: null,  // was top-level let in "OBJECT MANIPULATION"
   toastTimer: null,  // was top-level let in "TOAST"
-  selectedFace: null,  // Points/Sides — currently selected face tile
-  selectedEdge: null,  // Extrude — currently selected edge
-  selectedPoint: null,  // Points/Sides — currently selected corner number
 };

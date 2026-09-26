@@ -20,15 +20,8 @@ const moveCursor=
 
 moveCursor.id='moveCursor';
 
-// points up-left at 45°, with a tail on the opposite side, like a mouse pointer
 moveCursor.innerHTML=
-  `<svg viewBox="0 0 40 40" width="34" height="34">
-    <line x1="20" y1="20" x2="34" y2="34"
-      stroke="#3a6fd8" stroke-width="4"
-      stroke-linecap="round"/>
-    <path d="M20,20 L6,6 L11,17 L2,22 Z"
-      fill="#3a6fd8"/>
-  </svg>`;
+  '<span>➤</span>';
 
 document
   .getElementById('plate')
@@ -37,8 +30,8 @@ document
   );
 
 
-const CURSOR_OFFSET_X=40;
-const CURSOR_OFFSET_Y=52;
+const CURSOR_OFFSET_X=30;
+const CURSOR_OFFSET_Y=42;
 
 
 export function setAxis(axis){

@@ -19,7 +19,6 @@ import './stl_maker_p2p.js';
 import './stl_maker_object_manipulation.js';
 import './stl_maker_layer_delete.js';
 import './stl_maker_shape_panel.js';
-import './stl_maker_face_edit.js';
 import './stl_maker_subtools.js';
 import './stl_maker_boolean.js';
 import './stl_maker_settings_help.js';

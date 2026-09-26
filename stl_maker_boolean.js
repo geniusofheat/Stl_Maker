@@ -295,8 +295,10 @@ async function runBoolean(
     const mesh=
       new THREE.Mesh(
         result.geometry,
-        new THREE.MeshBasicMaterial({
-          color:a.color
+        new THREE.MeshStandardMaterial({
+          color:a.color,
+          metalness:.15,
+          roughness:.55
         })
       );
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { SWATCHES } from './stl_maker_data.js';
 import { S } from './stl_maker_state.js';
-import { PLATE_W, PLATE_L, PLATE_H, halfX, halfY, scene } from './stl_maker_three.js';
+import { PLATE_SIZE, half, scene } from './stl_maker_three.js';
 import { findLayer, layers } from './stl_maker_layer_data.js';
 
 
@@ -268,17 +268,17 @@ export function clampToPlate(
     Math.abs(mesh.scale.z);
 
 
-  if(rx>PLATE_W)
+  if(rx>PLATE_SIZE)
     mesh.scale.x *=
-      PLATE_W/rx;
+      PLATE_SIZE/rx;
 
-  if(ry>PLATE_L)
+  if(ry>PLATE_SIZE)
     mesh.scale.y *=
-      PLATE_L/ry;
+      PLATE_SIZE/ry;
 
-  if(rz>PLATE_H)
+  if(rz>PLATE_SIZE)
     mesh.scale.z *=
-      PLATE_H/rz;
+      PLATE_SIZE/rz;
 
 
   const hx=
@@ -297,15 +297,15 @@ export function clampToPlate(
   mesh.position.x=
     THREE.MathUtils.clamp(
       mesh.position.x,
-      -halfX+hx,
-      halfX-hx
+      -half+hx,
+      half-hx
     );
 
   mesh.position.y=
     THREE.MathUtils.clamp(
       mesh.position.y,
-      -halfY+hy,
-      halfY-hy
+      -half+hy,
+      half-hy
     );
 
 
@@ -330,11 +330,11 @@ export function clampToPlate(
 
   if(
     mesh.position.z >
-    PLATE_H-hz
+    PLATE_SIZE-hz
   ){
 
     mesh.position.z=
-      PLATE_H-hz;
+      PLATE_SIZE-hz;
   }
 }
 
@@ -395,8 +395,10 @@ function insertShape(
   const mesh=
     new THREE.Mesh(
       geo,
-      new THREE.MeshBasicMaterial({
-        color
+      new THREE.MeshStandardMaterial({
+        color,
+        metalness:.15,
+        roughness:.55
       })
     );
 

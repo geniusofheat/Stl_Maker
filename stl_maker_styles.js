@@ -515,7 +515,15 @@ style.textContent = `
   height:34px;
   pointer-events:none;
   z-index:20;
-  filter:drop-shadow(0 1px 2px #000);
+  color:#3a6fd8;
+  font-size:30px;
+  line-height:30px;
+  text-shadow:0 1px 2px #000;
+}
+
+#moveCursor span{
+  display:block;
+  transform:rotate(-8deg);
 }
 
 #confirmOverlay{

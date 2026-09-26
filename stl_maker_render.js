@@ -7,7 +7,6 @@ import { renderBooleanPick } from './stl_maker_boolean.js';
 import { renderHelp, renderSettings } from './stl_maker_settings_help.js';
 import { renderDrawShapePick } from './stl_maker_shape_draw.js';
 import { cleanupManipulation } from './stl_maker_object_manipulation.js';
-import { hideCornerDots } from './stl_maker_face_edit.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -22,11 +21,6 @@ export function render(
   // Leaving the rotate tool (back arrow, other buttons) must end rotate mode
   if(!(view==='shapePanel' && subtool==='rotate'))
     cleanupManipulation();
-
-  // the white corner dots only belong on the shape panel; renderShapePanel
-  // puts them back for whichever shape is active when it runs, below
-  if(view!=='shapePanel')
-    hideCornerDots();
 
   slideMenu.classList.add(
     'open'
