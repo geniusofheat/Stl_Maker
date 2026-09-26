@@ -9,6 +9,7 @@ import { showToast } from './stl_maker_toast.js';
 import { render } from './stl_maker_render.js';
 import { fillSubtool } from './stl_maker_subtools.js';
 import { cleanupManipulation } from './stl_maker_object_manipulation.js';
+import { showCornerDots } from './stl_maker_face_edit.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -16,11 +17,6 @@ import { cleanupManipulation } from './stl_maker_object_manipulation.js';
 ───────────────────────────────────────────────────────────── */
 
 const ACTIONS=[
-  {
-    id:'select',
-    label:'Select',
-    icon:'select'
-  },
   {
     id:'move',
     label:'Move',
@@ -198,14 +194,6 @@ export function renderShapePanel(
             }
 
 
-            if(id==='select'){
-
-              activateCrosshair();
-
-              return;
-            }
-
-
             if(id==='boolean'){
 
               S.crumbs=[
@@ -238,8 +226,7 @@ export function renderShapePanel(
 
   if(
     subtool &&
-    subtool!=='boolean' &&
-    subtool!=='select'
+    subtool!=='boolean'
   ){
 
     fillSubtool(
@@ -248,4 +235,8 @@ export function renderShapePanel(
       s
     );
   }
+
+  // corners get white move-handle dots whenever a box shape is active
+  // (tap-and-hold one to extrude it — see stl_maker_drawing_tools.js)
+  showCornerDots();
 }

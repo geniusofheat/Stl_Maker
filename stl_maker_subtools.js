@@ -6,6 +6,11 @@ import { GRID_SQUARE, PLATE_W, PLATE_L, PLATE_H, halfX, halfY } from './stl_make
 import { menuScroll } from './stl_maker_h2.js';
 import { beginRotate, currentIncrement, setAxis } from './stl_maker_object_manipulation.js';
 import { refreshShapeVisuals } from './stl_maker_layer_data.js';
+import {
+  moveFace, moveEdge, movePoint,
+  facePosition, edgePosition, edgeAxes, cornerPosition,
+  faceAxisLetter, faceSideSign
+} from './stl_maker_face_edit.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -253,6 +258,99 @@ export function fillSubtool(
       Y:PLATE_L,
       Z:PLATE_H
     };
+
+    const extrudeAxes=
+      S.selectedPoint ? ['X','Y','Z'] :
+      S.selectedEdge ? edgeAxes(S.selectedEdge).map(a=>a.toUpperCase()) :
+      S.selectedFace ? [faceAxisLetter(S.selectedFace)] :
+      null;
+
+    if(extrudeAxes){
+
+      const extrudeCurrent=axis => {
+
+        const a=axis.toLowerCase();
+
+        if(S.selectedPoint)
+          return cornerPosition(s,S.selectedPoint)[a];
+
+        if(S.selectedEdge)
+          return edgePosition(s,S.selectedEdge,a);
+
+        return facePosition(s,S.selectedFace);
+      };
+
+      slot.innerHTML=`
+        <div class="ft-editor-label">
+          Extrude — ${
+            S.selectedPoint ? 'Point '+S.selectedPoint :
+            S.selectedEdge ? 'Edge' : 'Side'
+          }
+        </div>
+        <div class="stepper-stack">
+          ${
+            ['X','Y','Z'].map(axis =>
+              stepperRow(
+                axis,
+                extrudeAxes.includes(axis)
+                  ? extrudeCurrent(axis)
+                  : 0,
+                -sizeMax[axis],
+                sizeMax[axis],
+                'mm'
+              )
+            ).join('')
+          }
+        </div>
+      `;
+
+      slot
+        .querySelectorAll('.stepper-row')
+        .forEach((row,i) => {
+
+          const axis=['X','Y','Z'][i];
+
+          if(!extrudeAxes.includes(axis)){
+
+            row.style.opacity='.4';
+
+            row
+              .querySelectorAll('button')
+              .forEach(b=>b.disabled=true);
+
+            return;
+          }
+
+          row
+            .querySelectorAll('[data-step]')
+            .forEach(btn =>
+              btn.addEventListener('click',() => {
+
+                const delta=
+                  currentIncrement()*
+                  parseFloat(btn.dataset.step);
+
+                const a=axis.toLowerCase();
+
+                if(S.selectedPoint)
+                  movePoint(s,S.selectedPoint,a,delta);
+                else if(S.selectedEdge)
+                  moveEdge(s,S.selectedEdge,a,delta);
+                else
+                  moveFace(
+                    s,
+                    S.selectedFace,
+                    delta*
+                    faceSideSign(S.selectedFace)
+                  );
+
+                fillSubtool('scale',l,s);
+              })
+            );
+        });
+
+      return;
+    }
 
     slot.innerHTML=`
       <div class="stepper-stack">
