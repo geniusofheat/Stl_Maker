@@ -138,6 +138,29 @@ const grid = buildGrid();
 scene.add(grid);
 
 
+/* CENTER GRIDLINES — brighter lines through the origin, the way
+   GridHelper's center lines used to look before the grid became
+   rectangular */
+
+const centerLines =
+  new THREE.LineSegments(
+    new THREE.BufferGeometry()
+      .setFromPoints([
+        new THREE.Vector3(-halfX,0,0),
+        new THREE.Vector3(halfX,0,0),
+        new THREE.Vector3(0,-halfY,0),
+        new THREE.Vector3(0,halfY,0)
+      ]),
+    new THREE.LineBasicMaterial({
+      color:0xc8a96e,
+      transparent:true,
+      opacity:.7
+    })
+  );
+
+scene.add(centerLines);
+
+
 /* PLATE BORDER */
 
 const borderGeometry =
@@ -329,141 +352,126 @@ function buildMmLabels(step){
 buildMmLabels(5);
 
 
-/* AXIS EDGE INDICATORS (3D only) —
-   two red lines along the grid's X-running edges (with arrows on
-   both ends and an "X" at the middle), two green lines along the
-   Y-running edges, and a small blue up-arrow at each of the 4
-   corners for Z. */
+/* AXIS INDICATOR — flat, centered on the grid, parallel to the
+   ground plane in both 2D and 3D. One red line along X, one green
+   line along Y, both a third of the grid's length and centered on
+   the grid's middle; a blue line straight up for Z, shown in 3D
+   only. Each line has a gap in the middle for its letter (with
+   clear space around it) and flat 2D arrowheads held off the ends
+   by a small gap — no 3D cones. */
 
-function edgeArrowLine(p1, p2, color){
+const ARM_LEN = (PLATE_W+PLATE_L)/2/3;
+const LABEL_GAP = 10;
+const ARROW_GAP = 3;
+const ARROW_LEN = 5;
+const ARROW_W = 3;
+
+function flatArrow(tipPos, dir, color, planeAxis){
+
+  // a flat 2D triangle, lying in the ground plane (or, for Z,
+  // standing in a vertical plane), pointing along `dir`
+  const back = tipPos.clone().addScaledVector(dir,-ARROW_LEN);
+
+  const side =
+    planeAxis==='z'
+      ? new THREE.Vector3(0,1,0)
+      : new THREE.Vector3(-dir.y,dir.x,0);
+
+  const w = side.clone().multiplyScalar(ARROW_W/2);
+
+  const geo = new THREE.BufferGeometry();
+
+  geo.setFromPoints([
+    tipPos,
+    back.clone().add(w),
+    back.clone().sub(w)
+  ]);
+
+  return new THREE.Mesh(
+    geo,
+    new THREE.MeshBasicMaterial({
+      color,
+      side:THREE.DoubleSide
+    })
+  );
+}
+
+function axisIndicatorLine(dir, color, label, planeAxis){
 
   const g = new THREE.Group();
 
-  const dir = p2.clone().sub(p1);
-  const len = dir.length();
-  const unit = dir.clone().normalize();
+  const half = dir.clone().multiplyScalar(ARM_LEN/2);
+  const gapPt = dir.clone().multiplyScalar(LABEL_GAP/2);
+  const arrowBase = dir.clone().multiplyScalar(ARM_LEN/2-ARROW_GAP);
 
-  g.add(
-    new THREE.Line(
-      new THREE.BufferGeometry()
-        .setFromPoints([p1,p2]),
-      new THREE.LineBasicMaterial({color})
-    )
-  );
+  [1,-1].forEach(sign => {
 
-  [
-    [p1, unit.clone().negate()],
-    [p2, unit.clone()]
-  ].forEach(([pos,headDir]) => {
+    const from = gapPt.clone().multiplyScalar(sign);
+    const to = arrowBase.clone().multiplyScalar(sign);
 
-    const head =
-      new THREE.Mesh(
-        new THREE.ConeGeometry(2,5,10),
-        new THREE.MeshBasicMaterial({color})
-      );
-
-    head.position.copy(pos);
-
-    head.quaternion.setFromUnitVectors(
-      new THREE.Vector3(0,1,0),
-      headDir
+    g.add(
+      new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([from,to]),
+        new THREE.LineBasicMaterial({color})
+      )
     );
 
-    g.add(head);
+    g.add(
+      flatArrow(
+        half.clone().multiplyScalar(sign),
+        dir.clone().multiplyScalar(sign),
+        color,
+        planeAxis
+      )
+    );
   });
 
-  const mid = p1.clone().lerp(p2,.5);
+  const lbl = makeLabelSprite(label,'#'+color.toString(16).padStart(6,'0'),28);
 
-  const label =
-    makeLabelSprite(
-      color===0xd9534f ? 'X' : 'Y',
-      '#'+color.toString(16).padStart(6,'0'),
-      32
-    );
+  lbl.position.copy(
+    planeAxis==='z'
+      ? new THREE.Vector3(0,0,ARM_LEN+3)
+      : new THREE.Vector3(0,0,0)
+  );
 
-  label.position.copy(mid);
-  label.renderOrder=999;
-
-  g.add(label);
+  g.add(lbl);
 
   return g;
 }
 
-const axisEdgeGroup = new THREE.Group();
+const axisIndicator = new THREE.Group();
 
-const EDGE_GAP = 8;
-
-axisEdgeGroup.add(
-  edgeArrowLine(
-    new THREE.Vector3(-halfX,-halfY-EDGE_GAP,0),
-    new THREE.Vector3(halfX,-halfY-EDGE_GAP,0),
-    0xd9534f
-  )
-);
-
-axisEdgeGroup.add(
-  edgeArrowLine(
-    new THREE.Vector3(-halfX,halfY+EDGE_GAP,0),
-    new THREE.Vector3(halfX,halfY+EDGE_GAP,0),
-    0xd9534f
-  )
-);
-
-axisEdgeGroup.add(
-  edgeArrowLine(
-    new THREE.Vector3(-halfX-EDGE_GAP,-halfY,0),
-    new THREE.Vector3(-halfX-EDGE_GAP,halfY,0),
-    0x5cb85c
-  )
-);
-
-axisEdgeGroup.add(
-  edgeArrowLine(
-    new THREE.Vector3(halfX+EDGE_GAP,-halfY,0),
-    new THREE.Vector3(halfX+EDGE_GAP,halfY,0),
-    0x5cb85c
-  )
-);
-
-[
-  [-halfX,-halfY],
-  [halfX,-halfY],
-  [halfX,halfY],
-  [-halfX,halfY]
-].forEach(([cx,cy]) => {
-
-  const corner = new THREE.Group();
-
-  corner.add(
-    new THREE.Line(
-      new THREE.BufferGeometry()
-        .setFromPoints([
-          new THREE.Vector3(cx,cy,0),
-          new THREE.Vector3(cx,cy,10)
-        ]),
-      new THREE.LineBasicMaterial({
-        color:0x4a90d9
-      })
-    )
+const xIndicator =
+  axisIndicatorLine(
+    new THREE.Vector3(1,0,0),
+    0xd9534f,'X','x'
   );
 
-  const head=
-    new THREE.Mesh(
-      new THREE.ConeGeometry(1.6,4,10),
-      new THREE.MeshBasicMaterial({
-        color:0x4a90d9
-      })
-    );
+xIndicator.position.z=1.5;
 
-  head.position.set(cx,cy,10);
-  head.rotation.x=Math.PI/2;
+axisIndicator.add(xIndicator);
 
-  corner.add(head);
+const yIndicator =
+  axisIndicatorLine(
+    new THREE.Vector3(0,1,0),
+    0x5cb85c,'Y','y'
+  );
 
-  axisEdgeGroup.add(corner);
-});
+yIndicator.position.z=4;
 
-scene.add(axisEdgeGroup);
+axisIndicator.add(yIndicator);
+
+const zIndicator =
+  axisIndicatorLine(
+    new THREE.Vector3(0,0,1),
+    0x4a90d9,'Z','z'
+  );
+
+axisIndicator.add(zIndicator);
+
+scene.add(axisIndicator);
+
+
 
 
 const mmBtn =
@@ -608,10 +616,13 @@ export function refreshModeScene(){
       new THREE.Vector3(0,1,0)
     );
 
+    xArrow.visible=false;
+    yArrow.visible=false;
     zArrow.visible=false;
-    zLabel.visible=false;
 
-    axisEdgeGroup.visible=false;
+    xIndicator.visible=true;
+    yIndicator.visible=true;
+    zIndicator.visible=false;
 
     xLabel.position.set(
       -half-4+10,
@@ -689,7 +700,9 @@ export function refreshModeScene(){
     yLabel.visible=false;
     zLabel.visible=false;
 
-    axisEdgeGroup.visible=true;
+    xIndicator.visible=true;
+    yIndicator.visible=true;
+    zIndicator.visible=true;
 
     camera.position.copy(
       DEFAULT_CAM
