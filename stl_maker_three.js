@@ -352,29 +352,31 @@ function buildMmLabels(step){
 buildMmLabels(5);
 
 
-/* AXIS INDICATOR — flat, centered on the grid, parallel to the
-   ground plane in both 2D and 3D. One red line along X, one green
-   line along Y, both a third of the grid's length and centered on
-   the grid's middle; a blue line straight up for Z, shown in 3D
-   only. Each line has a gap in the middle for its letter (with
-   clear space around it) and flat 2D arrowheads held off the ends
-   by a small gap — no 3D cones. */
+/* AXIS INDICATOR — one X line outside the grid's top edge, one Y
+   line outside its left edge, both a third of the grid's length,
+   with a double-headed 2D arrow and a gap in the middle for the
+   letter (space all around it, arrowheads held off by a gap too).
+   Z is four short vertical arrows, one from each corner, straight
+   up, with the same gapped-label treatment. X/Y show in 2D and 3D;
+   Z only in 3D. */
 
 const ARM_LEN = (PLATE_W+PLATE_L)/2/3;
 const LABEL_GAP = 10;
 const ARROW_GAP = 3;
 const ARROW_LEN = 5;
 const ARROW_W = 3;
+const OUTSIDE_GAP = 14;
+const CORNER_Z_LEN = ARM_LEN*.6;
 
-function flatArrow(tipPos, dir, color, planeAxis){
+function flatArrow(tipPos, dir, color, vertical){
 
-  // a flat 2D triangle, lying in the ground plane (or, for Z,
-  // standing in a vertical plane), pointing along `dir`
+  // a flat 2D triangle pointing along `dir` — lies in the ground
+  // plane for X/Y, or in a vertical plane for the corner Z arrows
   const back = tipPos.clone().addScaledVector(dir,-ARROW_LEN);
 
   const side =
-    planeAxis==='z'
-      ? new THREE.Vector3(0,1,0)
+    vertical
+      ? new THREE.Vector3(1,0,0)
       : new THREE.Vector3(-dir.y,dir.x,0);
 
   const w = side.clone().multiplyScalar(ARROW_W/2);
@@ -396,18 +398,20 @@ function flatArrow(tipPos, dir, color, planeAxis){
   );
 }
 
-function axisIndicatorLine(dir, color, label, planeAxis){
+// a double-headed gapped-label line centered at `center`, running
+// along `dir`, length `len`
+function gappedDoubleArrow(center, dir, len, color, label, labelOffset, vertical){
 
   const g = new THREE.Group();
 
-  const half = dir.clone().multiplyScalar(ARM_LEN/2);
+  const half = dir.clone().multiplyScalar(len/2);
   const gapPt = dir.clone().multiplyScalar(LABEL_GAP/2);
-  const arrowBase = dir.clone().multiplyScalar(ARM_LEN/2-ARROW_GAP);
+  const arrowBase = dir.clone().multiplyScalar(len/2-ARROW_GAP);
 
   [1,-1].forEach(sign => {
 
-    const from = gapPt.clone().multiplyScalar(sign);
-    const to = arrowBase.clone().multiplyScalar(sign);
+    const from = center.clone().addScaledVector(gapPt,sign);
+    const to = center.clone().addScaledVector(arrowBase,sign);
 
     g.add(
       new THREE.Line(
@@ -418,21 +422,64 @@ function axisIndicatorLine(dir, color, label, planeAxis){
 
     g.add(
       flatArrow(
-        half.clone().multiplyScalar(sign),
+        center.clone().addScaledVector(half,sign),
         dir.clone().multiplyScalar(sign),
         color,
-        planeAxis
+        vertical
       )
     );
   });
 
   const lbl = makeLabelSprite(label,'#'+color.toString(16).padStart(6,'0'),28);
 
-  lbl.position.copy(
-    planeAxis==='z'
-      ? new THREE.Vector3(0,0,ARM_LEN+3)
-      : new THREE.Vector3(0,0,0)
+  lbl.position.copy(center).add(labelOffset);
+
+  g.add(lbl);
+
+  return g;
+}
+
+// a single up-pointing gapped arrow, starting at a grid corner
+function cornerZArrow(cx, cy){
+
+  const g = new THREE.Group();
+
+  const gapZ = LABEL_GAP/2;
+  const tipZ = CORNER_Z_LEN;
+  const arrowBaseZ = CORNER_Z_LEN-ARROW_GAP;
+
+  g.add(
+    new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(cx,cy,0),
+        new THREE.Vector3(cx,cy,gapZ)
+      ]),
+      new THREE.LineBasicMaterial({color:0x4a90d9})
+    )
   );
+
+  g.add(
+    new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(cx,cy,gapZ*2),
+        new THREE.Vector3(cx,cy,arrowBaseZ)
+      ]),
+      new THREE.LineBasicMaterial({color:0x4a90d9})
+    )
+  );
+
+  g.add(
+    flatArrow(
+      new THREE.Vector3(cx,cy,tipZ),
+      new THREE.Vector3(0,0,1),
+      0x4a90d9,
+      true
+    )
+  );
+
+  const lbl=makeLabelSprite('Z','#4a90d9',24);
+
+  lbl.position.set(cx,cy,gapZ*1.5);
 
   g.add(lbl);
 
@@ -442,36 +489,43 @@ function axisIndicatorLine(dir, color, label, planeAxis){
 const axisIndicator = new THREE.Group();
 
 const xIndicator =
-  axisIndicatorLine(
+  gappedDoubleArrow(
+    new THREE.Vector3(0,halfY+OUTSIDE_GAP,0),
     new THREE.Vector3(1,0,0),
-    0xd9534f,'X','x'
+    ARM_LEN,
+    0xd9534f,'X',
+    new THREE.Vector3(0,7,0),
+    false
   );
-
-xIndicator.position.z=1.5;
 
 axisIndicator.add(xIndicator);
 
 const yIndicator =
-  axisIndicatorLine(
+  gappedDoubleArrow(
+    new THREE.Vector3(-halfX-OUTSIDE_GAP,0,0),
     new THREE.Vector3(0,1,0),
-    0x5cb85c,'Y','y'
+    ARM_LEN,
+    0x5cb85c,'Y',
+    new THREE.Vector3(-7,0,0),
+    false
   );
-
-yIndicator.position.z=4;
 
 axisIndicator.add(yIndicator);
 
-const zIndicator =
-  axisIndicatorLine(
-    new THREE.Vector3(0,0,1),
-    0x4a90d9,'Z','z'
-  );
+const zIndicator = new THREE.Group();
+
+[
+  [-halfX,-halfY],
+  [halfX,-halfY],
+  [halfX,halfY],
+  [-halfX,halfY]
+].forEach(([cx,cy]) =>
+  zIndicator.add(cornerZArrow(cx,cy))
+);
 
 axisIndicator.add(zIndicator);
 
 scene.add(axisIndicator);
-
-
 
 
 const mmBtn =
