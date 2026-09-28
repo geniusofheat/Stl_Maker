@@ -230,73 +230,113 @@ function makeLabelSprite(
 }
 
 
-const axisOrigin =
-  new THREE.Vector3(
-    -halfX-4,
-    -halfY-4,
-    .1
+/* AXIS INDICATOR — one red X line above the grid's top edge and one
+   green Y line left of its left edge, both outside the grid (never
+   over a grid line), lying flat in the ground plane, each a third of
+   the edge it runs beside. Flat 2D arrowheads on both ends held off
+   the line by a small gap; the letter sits in a gap at the center of
+   the line with clear space around it. Same in 2D and 3D. */
+
+const AXIS_OUTSIDE = 12;   // distance from the plate edge to the line
+const AXIS_LABEL_GAP = 12; // empty space around the letter
+const AXIS_ARROW_GAP = 3;  // empty space between line end and arrowhead
+const AXIS_ARROW_LEN = 5;
+const AXIS_ARROW_W = 4;
+const AXIS_Z = .1;         // just above the grid, like the border
+
+function axisArrowhead(tip, dir, color){
+
+  // flat triangle in the ground plane pointing along dir
+  const back = tip.clone().addScaledVector(dir,-AXIS_ARROW_LEN);
+
+  const side =
+    new THREE.Vector3(-dir.y,dir.x,0)
+      .multiplyScalar(AXIS_ARROW_W/2);
+
+  const geo =
+    new THREE.BufferGeometry()
+      .setFromPoints([
+        tip,
+        back.clone().add(side),
+        back.clone().sub(side)
+      ]);
+
+  return new THREE.Mesh(
+    geo,
+    new THREE.MeshBasicMaterial({
+      color,
+      side:THREE.DoubleSide
+    })
   );
+}
 
+function makeAxisIndicator(center, dir, length, color, letter){
 
-const xArrow =
-  new THREE.ArrowHelper(
+  const g = new THREE.Group();
+
+  [1,-1].forEach(sign => {
+
+    const d = dir.clone().multiplyScalar(sign);
+
+    const from =
+      center.clone()
+        .addScaledVector(d,AXIS_LABEL_GAP/2);
+
+    const to =
+      center.clone()
+        .addScaledVector(d,length/2-AXIS_ARROW_GAP);
+
+    g.add(
+      new THREE.Line(
+        new THREE.BufferGeometry()
+          .setFromPoints([from,to]),
+        new THREE.LineBasicMaterial({color})
+      )
+    );
+
+    g.add(
+      axisArrowhead(
+        center.clone().addScaledVector(d,length/2),
+        d,
+        color
+      )
+    );
+  });
+
+  const label =
+    makeLabelSprite(
+      letter,
+      '#'+color.toString(16).padStart(6,'0'),
+      30
+    );
+
+  label.scale.set(8,4,1);
+  label.position.copy(center);
+
+  g.add(label);
+
+  return g;
+}
+
+scene.add(
+  makeAxisIndicator(
+    new THREE.Vector3(0,halfY+AXIS_OUTSIDE,AXIS_Z),
     new THREE.Vector3(1,0,0),
-    axisOrigin,
-    18,
+    PLATE_W/3,
     0xd9534f,
-    4,
-    3
-  );
+    'X'
+  )
+);
 
-const yArrow =
-  new THREE.ArrowHelper(
+scene.add(
+  makeAxisIndicator(
+    new THREE.Vector3(-halfX-AXIS_OUTSIDE,0,AXIS_Z),
     new THREE.Vector3(0,1,0),
-    axisOrigin,
-    18,
+    PLATE_L/3,
     0x5cb85c,
-    4,
-    3
-  );
-
-const zArrow =
-  new THREE.ArrowHelper(
-    new THREE.Vector3(0,0,1),
-    axisOrigin,
-    18,
-    0x4a90d9,
-    4,
-    3
-  );
-
-scene.add(xArrow);
-scene.add(yArrow);
-scene.add(zArrow);
-
-
-const xLabel =
-  makeLabelSprite(
-    'X',
-    '#d9534f',
-    26
-  );
-
-const yLabel =
-  makeLabelSprite(
-    'Y',
-    '#5cb85c',
-    26
-  );
-
-const zLabel =
-  makeLabelSprite(
-    'Z',
-    '#4a90d9',
-    26
-  );
-
-scene.add(xLabel);
-scene.add(yLabel);
-scene.add(zLabel);
+    'Y'
+  )
+);
 
 
 /* MM LABELS */
@@ -476,37 +516,6 @@ export function refreshModeScene(){
       .06
     );
 
-    xArrow.position.copy(axisOrigin);
-    yArrow.position.copy(axisOrigin);
-
-    xArrow.setDirection(
-      new THREE.Vector3(1,0,0)
-    );
-
-    yArrow.setDirection(
-      new THREE.Vector3(0,1,0)
-    );
-
-    xArrow.visible=true;
-    yArrow.visible=true;
-    zArrow.visible=false;
-    zLabel.visible=false;
-
-    xLabel.position.set(
-      axisOrigin.x+10,
-      axisOrigin.y,
-      axisOrigin.z
-    );
-
-    yLabel.position.set(
-      axisOrigin.x,
-      axisOrigin.y+10,
-      axisOrigin.z
-    );
-
-    xLabel.visible=true;
-    yLabel.visible=true;
-
     // 140 framed the original 100mm plate; scaled up for the 175mm-long one
     camera.position.set(
       0,
@@ -558,49 +567,6 @@ export function refreshModeScene(){
       0,
       .06
     );
-
-    xArrow.position.copy(axisOrigin);
-    yArrow.position.copy(axisOrigin);
-    zArrow.position.copy(axisOrigin);
-
-    xArrow.setDirection(
-      new THREE.Vector3(1,0,0)
-    );
-
-    yArrow.setDirection(
-      new THREE.Vector3(0,1,0)
-    );
-
-    zArrow.setDirection(
-      new THREE.Vector3(0,0,1)
-    );
-
-    // all three visible — Z used to stay hidden after a visit to 2D
-    xArrow.visible=true;
-    yArrow.visible=true;
-    zArrow.visible=true;
-
-    xLabel.position.set(
-      axisOrigin.x+10,
-      axisOrigin.y,
-      axisOrigin.z
-    );
-
-    yLabel.position.set(
-      axisOrigin.x,
-      axisOrigin.y+10,
-      axisOrigin.z
-    );
-
-    zLabel.position.set(
-      axisOrigin.x,
-      axisOrigin.y,
-      axisOrigin.z+10
-    );
-
-    xLabel.visible=true;
-    yLabel.visible=true;
-    zLabel.visible=true;
 
     camera.position.copy(
       DEFAULT_CAM
