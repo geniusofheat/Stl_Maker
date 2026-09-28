@@ -39,8 +39,9 @@ export const camera = new THREE.PerspectiveCamera(
   5000
 );
 
+// (90,70,110) framed the original 100mm plate; scaled up for the 175mm-long one
 const DEFAULT_CAM =
-  new THREE.Vector3(90,70,110);
+  new THREE.Vector3(90,70,110).multiplyScalar(1.75);
 
 camera.position.copy(DEFAULT_CAM);
 
@@ -89,76 +90,77 @@ export const PLATE_SIZE = Math.max(PLATE_W, PLATE_L);
 export const half = halfX;
 
 
-/* GRID — X/Y PLANE (rectangular: PLATE_W × PLATE_L, true 5mm squares) */
+/* GRID — X/Y PLANE. Same look as the original engine's GridHelper
+   (gold center lines, dim blue-gray grid lines, 45% opacity), but
+   rectangular for the 155 × 175 build plate. Lines sit on multiples
+   of 5mm measured from the origin, so the origin is always on a
+   crossing of two lines, exactly like the original. The plate edge
+   isn't a multiple of 5 (155 and 175 are odd cell counts), so the
+   outermost cells on each side are half-cells. Built flat in the XY
+   plane already (Z is up) — do not rotate it. */
 
 function buildGrid(){
 
+  const CENTER = new THREE.Color(0xc8a96e);
+  const LINE   = new THREE.Color(0x34355a);
+
+  const nx = Math.floor(halfX/GRID_SQUARE);
+  const ny = Math.floor(halfY/GRID_SQUARE);
+
   const pts=[];
+  const cols=[];
 
-  for(
-    let x=-halfX;
-    x<=halfX+.001;
-    x+=GRID_SQUARE
-  ){
+  function seg(a,b,color){
 
-    pts.push(
+    pts.push(a,b);
+    cols.push(color.r,color.g,color.b);
+    cols.push(color.r,color.g,color.b);
+  }
+
+  for(let i=-nx;i<=nx;i++){
+
+    const x=i*GRID_SQUARE;
+
+    seg(
       new THREE.Vector3(x,-halfY,0),
-      new THREE.Vector3(x,halfY,0)
+      new THREE.Vector3(x,halfY,0),
+      i===0 ? CENTER : LINE
     );
   }
 
-  for(
-    let y=-halfY;
-    y<=halfY+.001;
-    y+=GRID_SQUARE
-  ){
+  for(let j=-ny;j<=ny;j++){
 
-    pts.push(
+    const y=j*GRID_SQUARE;
+
+    seg(
       new THREE.Vector3(-halfX,y,0),
-      new THREE.Vector3(halfX,y,0)
+      new THREE.Vector3(halfX,y,0),
+      j===0 ? CENTER : LINE
     );
   }
 
-  const g=
-    new THREE.LineSegments(
-      new THREE.BufferGeometry()
-        .setFromPoints(pts),
-      new THREE.LineBasicMaterial({
-        color:0x34355a,
-        transparent:true,
-        opacity:.4
-      })
-    );
+  const geo=
+    new THREE.BufferGeometry()
+      .setFromPoints(pts);
 
-  return g;
+  geo.setAttribute(
+    'color',
+    new THREE.Float32BufferAttribute(cols,3)
+  );
+
+  return new THREE.LineSegments(
+    geo,
+    new THREE.LineBasicMaterial({
+      vertexColors:true,
+      transparent:true,
+      opacity:.45
+    })
+  );
 }
 
 const grid = buildGrid();
 
 scene.add(grid);
-
-
-/* CENTER GRIDLINES — brighter lines through the origin, the way
-   GridHelper's center lines used to look before the grid became
-   rectangular */
-
-const centerLines =
-  new THREE.LineSegments(
-    new THREE.BufferGeometry()
-      .setFromPoints([
-        new THREE.Vector3(-halfX,0,0),
-        new THREE.Vector3(halfX,0,0),
-        new THREE.Vector3(0,-halfY,0),
-        new THREE.Vector3(0,halfY,0)
-      ]),
-    new THREE.LineBasicMaterial({
-      color:0xc8a96e,
-      transparent:true,
-      opacity:.7
-    })
-  );
-
-scene.add(centerLines);
 
 
 /* PLATE BORDER */
@@ -352,182 +354,6 @@ function buildMmLabels(step){
 buildMmLabels(5);
 
 
-/* AXIS INDICATOR — one X line outside the grid's top edge, one Y
-   line outside its left edge, both a third of the grid's length,
-   with a double-headed 2D arrow and a gap in the middle for the
-   letter (space all around it, arrowheads held off by a gap too).
-   Z is four short vertical arrows, one from each corner, straight
-   up, with the same gapped-label treatment. X/Y show in 2D and 3D;
-   Z only in 3D. */
-
-const ARM_LEN = (PLATE_W+PLATE_L)/2/3;
-const LABEL_GAP = 10;
-const ARROW_GAP = 3;
-const ARROW_LEN = 5;
-const ARROW_W = 3;
-const OUTSIDE_GAP = 14;
-const CORNER_Z_LEN = ARM_LEN*.6;
-
-function flatArrow(tipPos, dir, color, vertical){
-
-  // a flat 2D triangle pointing along `dir` — lies in the ground
-  // plane for X/Y, or in a vertical plane for the corner Z arrows
-  const back = tipPos.clone().addScaledVector(dir,-ARROW_LEN);
-
-  const side =
-    vertical
-      ? new THREE.Vector3(1,0,0)
-      : new THREE.Vector3(-dir.y,dir.x,0);
-
-  const w = side.clone().multiplyScalar(ARROW_W/2);
-
-  const geo = new THREE.BufferGeometry();
-
-  geo.setFromPoints([
-    tipPos,
-    back.clone().add(w),
-    back.clone().sub(w)
-  ]);
-
-  return new THREE.Mesh(
-    geo,
-    new THREE.MeshBasicMaterial({
-      color,
-      side:THREE.DoubleSide
-    })
-  );
-}
-
-// a double-headed gapped-label line centered at `center`, running
-// along `dir`, length `len`
-function gappedDoubleArrow(center, dir, len, color, label, labelOffset, vertical){
-
-  const g = new THREE.Group();
-
-  const half = dir.clone().multiplyScalar(len/2);
-  const gapPt = dir.clone().multiplyScalar(LABEL_GAP/2);
-  const arrowBase = dir.clone().multiplyScalar(len/2-ARROW_GAP);
-
-  [1,-1].forEach(sign => {
-
-    const from = center.clone().addScaledVector(gapPt,sign);
-    const to = center.clone().addScaledVector(arrowBase,sign);
-
-    g.add(
-      new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints([from,to]),
-        new THREE.LineBasicMaterial({color})
-      )
-    );
-
-    g.add(
-      flatArrow(
-        center.clone().addScaledVector(half,sign),
-        dir.clone().multiplyScalar(sign),
-        color,
-        vertical
-      )
-    );
-  });
-
-  const lbl = makeLabelSprite(label,'#'+color.toString(16).padStart(6,'0'),28);
-
-  lbl.position.copy(center).add(labelOffset);
-
-  g.add(lbl);
-
-  return g;
-}
-
-// a single up-pointing gapped arrow, starting at a grid corner
-function cornerZArrow(cx, cy){
-
-  const g = new THREE.Group();
-
-  const gapZ = LABEL_GAP/2;
-  const tipZ = CORNER_Z_LEN;
-  const arrowBaseZ = CORNER_Z_LEN-ARROW_GAP;
-
-  g.add(
-    new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(cx,cy,0),
-        new THREE.Vector3(cx,cy,gapZ)
-      ]),
-      new THREE.LineBasicMaterial({color:0x4a90d9})
-    )
-  );
-
-  g.add(
-    new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(cx,cy,gapZ*2),
-        new THREE.Vector3(cx,cy,arrowBaseZ)
-      ]),
-      new THREE.LineBasicMaterial({color:0x4a90d9})
-    )
-  );
-
-  g.add(
-    flatArrow(
-      new THREE.Vector3(cx,cy,tipZ),
-      new THREE.Vector3(0,0,1),
-      0x4a90d9,
-      true
-    )
-  );
-
-  const lbl=makeLabelSprite('Z','#4a90d9',24);
-
-  lbl.position.set(cx,cy,gapZ*1.5);
-
-  g.add(lbl);
-
-  return g;
-}
-
-const axisIndicator = new THREE.Group();
-
-const xIndicator =
-  gappedDoubleArrow(
-    new THREE.Vector3(0,halfY+OUTSIDE_GAP,0),
-    new THREE.Vector3(1,0,0),
-    ARM_LEN,
-    0xd9534f,'X',
-    new THREE.Vector3(0,7,0),
-    false
-  );
-
-axisIndicator.add(xIndicator);
-
-const yIndicator =
-  gappedDoubleArrow(
-    new THREE.Vector3(-halfX-OUTSIDE_GAP,0,0),
-    new THREE.Vector3(0,1,0),
-    ARM_LEN,
-    0x5cb85c,'Y',
-    new THREE.Vector3(-7,0,0),
-    false
-  );
-
-axisIndicator.add(yIndicator);
-
-const zIndicator = new THREE.Group();
-
-[
-  [-halfX,-halfY],
-  [halfX,-halfY],
-  [halfX,halfY],
-  [-halfX,halfY]
-].forEach(([cx,cy]) =>
-  zIndicator.add(cornerZArrow(cx,cy))
-);
-
-axisIndicator.add(zIndicator);
-
-scene.add(axisIndicator);
-
-
 const mmBtn =
   document.createElement('button');
 
@@ -627,7 +453,7 @@ export function refreshModeScene(){
   if(S.shapeMode==='2d'){
 
     grid.rotation.set(
-      Math.PI/2,
+      0,
       0,
       0
     );
@@ -650,53 +476,42 @@ export function refreshModeScene(){
       .06
     );
 
-    xArrow.position.set(
-      -half-4,
-      -half-4,
-      .1
-    );
+    xArrow.position.copy(axisOrigin);
+    yArrow.position.copy(axisOrigin);
 
     xArrow.setDirection(
       new THREE.Vector3(1,0,0)
-    );
-
-    yArrow.position.set(
-      -half-4,
-      -half-4,
-      .1
     );
 
     yArrow.setDirection(
       new THREE.Vector3(0,1,0)
     );
 
-    xArrow.visible=false;
-    yArrow.visible=false;
+    xArrow.visible=true;
+    yArrow.visible=true;
     zArrow.visible=false;
-
-    xIndicator.visible=true;
-    yIndicator.visible=true;
-    zIndicator.visible=false;
+    zLabel.visible=false;
 
     xLabel.position.set(
-      -half-4+10,
-      -half-4,
-      .1
+      axisOrigin.x+10,
+      axisOrigin.y,
+      axisOrigin.z
     );
 
     yLabel.position.set(
-      -half-4,
-      -half-4+10,
-      .1
+      axisOrigin.x,
+      axisOrigin.y+10,
+      axisOrigin.z
     );
 
     xLabel.visible=true;
     yLabel.visible=true;
 
+    // 140 framed the original 100mm plate; scaled up for the 175mm-long one
     camera.position.set(
       0,
       0,
-      140
+      245
     );
 
     camera.up.set(
@@ -721,7 +536,7 @@ export function refreshModeScene(){
   }else{
 
     grid.rotation.set(
-      Math.PI/2,
+      0,
       0,
       0
     );
@@ -744,19 +559,48 @@ export function refreshModeScene(){
       .06
     );
 
-    // the corner arrows are only used in 2D now; 3D shows the
-    // axis edge indicators instead
-    xArrow.visible=false;
-    yArrow.visible=false;
-    zArrow.visible=false;
+    xArrow.position.copy(axisOrigin);
+    yArrow.position.copy(axisOrigin);
+    zArrow.position.copy(axisOrigin);
 
-    xLabel.visible=false;
-    yLabel.visible=false;
-    zLabel.visible=false;
+    xArrow.setDirection(
+      new THREE.Vector3(1,0,0)
+    );
 
-    xIndicator.visible=true;
-    yIndicator.visible=true;
-    zIndicator.visible=true;
+    yArrow.setDirection(
+      new THREE.Vector3(0,1,0)
+    );
+
+    zArrow.setDirection(
+      new THREE.Vector3(0,0,1)
+    );
+
+    // all three visible — Z used to stay hidden after a visit to 2D
+    xArrow.visible=true;
+    yArrow.visible=true;
+    zArrow.visible=true;
+
+    xLabel.position.set(
+      axisOrigin.x+10,
+      axisOrigin.y,
+      axisOrigin.z
+    );
+
+    yLabel.position.set(
+      axisOrigin.x,
+      axisOrigin.y+10,
+      axisOrigin.z
+    );
+
+    zLabel.position.set(
+      axisOrigin.x,
+      axisOrigin.y,
+      axisOrigin.z+10
+    );
+
+    xLabel.visible=true;
+    yLabel.visible=true;
+    zLabel.visible=true;
 
     camera.position.copy(
       DEFAULT_CAM
