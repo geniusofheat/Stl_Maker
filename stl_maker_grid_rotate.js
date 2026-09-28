@@ -21,8 +21,11 @@ const DRAG_SPEED = 0.012;      // radians per pixel of finger travel (X / Y)
 const ANIM_MS    = 280;        // length of a 90° / 180° turn
 
 const AXES = {
-  X: new THREE.Vector3(1,0,0),
-  Y: new THREE.Vector3(0,1,0),
+  // swapped on purpose: pressing "X" should turn the grid the way
+  // the X indicator points, which means rotating around the Y axis
+  // (and "Y" rotates around X) — matches how the indicators are drawn
+  X: new THREE.Vector3(0,1,0),
+  Y: new THREE.Vector3(1,0,0),
   Z: new THREE.Vector3(0,0,1)
 };
 
