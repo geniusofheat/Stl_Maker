@@ -75,7 +75,9 @@ export function startDragToSize(
     const size=
       Math.max(
         GRID_SQUARE,
-        startPt.distanceTo(cur)
+        S.selectedAxis==='Y'
+          ? Math.abs(cur.y-startPt.y)
+          : Math.abs(cur.x-startPt.x)
       );
 
 
