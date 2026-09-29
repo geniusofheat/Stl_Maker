@@ -29,7 +29,7 @@ const AXES = {
   Z: new THREE.Vector3(0,0,1)
 };
 
-let gridAxis = 'Z';
+export let gridAxis = 'X';
 
 
 /* ── buttons over the grid ── */
