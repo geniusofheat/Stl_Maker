@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { SWATCHES } from './stl_maker_data.js';
 import { S } from './stl_maker_state.js';
+import { gridAxis } from './stl_maker_grid_rotate.js';
 import { armUndo, menuScroll, setH2 } from './stl_maker_h2.js';
 import { plateHit } from './stl_maker_plate_hit.js';
 import { GRID_SQUARE, canvas, controls, refreshLockBtn, scene } from './stl_maker_three.js';
