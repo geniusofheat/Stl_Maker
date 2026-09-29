@@ -9,7 +9,7 @@ import { attachOutline, clampToPlate, geometryDimensions, storeDimensions } from
 import { activeLayer, refreshShapeVisuals } from './stl_maker_layer_data.js';
 import { showToast } from './stl_maker_toast.js';
 import { goToShape } from './stl_maker_navigation.js';
-
+import { gridAxis } from './stl_maker_grid_rotate.js';
 
 /* ─────────────────────────────────────────────────────────────
    SHAPE DRAG
