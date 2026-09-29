@@ -28,16 +28,12 @@ import './stl_maker_toast.js';
 import './stl_maker_grid_rotate.js';
 import { refreshModeScene, refreshModeToggle } from './stl_maker_three.js';
 import { renderH1 } from './stl_maker_module_h1.js';
-import { goToDrawingTools } from './stl_maker_navigation.js';
-
 
 /* ─────────────────────────────────────────────────────────────
-   INITIAL STATE
+INITIAL STATE
 ───────────────────────────────────────────────────────────── */
 
 refreshModeScene();
 refreshModeToggle();
 
 renderH1();
-
-goToDrawingTools();
