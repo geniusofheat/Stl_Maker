@@ -1,202 +1,149 @@
 import { MODULES } from './stl_maker_data.js';
 import { S } from './stl_maker_state.js';
 import { svg } from './stl_maker_icons.js';
-import { goToDrawingTools, goToLayersHome } from './stl_maker_navigation.js';
+import {
+goToDrawingTools,
+goToLayersHome
+} from './stl_maker_navigation.js';
 import { render } from './stl_maker_render.js';
 
+const h1=
+document.getElementById('h1');
 
-/* ─────────────────────────────────────────────────────────────
-   MODULE / H1
-───────────────────────────────────────────────────────────── */
-
-const h1 =
-  document.getElementById('h1');
-
-
-export const MODULE_ORDER = [
-  'tools',
-  'layers',
-  'settings',
-  'help'
+export const MODULE_ORDER=[
+'tools',
+'layers',
+'settings',
+'help'
 ];
 
-
-const MODULE_OVERRIDE = {
-  tools: {
-    label: 'Drawing Tools',
-    icon: 'pencil'
-  }
+const MODULE_OVERRIDE={
+tools:{
+label:'Drawing Tools',
+icon:'pencil'
+}
 };
 
+function openModule(id){
+
+S.activeModule=id;
+S.h3Open=true;
+
+if(id==='layers'){
+
+goToLayersHome();
+
+}else if(id==='tools'){
+
+goToDrawingTools();
+
+}else if(id==='settings'){
+
+S.crumbs=['Settings'];
+S.crumbBack=null;
+
+render('settings');
+renderH1();
+
+}else if(id==='help'){
+
+S.crumbs=['Help'];
+S.crumbBack=null;
+
+render('help');
+renderH1();
+
+}
+}
 
 export function renderH1(){
 
-  const mods =
-    MODULE_ORDER
-      .map(
-        id =>
-          MODULES.find(
-            m => m.id === id
-          )
-      )
-      .filter(Boolean);
+const mods=
+MODULE_ORDER
+.map(
+id =>
+MODULES.find(
+m => m.id===id
+)
+)
+.filter(Boolean);
+
+h1.innerHTML=
+mods.map(
+m => {
+
+    const o=
+      MODULE_OVERRIDE[m.id] || {};
+
+    return `
+      <button
+        class="module-btn ${
+          m.id===S.activeModule
+            ? 'active-blue'
+            : ''
+        }"
+        data-module="${m.id}">
+        ${svg(o.icon || m.icon)}
+        <span>${o.label || m.label}</span>
+      </button>
+    `;
+  }
+).join('');
+
+h1
+.querySelectorAll('[data-module]')
+.forEach(
+btn => {
+
+    btn.addEventListener(
+      'click',
+      () => {
+
+        const id=
+          btn.dataset.module;
+
+        const menu=
+          document.getElementById(
+            'slideMenu'
+          );
 
 
-  h1.innerHTML =
-    mods.map(
-      m => {
+        /*
+          Same H1 button:
+          open → close
+          closed → open
+        */
 
-        const o =
-          MODULE_OVERRIDE[m.id] ||
-          {};
+        if(id===S.activeModule){
 
-        return `
-          <button
-            class="module-btn ${
-              m.id === S.activeModule
-                ? 'active-blue'
-                : ''
-            }"
-            data-module="${m.id}">
-            ${svg(o.icon || m.icon)}
-            <span>${
-              o.label || m.label
-            }</span>
-          </button>
-        `;
-      }
-    ).join('');
+          if(S.h3Open){
 
+            S.h3Open=false;
 
-  h1
-    .querySelectorAll(
-      '[data-module]'
-    )
-    .forEach(
-      btn => {
+            menu.classList.remove(
+              'open'
+            );
 
-        btn.addEventListener(
-          'click',
-          () => {
+          }else{
 
-            const id =
-              btn.dataset.module;
+            openModule(id);
 
-            const menu =
-              document.getElementById(
-                'slideMenu'
-              );
-
-
-            /* Clicking the active H1
-               toggles the H3 menu. */
-
-            if(id === S.activeModule){
-
-              if(
-                menu.classList.contains(
-                  'open'
-                )
-              ){
-
-                menu.classList.remove(
-                  'open'
-                );
-
-              }else{
-
-                if(id === 'layers')
-                  goToLayersHome();
-
-                else if(id === 'tools')
-                  goToDrawingTools();
-
-                else if(id === 'settings'){
-
-                  S.crumbs = [
-                    'Settings'
-                  ];
-
-                  S.crumbBack = null;
-
-                  render(
-                    'settings'
-                  );
-
-                  renderH1();
-
-                }else if(id === 'help'){
-
-                  S.crumbs = [
-                    'Help'
-                  ];
-
-                  S.crumbBack = null;
-
-                  render(
-                    'help'
-                  );
-
-                  renderH1();
-                }
-              }
-
-              return;
-            }
-
-
-            /* Clicking a different H1
-               switches modules and opens H3. */
-
-            S.activeModule = id;
-
-
-            if(id === 'layers')
-              goToLayersHome();
-
-            else if(id === 'tools')
-              goToDrawingTools();
-
-            else if(id === 'settings'){
-
-              S.crumbs = [
-                'Settings'
-              ];
-
-              S.crumbBack = null;
-
-              render(
-                'settings'
-              );
-
-              renderH1();
-
-            }else if(id === 'help'){
-
-              S.crumbs = [
-                'Help'
-              ];
-
-              S.crumbBack = null;
-
-              render(
-                'help'
-              );
-
-              renderH1();
-            }
           }
-        );
+
+          return;
+        }
+
+
+        /*
+          Different H1 button:
+          switch module and open H3.
+        */
+
+        openModule(id);
+
       }
     );
+  }
+);
+
 }
-
-The important change is that an active button now checks whether "slideMenu" actually has the "open" class. If it does, it closes. If it doesn't, it calls the appropriate render/navigation function, which opens it again.
-
-After replacing the file, test this exact sequence:
-
-Layers → close → Layers → close → Layers
-
-and then:
-
-Drawing Tools → close → Drawing Tools → close → Drawing Tools
