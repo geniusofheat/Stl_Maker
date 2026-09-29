@@ -330,7 +330,27 @@ scene.add(
 
 scene.add(
   makeAxisIndicator(
+    new THREE.Vector3(0,-halfY-AXIS_OUTSIDE,AXIS_Z),
+    new THREE.Vector3(1,0,0),
+    PLATE_W/3,
+    0xd9534f,
+    'X'
+  )
+);
+
+scene.add(
+  makeAxisIndicator(
     new THREE.Vector3(-halfX-AXIS_OUTSIDE,0,AXIS_Z),
+    new THREE.Vector3(0,1,0),
+    PLATE_L/3,
+    0x5cb85c,
+    'Y'
+  )
+);
+
+scene.add(
+  makeAxisIndicator(
+    new THREE.Vector3(halfX+AXIS_OUTSIDE,0,AXIS_Z),
     new THREE.Vector3(0,1,0),
     PLATE_L/3,
     0x5cb85c,
