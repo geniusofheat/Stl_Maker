@@ -96,5 +96,5 @@ export const SETTINGS_ITEMS = [
 export const PLATE = {
   size: 100,        // fixed printable bed, mm
   gridSquare: 5,     // fixed grid spacing, mm
-  nudgeStep: 5,      // Move pad step, mm
+  nudgeStep: 1,      // Move pad step, mm
 };
