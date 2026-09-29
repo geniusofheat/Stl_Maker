@@ -19,6 +19,7 @@ import './stl_maker_p2p.js';
 import './stl_maker_object_manipulation.js';
 import './stl_maker_layer_delete.js';
 import './stl_maker_shape_panel.js';
+import './stl_maker_face_edit.js';
 import './stl_maker_subtools.js';
 import './stl_maker_boolean.js';
 import './stl_maker_settings_help.js';
@@ -28,7 +29,6 @@ import './stl_maker_toast.js';
 import './stl_maker_grid_rotate.js';
 import { refreshModeScene, refreshModeToggle } from './stl_maker_three.js';
 import { renderH1 } from './stl_maker_module_h1.js';
-import { goToDrawingTools } from './stl_maker_navigation.js';
 
 
 /* ─────────────────────────────────────────────────────────────
@@ -40,4 +40,6 @@ refreshModeToggle();
 
 renderH1();
 
-goToDrawingTools();
+// H3 (#slideMenu) starts closed — it only opens once the user presses
+// an H1 tab (Drawing Tools / Layers / Settings / Help), so the grid
+// gets the full width until then
