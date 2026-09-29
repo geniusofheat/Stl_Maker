@@ -11,8 +11,8 @@ const h1=
 document.getElementById('h1');
 
 export const MODULE_ORDER=[
-'tools',
 'layers',
+'tools',
 'settings',
 'help'
 ];
