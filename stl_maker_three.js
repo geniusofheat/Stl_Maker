@@ -79,7 +79,7 @@ scene.add(fillL);
 export const PLATE_W = 155;   // X (wide)
 export const PLATE_L = 175;   // Y (long)
 export const PLATE_H = 210;   // Z (high)
-export const GRID_SQUARE = 5;
+export const GRID_SQUARE = 1;
 
 export const halfX = PLATE_W / 2;
 export const halfY = PLATE_L / 2;
@@ -407,9 +407,7 @@ document
 function refreshMmBtn(){
 
   mmBtn.innerHTML =
-    `<span class="seg ${S.mmState==='5'?'on':''}">5</span>`+
-    `<span class="sep">|</span>`+
-    `<span class="seg ${S.mmState==='2.5'?'on':''}">2.5</span>`;
+  `<span class="seg on">1 mm</span>`;
 }
 
 
