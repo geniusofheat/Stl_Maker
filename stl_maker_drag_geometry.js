@@ -10,7 +10,7 @@ import { polygonGeometry, rotateGeometryToZ } from './stl_maker_geometry.js';
 
 export function buildDragGeometry(
   shapeKey,
-  sizeMM
+  size
 ){
 
   const H=
