@@ -39,9 +39,8 @@ export const camera = new THREE.PerspectiveCamera(
   5000
 );
 
-// (90,70,110) framed the original 100mm plate; scaled up for the 175mm-long one
 const DEFAULT_CAM =
-  new THREE.Vector3(90,70,110).multiplyScalar(1.75);
+  new THREE.Vector3(90,70,110);
 
 camera.position.copy(DEFAULT_CAM);
 
@@ -90,72 +89,48 @@ export const PLATE_SIZE = Math.max(PLATE_W, PLATE_L);
 export const half = halfX;
 
 
-/* GRID — X/Y PLANE. Same look as the original engine's GridHelper
-   (gold center lines, dim blue-gray grid lines, 45% opacity), but
-   rectangular for the 155 × 175 build plate. Lines sit on multiples
-   of 5mm measured from the origin, so the origin is always on a
-   crossing of two lines, exactly like the original. The plate edge
-   isn't a multiple of 5 (155 and 175 are odd cell counts), so the
-   outermost cells on each side are half-cells. Built flat in the XY
-   plane already (Z is up) — do not rotate it. */
+/* GRID — X/Y PLANE (rectangular: PLATE_W × PLATE_L, true 5mm squares) */
 
 function buildGrid(){
 
-  const CENTER = new THREE.Color(0xc8a96e);
-  const LINE   = new THREE.Color(0x34355a);
-
-  const nx = Math.floor(halfX/GRID_SQUARE);
-  const ny = Math.floor(halfY/GRID_SQUARE);
-
   const pts=[];
-  const cols=[];
 
-  function seg(a,b,color){
+  for(
+    let x=-halfX;
+    x<=halfX+.001;
+    x+=GRID_SQUARE
+  ){
 
-    pts.push(a,b);
-    cols.push(color.r,color.g,color.b);
-    cols.push(color.r,color.g,color.b);
-  }
-
-  for(let i=-nx;i<=nx;i++){
-
-    const x=i*GRID_SQUARE;
-
-    seg(
+    pts.push(
       new THREE.Vector3(x,-halfY,0),
-      new THREE.Vector3(x,halfY,0),
-      i===0 ? CENTER : LINE
+      new THREE.Vector3(x,halfY,0)
     );
   }
 
-  for(let j=-ny;j<=ny;j++){
+  for(
+    let y=-halfY;
+    y<=halfY+.001;
+    y+=GRID_SQUARE
+  ){
 
-    const y=j*GRID_SQUARE;
-
-    seg(
+    pts.push(
       new THREE.Vector3(-halfX,y,0),
-      new THREE.Vector3(halfX,y,0),
-      j===0 ? CENTER : LINE
+      new THREE.Vector3(halfX,y,0)
     );
   }
 
-  const geo=
-    new THREE.BufferGeometry()
-      .setFromPoints(pts);
+  const g=
+    new THREE.LineSegments(
+      new THREE.BufferGeometry()
+        .setFromPoints(pts),
+      new THREE.LineBasicMaterial({
+        color:0x34355a,
+        transparent:true,
+        opacity:.4
+      })
+    );
 
-  geo.setAttribute(
-    'color',
-    new THREE.Float32BufferAttribute(cols,3)
-  );
-
-  return new THREE.LineSegments(
-    geo,
-    new THREE.LineBasicMaterial({
-      vertexColors:true,
-      transparent:true,
-      opacity:.45
-    })
-  );
+  return g;
 }
 
 const grid = buildGrid();
@@ -230,113 +205,73 @@ function makeLabelSprite(
 }
 
 
-/* AXIS INDICATOR — one red X line above the grid's top edge and one
-   green Y line left of its left edge, both outside the grid (never
-   over a grid line), lying flat in the ground plane, each a third of
-   the edge it runs beside. Flat 2D arrowheads on both ends held off
-   the line by a small gap; the letter sits in a gap at the center of
-   the line with clear space around it. Same in 2D and 3D. */
-
-const AXIS_OUTSIDE = 12;   // distance from the plate edge to the line
-const AXIS_LABEL_GAP = 12; // empty space around the letter
-const AXIS_ARROW_GAP = 3;  // empty space between line end and arrowhead
-const AXIS_ARROW_LEN = 5;
-const AXIS_ARROW_W = 4;
-const AXIS_Z = .1;         // just above the grid, like the border
-
-function axisArrowhead(tip, dir, color){
-
-  // flat triangle in the ground plane pointing along dir
-  const back = tip.clone().addScaledVector(dir,-AXIS_ARROW_LEN);
-
-  const side =
-    new THREE.Vector3(-dir.y,dir.x,0)
-      .multiplyScalar(AXIS_ARROW_W/2);
-
-  const geo =
-    new THREE.BufferGeometry()
-      .setFromPoints([
-        tip,
-        back.clone().add(side),
-        back.clone().sub(side)
-      ]);
-
-  return new THREE.Mesh(
-    geo,
-    new THREE.MeshBasicMaterial({
-      color,
-      side:THREE.DoubleSide
-    })
+const axisOrigin =
+  new THREE.Vector3(
+    -halfX-4,
+    -halfY-4,
+    .1
   );
-}
 
-function makeAxisIndicator(center, dir, length, color, letter){
 
-  const g = new THREE.Group();
-
-  [1,-1].forEach(sign => {
-
-    const d = dir.clone().multiplyScalar(sign);
-
-    const from =
-      center.clone()
-        .addScaledVector(d,AXIS_LABEL_GAP/2);
-
-    const to =
-      center.clone()
-        .addScaledVector(d,length/2-AXIS_ARROW_GAP);
-
-    g.add(
-      new THREE.Line(
-        new THREE.BufferGeometry()
-          .setFromPoints([from,to]),
-        new THREE.LineBasicMaterial({color})
-      )
-    );
-
-    g.add(
-      axisArrowhead(
-        center.clone().addScaledVector(d,length/2),
-        d,
-        color
-      )
-    );
-  });
-
-  const label =
-    makeLabelSprite(
-      letter,
-      '#'+color.toString(16).padStart(6,'0'),
-      30
-    );
-
-  label.scale.set(8,4,1);
-  label.position.copy(center);
-
-  g.add(label);
-
-  return g;
-}
-
-scene.add(
-  makeAxisIndicator(
-    new THREE.Vector3(0,halfY+AXIS_OUTSIDE,AXIS_Z),
+const xArrow =
+  new THREE.ArrowHelper(
     new THREE.Vector3(1,0,0),
-    PLATE_W/3,
+    axisOrigin,
+    18,
     0xd9534f,
-    'X'
-  )
-);
+    4,
+    3
+  );
 
-scene.add(
-  makeAxisIndicator(
-    new THREE.Vector3(-halfX-AXIS_OUTSIDE,0,AXIS_Z),
+const yArrow =
+  new THREE.ArrowHelper(
     new THREE.Vector3(0,1,0),
-    PLATE_L/3,
+    axisOrigin,
+    18,
     0x5cb85c,
-    'Y'
-  )
-);
+    4,
+    3
+  );
+
+const zArrow =
+  new THREE.ArrowHelper(
+    new THREE.Vector3(0,0,1),
+    axisOrigin,
+    18,
+    0x4a90d9,
+    4,
+    3
+  );
+
+scene.add(xArrow);
+scene.add(yArrow);
+scene.add(zArrow);
+
+
+const xLabel =
+  makeLabelSprite(
+    'X',
+    '#d9534f',
+    26
+  );
+
+const yLabel =
+  makeLabelSprite(
+    'Y',
+    '#5cb85c',
+    26
+  );
+
+const zLabel =
+  makeLabelSprite(
+    'Z',
+    '#4a90d9',
+    26
+  );
+
+scene.add(xLabel);
+scene.add(yLabel);
+scene.add(zLabel);
 
 
 /* MM LABELS */
@@ -392,6 +327,238 @@ function buildMmLabels(step){
 }
 
 buildMmLabels(5);
+
+
+/* AXIS EDGE INDICATORS (3D only) —
+   short flat X/Y indicators centered on the grid edges.
+
+   X indicators:
+   - one above the grid and one below it
+   - each is one-third of the grid's X length
+   - left/right 2D arrowheads point in opposite directions
+   - X is centered on each indicator
+
+   Y indicators:
+   - one left of the grid and one right of it
+   - each is one-third of the grid's Y length
+   - up/down 2D arrowheads point in opposite directions
+   - Y is centered on each indicator
+
+   The entire indicator group is rotated with the grid so the
+   indicators remain flat in the same plane as the 3D build plate. */
+
+function makeFlatArrowHead(
+  position,
+  direction,
+  color
+){
+
+  const head =
+    new THREE.Mesh(
+      new THREE.ConeGeometry(1.8,5,3),
+      new THREE.MeshBasicMaterial({color})
+    );
+
+  head.position.copy(position);
+
+  // A cone is created along local +Y. Rotate it so its point
+  // faces the requested 2D direction in the indicator plane.
+  head.quaternion.setFromUnitVectors(
+    new THREE.Vector3(0,1,0),
+    direction.clone().normalize()
+  );
+
+  return head;
+}
+
+function edgeIndicator(
+  p1,
+  p2,
+  direction,
+  color,
+  labelText
+){
+
+  const g = new THREE.Group();
+
+  const line =
+    new THREE.Line(
+      new THREE.BufferGeometry()
+        .setFromPoints([p1,p2]),
+      new THREE.LineBasicMaterial({color})
+    );
+
+  g.add(line);
+
+  g.add(
+    makeFlatArrowHead(
+      p1,
+      direction.clone().negate(),
+      color
+    )
+  );
+
+  g.add(
+    makeFlatArrowHead(
+      p2,
+      direction.clone(),
+      color
+    )
+  );
+
+  const mid =
+    p1.clone().lerp(p2,.5);
+
+  const label =
+    makeLabelSprite(
+      labelText,
+      '#'+color.toString(16).padStart(6,'0'),
+      32
+    );
+
+  label.position.copy(mid);
+  label.renderOrder=999;
+
+  g.add(label);
+
+  return g;
+}
+
+const axisEdgeGroup = new THREE.Group();
+
+const EDGE_GAP = 8;
+
+// Each indicator is centered on its corresponding grid edge
+// and is only one-third of that edge's total length.
+const X_INDICATOR_HALF = PLATE_W / 6;
+const Y_INDICATOR_HALF = PLATE_L / 6;
+
+// X indicators — horizontal in the grid's local XY plane.
+axisEdgeGroup.add(
+  edgeIndicator(
+    new THREE.Vector3(
+      -X_INDICATOR_HALF,
+      -halfY-EDGE_GAP,
+      0
+    ),
+    new THREE.Vector3(
+      X_INDICATOR_HALF,
+      -halfY-EDGE_GAP,
+      0
+    ),
+    new THREE.Vector3(1,0,0),
+    0xd9534f,
+    'X'
+  )
+);
+
+axisEdgeGroup.add(
+  edgeIndicator(
+    new THREE.Vector3(
+      -X_INDICATOR_HALF,
+      halfY+EDGE_GAP,
+      0
+    ),
+    new THREE.Vector3(
+      X_INDICATOR_HALF,
+      halfY+EDGE_GAP,
+      0
+    ),
+    new THREE.Vector3(1,0,0),
+    0xd9534f,
+    'X'
+  )
+);
+
+// Y indicators — vertical in the grid's local XY plane.
+axisEdgeGroup.add(
+  edgeIndicator(
+    new THREE.Vector3(
+      -halfX-EDGE_GAP,
+      -Y_INDICATOR_HALF,
+      0
+    ),
+    new THREE.Vector3(
+      -halfX-EDGE_GAP,
+      Y_INDICATOR_HALF,
+      0
+    ),
+    new THREE.Vector3(0,1,0),
+    0x5cb85c,
+    'Y'
+  )
+);
+
+axisEdgeGroup.add(
+  edgeIndicator(
+    new THREE.Vector3(
+      halfX+EDGE_GAP,
+      -Y_INDICATOR_HALF,
+      0
+    ),
+    new THREE.Vector3(
+      halfX+EDGE_GAP,
+      Y_INDICATOR_HALF,
+      0
+    ),
+    new THREE.Vector3(0,1,0),
+    0x5cb85c,
+    'Y'
+  )
+);
+
+/*
+   Z corner indicators are retained from the original file.
+   They are separate from the X/Y flat indicator lines described above.
+*/
+[
+  [-halfX,-halfY],
+  [halfX,-halfY],
+  [halfX,halfY],
+  [-halfX,halfY]
+].forEach(([cx,cy]) => {
+
+  const corner = new THREE.Group();
+
+  corner.add(
+    new THREE.Line(
+      new THREE.BufferGeometry()
+        .setFromPoints([
+          new THREE.Vector3(cx,cy,0),
+          new THREE.Vector3(cx,cy,10)
+        ]),
+      new THREE.LineBasicMaterial({
+        color:0x4a90d9
+      })
+    )
+  );
+
+  const head=
+    new THREE.Mesh(
+      new THREE.ConeGeometry(1.6,4,10),
+      new THREE.MeshBasicMaterial({
+        color:0x4a90d9
+      })
+    );
+
+  head.position.set(cx,cy,10);
+  head.rotation.x=Math.PI/2;
+
+  corner.add(head);
+
+  axisEdgeGroup.add(corner);
+});
+
+/*
+   The grid is rotated 90° about X in the current 3D scene so its
+   build surface becomes the X/Z plane. Rotate the complete X/Y
+   indicator group by the same amount. This is what keeps the flat
+   indicators physically coplanar with the visible grid instead of
+   leaving them standing in the original world XY plane.
+*/
+axisEdgeGroup.rotation.set(Math.PI/2,0,0);
+
+scene.add(axisEdgeGroup);
 
 
 const mmBtn =
@@ -493,7 +660,7 @@ export function refreshModeScene(){
   if(S.shapeMode==='2d'){
 
     grid.rotation.set(
-      0,
+      Math.PI/2,
       0,
       0
     );
@@ -516,11 +683,50 @@ export function refreshModeScene(){
       .06
     );
 
-    // 140 framed the original 100mm plate; scaled up for the 175mm-long one
+    xArrow.position.set(
+      -half-4,
+      -half-4,
+      .1
+    );
+
+    xArrow.setDirection(
+      new THREE.Vector3(1,0,0)
+    );
+
+    yArrow.position.set(
+      -half-4,
+      -half-4,
+      .1
+    );
+
+    yArrow.setDirection(
+      new THREE.Vector3(0,1,0)
+    );
+
+    zArrow.visible=false;
+    zLabel.visible=false;
+
+    axisEdgeGroup.visible=false;
+
+    xLabel.position.set(
+      -half-4+10,
+      -half-4,
+      .1
+    );
+
+    yLabel.position.set(
+      -half-4,
+      -half-4+10,
+      .1
+    );
+
+    xLabel.visible=true;
+    yLabel.visible=true;
+
     camera.position.set(
       0,
       0,
-      245
+      140
     );
 
     camera.up.set(
@@ -545,7 +751,7 @@ export function refreshModeScene(){
   }else{
 
     grid.rotation.set(
-      0,
+      Math.PI/2,
       0,
       0
     );
@@ -567,6 +773,18 @@ export function refreshModeScene(){
       0,
       .06
     );
+
+    // the corner arrows are only used in 2D now; 3D shows the
+    // axis edge indicators instead
+    xArrow.visible=false;
+    yArrow.visible=false;
+    zArrow.visible=false;
+
+    xLabel.visible=false;
+    yLabel.visible=false;
+    zLabel.visible=false;
+
+    axisEdgeGroup.visible=true;
 
     camera.position.copy(
       DEFAULT_CAM
@@ -720,9 +938,75 @@ function fitCanvas(){
     false
   );
 
-  camera.aspect =
+  const aspect =
     rect.width /
     rect.height;
+
+  camera.aspect = aspect;
+
+  /*
+     Keep the complete build plate and its axis indicators inside
+     the mobile viewport.  Changing camera.aspect alone is not
+     enough on a narrow phone screen because the horizontal field
+     of view becomes much smaller.
+  */
+  const margin = 1.10;
+  const fitWidth = PLATE_W + 2 * 8 + 12;
+  const fitHeight = PLATE_L + 2 * 8 + 12;
+
+  const vFov =
+    THREE.MathUtils.degToRad(camera.fov);
+
+  const hFov =
+    2 * Math.atan(
+      Math.tan(vFov / 2) * aspect
+    );
+
+  const distanceForHeight =
+    (fitHeight / 2) /
+    Math.tan(vFov / 2);
+
+  const distanceForWidth =
+    (fitWidth / 2) /
+    Math.tan(hFov / 2);
+
+  const fitDistance =
+    Math.max(
+      distanceForHeight,
+      distanceForWidth
+    ) * margin;
+
+  if(S.shapeMode==='2d'){
+
+    camera.position.set(
+      0,
+      0,
+      fitDistance
+    );
+
+    camera.up.set(
+      0,
+      1,
+      0
+    );
+
+  }else{
+
+    const direction =
+      DEFAULT_CAM.clone().normalize();
+
+    camera.position.copy(
+      direction.multiplyScalar(
+        fitDistance
+      )
+    );
+
+    camera.up.set(
+      0,
+      1,
+      0
+    );
+  }
 
   camera.updateProjectionMatrix();
 }
