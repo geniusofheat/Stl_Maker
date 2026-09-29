@@ -100,6 +100,7 @@ bar
       () => {
 
         gridAxis=b.dataset.ga;
+        S.selectedAxis=gridAxis;
 
         refreshAxisButtons();
       }
