@@ -202,12 +202,12 @@ export function startDragToSize(
     */
 
     mesh.position.set(
-      0,
-      0,
-      S.shapeMode==='3d'
-        ? geometryDimensions(mesh).z/2
-        : 0
-    );
+  geometryDimensions(mesh).x/2,
+  geometryDimensions(mesh).y/2,
+  S.shapeMode==='3d'
+    ? geometryDimensions(mesh).z/2
+    : 0
+);
 
     clampToPlate(
       mesh,
