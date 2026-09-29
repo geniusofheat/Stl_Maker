@@ -41,7 +41,7 @@ export const camera = new THREE.PerspectiveCamera(
 
 // (90,70,110) framed the original 100mm plate; scaled up for the 175mm-long one
 const DEFAULT_CAM =
-  new THREE.Vector3(90,70,110).multiplyScalar(1.75);
+  new THREE.Vector3(90,70,110).multiplyScalar(2.0);
 
 camera.position.copy(DEFAULT_CAM);
 
