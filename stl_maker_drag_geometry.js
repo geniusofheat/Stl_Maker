@@ -10,7 +10,8 @@ import { polygonGeometry, rotateGeometryToZ } from './stl_maker_geometry.js';
 
 export function buildDragGeometry(
   shapeKey,
-  sizeMM
+  sizeMM,
+  ySizeMM=sizeMM
 ){
 
   const H=
@@ -34,7 +35,7 @@ export function buildDragGeometry(
     if(shapeKey==='rectangle')
       return new THREE.PlaneGeometry(
         sizeMM,
-        sizeMM*.5
+        ysizeMM*.5
       );
 
     if(shapeKey==='triangle')
@@ -67,9 +68,9 @@ export function buildDragGeometry(
     }
 
     return new THREE.PlaneGeometry(
-      sizeMM,
-      sizeMM
-    );
+  sizeMM,
+  ySizeMM
+);
   }
 
 
@@ -83,7 +84,7 @@ export function buildDragGeometry(
   if(shapeKey==='square')
     return new THREE.BoxGeometry(
       sizeMM,
-      sizeMM,
+      ysizeMM,
       sizeMM
     );
 
