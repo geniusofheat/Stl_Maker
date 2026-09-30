@@ -149,11 +149,13 @@ export function startDragToSize(
     }
 
 
-    let size=
-      Math.max(
-        GRID_SQUARE,
-        startPt.distanceTo(cur)
-      );
+let size=
+  Math.max(
+    GRID_SQUARE,
+    S.selectedAxis==='Y'
+      ? Math.abs(cur.y-startPt.y)
+      : Math.abs(cur.x-startPt.x)
+  );
 
     size=
       Math.round(
