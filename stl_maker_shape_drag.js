@@ -249,7 +249,7 @@ export function startDragToSize(
 
     mesh.position.set(
       geometryDimensions(mesh).x/2,
-      geometryDimensions(mesh).y/2,
+      0,
       S.shapeMode==='3d'
         ? geometryDimensions(mesh).z/2
         : 0
