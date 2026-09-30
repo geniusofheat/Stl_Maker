@@ -4,6 +4,7 @@ import { S } from './stl_maker_state.js';
 import { armUndo, menuScroll, setH2 } from './stl_maker_h2.js';
 import { plateHit } from './stl_maker_plate_hit.js';
 import { GRID_SQUARE, canvas, controls, refreshLockBtn, scene } from './stl_maker_three.js';
+import { getGridAxis } from './stl_maker_grid_rotate.js';
 import { buildDragGeometry } from './stl_maker_drag_geometry.js';
 import { attachOutline, clampToPlate, geometryDimensions, storeDimensions } from './stl_maker_geometry.js';
 import { activeLayer, refreshShapeVisuals } from './stl_maker_layer_data.js';
@@ -75,7 +76,7 @@ export function startDragToSize(
     const size=
       Math.max(
         GRID_SQUARE,
-        S.selectedAxis==='Y'
+        getGridAxis()==='Y'
           ? Math.abs(cur.y-startPt.y)
           : Math.abs(cur.x-startPt.x)
       );
@@ -108,8 +109,8 @@ export function startDragToSize(
 
 
     previewMesh.position.set(
-      startPt.x,
-      startPt.y,
+      geometryDimensions(previewMesh).x/2,
+      geometryDimensions(previewMesh).y/2,
       S.shapeMode==='3d'
         ? size/2
         : 0
@@ -149,13 +150,13 @@ export function startDragToSize(
     }
 
 
-let size=
-  Math.max(
-    GRID_SQUARE,
-    S.selectedAxis==='Y'
-      ? Math.abs(cur.y-startPt.y)
-      : Math.abs(cur.x-startPt.x)
-  );
+    let size=
+      Math.max(
+        GRID_SQUARE,
+        getGridAxis()==='Y'
+          ? Math.abs(cur.y-startPt.y)
+          : Math.abs(cur.x-startPt.x)
+      );
 
     size=
       Math.round(
@@ -199,18 +200,13 @@ let size=
       );
 
 
-    /*
-      New objects snap to the
-      center of the grid.
-    */
-
     mesh.position.set(
-  geometryDimensions(mesh).x/2,
-  geometryDimensions(mesh).y/2,
-  S.shapeMode==='3d'
-    ? geometryDimensions(mesh).z/2
-    : 0
-);
+      geometryDimensions(mesh).x/2,
+      geometryDimensions(mesh).y/2,
+      S.shapeMode==='3d'
+        ? geometryDimensions(mesh).z/2
+        : 0
+    );
 
     clampToPlate(
       mesh,

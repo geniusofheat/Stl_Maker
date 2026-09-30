@@ -9,8 +9,8 @@ import { clearHistoryKind, pushHistory } from './stl_maker_h2.js';
    Turns the whole grid (and everything on it) in 3D mode.
 
    Axis buttons:
-     Z = spin around the origin (0,0, the center of the grid)  ← default
-     X = tip the grid forward / back
+     Z = spin around the origin (0,0, the center of the grid)
+     X = tip the grid forward / back  ← default
      Y = flip the grid left / right
 
    Degree buttons turn the grid by a fixed amount on the chosen axis.
@@ -30,6 +30,12 @@ const AXES = {
 };
 
 export let gridAxis = 'X';
+
+// lets other files (stl_maker_shape_drag.js) read the currently
+// selected grid axis without importing the mutable binding directly
+export function getGridAxis(){
+  return gridAxis;
+}
 
 
 /* ── buttons over the grid ── */
