@@ -56,9 +56,9 @@ export function renderDrawingToolsHome(){
 
           ${svg('shapes')}
 
-          <span class="category-label">
+          <div class="category-label">
             Create
-          </span>
+          </div>
 
         </div>
 
@@ -68,9 +68,9 @@ export function renderDrawingToolsHome(){
 
           ${svg('move')}
 
-          <span class="category-label">
+          <div class="category-label">
             Transform
-          </span>
+          </div>
 
         </div>
 
@@ -80,9 +80,9 @@ export function renderDrawingToolsHome(){
 
           ${svg('boolean')}
 
-          <span class="category-label">
+          <div class="category-label">
             Modify
-          </span>
+          </div>
 
         </div>
 
