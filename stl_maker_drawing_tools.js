@@ -51,36 +51,36 @@ export function renderDrawingToolsHome(){
       <div class="tile-row">
 
         <div
-          class="tile"
+          class="tile category-tile"
           data-category="create">
 
           ${svg('shapes')}
 
-          <span>
+          <span class="category-label">
             Create
           </span>
 
         </div>
 
         <div
-          class="tile"
+          class="tile category-tile"
           data-category="transform">
 
           ${svg('move')}
 
-          <span>
+          <span class="category-label">
             Transform
           </span>
 
         </div>
 
         <div
-          class="tile"
+          class="tile category-tile"
           data-category="modify">
 
           ${svg('boolean')}
 
-          <span>
+          <span class="category-label">
             Modify
           </span>
 
@@ -132,7 +132,6 @@ export function renderDrawingToolsHome(){
 
             }
 
-
             else if(category==='transform'){
 
               S.crumbs=[
@@ -141,7 +140,6 @@ export function renderDrawingToolsHome(){
               ];
 
             }
-
 
             else if(category==='modify'){
 
