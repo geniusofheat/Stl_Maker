@@ -73,7 +73,9 @@ export function setAxis(axis){
 
 export function currentIncrement(){
 
-  return 1;
+  return S.mmState==='2.5'
+    ? 2.5
+    : 5;
 }
 
 
