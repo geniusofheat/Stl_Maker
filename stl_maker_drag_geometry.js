@@ -10,8 +10,8 @@ import { polygonGeometry, rotateGeometryToZ } from './stl_maker_geometry.js';
 
 export function buildDragGeometry(
   shapeKey,
-  sizeMM,
-  ySizeMM=sizeMM
+  xSizeMM,
+  ySizeMM=xSizeMM
 ){
 
   const H=
@@ -22,39 +22,44 @@ export function buildDragGeometry(
 
     if(shapeKey==='circle')
       return new THREE.CircleGeometry(
-        sizeMM/2,
+        xSizeMM/2,
         64
       );
 
+
     if(shapeKey==='square')
       return new THREE.PlaneGeometry(
-        sizeMM,
-        sizeMM
+        xSizeMM,
+        ySizeMM
       );
+
 
     if(shapeKey==='rectangle')
       return new THREE.PlaneGeometry(
-        sizeMM,
-        ysizeMM*.5
+        xSizeMM,
+        ySizeMM
       );
+
 
     if(shapeKey==='triangle')
       return polygonGeometry(
         3,
-        sizeMM/2
+        xSizeMM/2
       );
+
 
     if(shapeKey==='octagon')
       return polygonGeometry(
         8,
-        sizeMM/2
+        xSizeMM/2
       );
+
 
     if(shapeKey==='oval'){
 
       const g=
         new THREE.CircleGeometry(
-          sizeMM/2,
+          xSizeMM/2,
           64
         );
 
@@ -67,59 +72,65 @@ export function buildDragGeometry(
       return g;
     }
 
+
     return new THREE.PlaneGeometry(
-  sizeMM,
-  ySizeMM
-);
+      xSizeMM,
+      ySizeMM
+    );
   }
 
 
   if(shapeKey==='circle')
     return new THREE.SphereGeometry(
-      sizeMM/2,
+      xSizeMM/2,
       32,
       24
     );
 
+
   if(shapeKey==='square')
     return new THREE.BoxGeometry(
-      sizeMM,
-      ysizeMM,
-      sizeMM
+      xSizeMM,
+      ySizeMM,
+      H
     );
+
 
   if(shapeKey==='rectangle')
     return new THREE.BoxGeometry(
-      sizeMM,
-      sizeMM*.5,
+      xSizeMM,
+      ySizeMM,
       H
     );
+
 
   if(shapeKey==='triangle')
     return rotateGeometryToZ(
       new THREE.CylinderGeometry(
-        sizeMM/2,
-        sizeMM/2,
+        xSizeMM/2,
+        xSizeMM/2,
         H,
         3
       )
     );
 
+
   if(shapeKey==='octagon')
     return rotateGeometryToZ(
       new THREE.CylinderGeometry(
-        sizeMM/2,
-        sizeMM/2,
+        xSizeMM/2,
+        xSizeMM/2,
         H,
         8
       )
     );
 
+
   if(shapeKey==='oval'){
 
     const g=
       new THREE.SphereGeometry(
-        sizeMM/2,
+        xSizeMM/2,
         32,
         24
       );
@@ -133,9 +144,10 @@ export function buildDragGeometry(
     return g;
   }
 
+
   return new THREE.BoxGeometry(
-    sizeMM,
-    sizeMM,
+    xSizeMM,
+    ySizeMM,
     H
   );
 }

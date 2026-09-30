@@ -10,6 +10,7 @@ import { activeLayer, refreshShapeVisuals } from './stl_maker_layer_data.js';
 import { showToast } from './stl_maker_toast.js';
 import { goToShape } from './stl_maker_navigation.js';
 
+
 /* ─────────────────────────────────────────────────────────────
    SHAPE DRAG
 ───────────────────────────────────────────────────────────── */
@@ -33,7 +34,6 @@ export function startDragToSize(
       ${shapeKey}...
     </div>
   `;
-
 
   let startPt=null;
   let previewMesh=null;
@@ -72,13 +72,44 @@ export function startDragToSize(
     if(!cur)
       return;
 
-    const size=
+
+    /*
+      Drag sizing uses one axis at a time.
+
+      X drag:
+        X = drag distance
+        Y = 1 mm
+
+      Y drag:
+        X = 1 mm
+        Y = drag distance
+    */
+
+    const dragSize=
       Math.max(
         GRID_SQUARE,
         S.selectedAxis==='Y'
           ? Math.abs(cur.y-startPt.y)
           : Math.abs(cur.x-startPt.x)
       );
+
+    const size=
+      Math.max(
+        GRID_SQUARE,
+        Math.round(
+          dragSize/GRID_SQUARE
+        )*GRID_SQUARE
+      );
+
+    const xSize=
+      S.selectedAxis==='Y'
+        ? GRID_SQUARE
+        : size;
+
+    const ySize=
+      S.selectedAxis==='Y'
+        ? size
+        : GRID_SQUARE;
 
 
     if(previewMesh){
@@ -97,7 +128,8 @@ export function startDragToSize(
       new THREE.Mesh(
         buildDragGeometry(
           shapeKey,
-          size
+          xSize,
+          ySize
         ),
         new THREE.MeshBasicMaterial({
           color:0xe0c48f,
@@ -111,7 +143,7 @@ export function startDragToSize(
       startPt.x,
       startPt.y,
       S.shapeMode==='3d'
-        ? size/2
+        ? geometryDimensions(previewMesh).z/2
         : 0
     );
 
@@ -149,18 +181,32 @@ export function startDragToSize(
     }
 
 
-let size=
-  Math.max(
-    GRID_SQUARE,
-    S.selectedAxis==='Y'
-      ? Math.abs(cur.y-startPt.y)
-      : Math.abs(cur.x-startPt.x)
-  );
+    const dragSize=
+      Math.max(
+        GRID_SQUARE,
+        S.selectedAxis==='Y'
+          ? Math.abs(cur.y-startPt.y)
+          : Math.abs(cur.x-startPt.x)
+      );
 
-    size=
-      Math.round(
-        size/GRID_SQUARE
-      )*GRID_SQUARE;
+    const size=
+      Math.max(
+        GRID_SQUARE,
+        Math.round(
+          dragSize/GRID_SQUARE
+        )*GRID_SQUARE
+      );
+
+
+    const xSize=
+      S.selectedAxis==='Y'
+        ? GRID_SQUARE
+        : size;
+
+    const ySize=
+      S.selectedAxis==='Y'
+        ? size
+        : GRID_SQUARE;
 
 
     if(previewMesh){
@@ -170,6 +216,7 @@ let size=
       );
 
       previewMesh.geometry.dispose();
+
       previewMesh.material.dispose();
 
       previewMesh=null;
@@ -191,7 +238,8 @@ let size=
       new THREE.Mesh(
         buildDragGeometry(
           shapeKey,
-          size
+          xSize,
+          ySize
         ),
         new THREE.MeshBasicMaterial({
           color:SWATCHES[0]
@@ -199,18 +247,13 @@ let size=
       );
 
 
-    /*
-      New objects snap to the
-      center of the grid.
-    */
-
     mesh.position.set(
-  geometryDimensions(mesh).x/2,
-  geometryDimensions(mesh).y/2,
-  S.shapeMode==='3d'
-    ? geometryDimensions(mesh).z/2
-    : 0
-);
+      geometryDimensions(mesh).x/2,
+      geometryDimensions(mesh).y/2,
+      S.shapeMode==='3d'
+        ? geometryDimensions(mesh).z/2
+        : 0
+    );
 
     clampToPlate(
       mesh,
@@ -228,13 +271,14 @@ let size=
       mesh,
       geomId:shapeKey,
       fields:{
-        size
+        size,
+        xSize,
+        ySize
       },
       color:SWATCHES[0],
       baseDimensions:
         storeDimensions(mesh)
     };
-
 
     active.shapes.push(rec);
 
@@ -249,7 +293,7 @@ let size=
     refreshShapeVisuals();
 
     showToast(
-      `${shapeKey} placed at ${size}mm`
+      `${shapeKey} placed at ${xSize}mm × ${ySize}mm`
     );
 
     cleanup();
